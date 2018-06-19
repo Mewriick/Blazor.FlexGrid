@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid", "src\Blazor.FlexGrid\Blazor.FlexGrid.csproj", "{82D8970C-84FC-49EE-B5FC-CEED38143031}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{537A7B95-B700-42E5-AFE3-B3C18131BA77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid.Demo.Server", "demo\Blazor.FlexGrid.Demo.Server\Blazor.FlexGrid.Demo.Server.csproj", "{33C17E0A-917D-494F-AB4C-48C704700D5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid.Demo.Client", "demo\Blazor.FlexGrid.Demo.Client\Blazor.FlexGrid.Demo.Client.csproj", "{A35498DB-93E2-4E74-B73E-AFB58AE22446}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid.Demo.Shared", "demo\Blazor.FlexGrid.Demo.Shared\Blazor.FlexGrid.Demo.Shared.csproj", "{5B20FC7E-F00C-448B-9F9B-F3428FB289F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82D8970C-84FC-49EE-B5FC-CEED38143031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82D8970C-84FC-49EE-B5FC-CEED38143031}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82D8970C-84FC-49EE-B5FC-CEED38143031}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82D8970C-84FC-49EE-B5FC-CEED38143031}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33C17E0A-917D-494F-AB4C-48C704700D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33C17E0A-917D-494F-AB4C-48C704700D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33C17E0A-917D-494F-AB4C-48C704700D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33C17E0A-917D-494F-AB4C-48C704700D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A35498DB-93E2-4E74-B73E-AFB58AE22446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A35498DB-93E2-4E74-B73E-AFB58AE22446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A35498DB-93E2-4E74-B73E-AFB58AE22446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A35498DB-93E2-4E74-B73E-AFB58AE22446}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{82D8970C-84FC-49EE-B5FC-CEED38143031} = {537A7B95-B700-42E5-AFE3-B3C18131BA77}
+		{33C17E0A-917D-494F-AB4C-48C704700D5D} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
+		{A35498DB-93E2-4E74-B73E-AFB58AE22446} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
+		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6BE7CF41-5635-41DC-98E5-7B43EB4B0EB4}
+	EndGlobalSection
+EndGlobal
