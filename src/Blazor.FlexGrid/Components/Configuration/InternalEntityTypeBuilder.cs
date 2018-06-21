@@ -1,5 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
-using System;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
@@ -13,9 +13,9 @@ namespace Blazor.FlexGrid.Components.Configuration
             ModelBuilder = modelBuilder;
         }
 
-        public InternalPropertyBuilder Property(string name, Type propertyType)
+        public InternalPropertyBuilder Property(MemberInfo memberInfo)
         {
-            var property = Metadata.AddProperty(name, propertyType);
+            var property = Metadata.AddProperty(memberInfo);
 
             return new InternalPropertyBuilder(property, new InternalModelBuilder(Metadata.Model));
         }

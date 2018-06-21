@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
@@ -11,14 +12,10 @@ namespace Blazor.FlexGrid.Components.Configuration
             Builder = internalEntityTypeBuilder ?? throw new ArgumentNullException(nameof(internalEntityTypeBuilder));
         }
 
-        //public virtual PropertyBuilder<TProperty> Property<TProperty>(Expression<Func<TEntity, TProperty>> propertyExpression)
-        //{
-        //    return new PropertyBuilder<TProperty>(Builder.Property());
-        //}
-
-        public virtual PropertyBuilder<TProperty> Property<TProperty>(string name, Type propertyType)
-        {
-            return new PropertyBuilder<TProperty>(Builder.Property(name, propertyType));
-        }
+        public virtual PropertyBuilder<TProperty> Property<TProperty>(Expression<Func<TEntity, TProperty>> propertyExpression)
+            =>
+             new PropertyBuilder<TProperty>(
+                Builder.Property(propertyExpression.GetPropertyAccess())
+                );
     }
 }

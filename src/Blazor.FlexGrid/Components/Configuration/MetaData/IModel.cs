@@ -9,6 +9,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         IEnumerable<IEntityType> GetEntityTypes();
 
-        IEntityType FindEntityType(string name);
+        IEntityType FindEntityType(Type clrType);
     }
 }

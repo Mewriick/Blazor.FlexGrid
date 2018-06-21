@@ -14,6 +14,8 @@ namespace Blazor.FlexGrid.Components.Configuration
             builder = new InternalModelBuilder(new Model());
         }
 
+        public EntityTypeBuilder<TEntity> Entity<TEntity>() where TEntity : class
+            => new EntityTypeBuilder<TEntity>(builder.Entity(typeof(TEntity)));
 
         public EntityTypeBuilder<TEntity> Entity<TEntity>(Type type) where TEntity : class
         {

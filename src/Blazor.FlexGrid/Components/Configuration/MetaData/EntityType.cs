@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -9,33 +10,54 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public Model Model { get; }
 
-        public EntityType(Model model)
+        public Type ClrType { get; }
+
+        public string Name { get; }
+
+
+        public EntityType(Type clrType, Model model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
+            Name = clrType.FullName;
             this.properties = new SortedDictionary<string, Property>();
         }
 
         public IProperty FindProperty(string name)
-        {
-            throw new NotImplementedException();
-        }
+            => properties.TryGetValue(name, out var property)
+                ? property
+                : null;
 
-        public IEnumerable<IProperty> GetProperties()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<IProperty> GetProperties() => properties.Values;
 
-        public Property AddProperty(string name, Type type)
-        {
-            return AddProperty(name, type);
-        }
 
-        IProperty IEntityType.AddProperty(string name, Type type)
+        public Property AddProperty(MemberInfo memberInfo)
         {
-            var property = new Property(name, type, this);
-            properties.Add(property.Name, property);
+            if (memberInfo is null)
+            {
+                throw new ArgumentNullException(nameof(memberInfo));
+            }
+
+            ValidationPropertyCanBeAdded(memberInfo.Name);
+
+            var property = new Property(memberInfo.Name, memberInfo.GetMemberType(), memberInfo as PropertyInfo, this);
+            properties.Add(memberInfo.Name, property);
 
             return property;
         }
+
+
+        private void ValidationPropertyCanBeAdded(string propertyName)
+        {
+            if (properties.TryGetValue(propertyName, out var property))
+            {
+                throw new InvalidOperationException($"The property {propertyName} cannot be configured on type {property.DeclaringType} " +
+                    $"because property with same name is already configured");
+            }
+        }
+
+
+        IModel IEntityType.Model => Model;
+
+        IProperty IEntityType.AddProperty(MemberInfo memberInfo) => AddProperty(memberInfo);
     }
 }

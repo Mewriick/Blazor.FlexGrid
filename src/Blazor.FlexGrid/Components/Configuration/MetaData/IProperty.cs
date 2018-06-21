@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -7,5 +8,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         string Name { get; }
 
         Type ClrType { get; }
+
+        PropertyInfo PropertyInfo { get; }
     }
 }

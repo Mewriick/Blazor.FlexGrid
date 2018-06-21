@@ -5,36 +5,45 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
     public class Model : Annotatable, IModel
     {
+        private readonly SortedDictionary<string, EntityType> entityTypes;
+        private readonly SortedDictionary<Type, EntityType> entityTypesMap;
+
+        public Model()
+        {
+            this.entityTypes = new SortedDictionary<string, EntityType>();
+            this.entityTypesMap = new SortedDictionary<Type, EntityType>();
+        }
+
+
         public EntityType AddEntityType(Type clrType)
         {
-            return AddEntityType(clrType);
-        }
+            var entityType = new EntityType(clrType, this);
 
-        public EntityType FindEntityType(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<EntityType> GetEntityTypes()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEntityType IModel.AddEntityType(Type clrType)
-        {
-            var entityType = new EntityType(this);
+            entityTypes.Add(entityType.Name, entityType);
+            entityTypesMap.Add(clrType, entityType);
 
             return entityType;
         }
 
-        IEntityType IModel.FindEntityType(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public EntityType FindEntityType(Type clrType)
+            => entityTypesMap.TryGetValue(clrType, out var entityType)
+                ? entityType
+                : null;
 
-        IEnumerable<IEntityType> IModel.GetEntityTypes()
-        {
-            throw new NotImplementedException();
-        }
+        public EntityType FindEntityType(string name)
+            => entityTypes.TryGetValue(name, out var entityType)
+                ? entityType
+                : null;
+
+        public IEnumerable<EntityType> GetEntityTypes() => entityTypes.Values;
+
+
+        IEntityType IModel.AddEntityType(Type clrType) => AddEntityType(clrType);
+
+        IEntityType IModel.FindEntityType(Type clrType) => FindEntityType(clrType);
+
+        IEnumerable<IEntityType> IModel.GetEntityTypes() => GetEntityTypes();
+
+
     }
 }

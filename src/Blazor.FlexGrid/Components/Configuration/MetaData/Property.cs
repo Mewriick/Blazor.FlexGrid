@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -10,8 +11,10 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public EntityType DeclaringType { get; }
 
+        public PropertyInfo PropertyInfo { get; }
 
-        public Property(string name, Type clrType, EntityType declaringType)
+
+        public Property(string name, Type clrType, PropertyInfo propertyInfo, EntityType declaringType)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -20,6 +23,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
             Name = name;
             ClrType = clrType ?? throw new ArgumentNullException(nameof(clrType));
+            PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
             DeclaringType = declaringType ?? throw new ArgumentNullException(nameof(declaringType));
         }
     }

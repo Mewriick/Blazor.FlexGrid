@@ -7,7 +7,6 @@ namespace Blazor.FlexGrid.Components.Configuration
     {
         public override InternalModelBuilder ModelBuilder => this;
 
-
         public InternalModelBuilder(Model metadata)
             : base(metadata)
         {
