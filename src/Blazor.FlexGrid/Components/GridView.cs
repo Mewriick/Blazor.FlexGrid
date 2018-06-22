@@ -1,10 +1,12 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
-using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components
@@ -16,6 +18,9 @@ namespace Blazor.FlexGrid.Components
 
         [Inject]
         private IGridComponentsContext ConfigurationContext { get; set; }
+
+        [Inject]
+        private IEnumerable<IGridRenderer> Renderers { get; set; }
 
         [Parameter]
         private ITableDataAdapter DataAdapter { get; set; }
@@ -46,58 +51,19 @@ namespace Blazor.FlexGrid.Components
             else
             {
                 var itemType = tableDataSet.GetType().GenericTypeArguments[0];
-                var gridConfiguration = ConfigurationContext.FindGridConfigurationByType(itemType);
-                var itemTypeProperties = itemType.GetProperties();
+                var rendererContext = new GridRendererContext(
+                        ConfigurationContext.FindGridConfigurationByType(itemType),
+                        itemType.GetProperties().ToList(),
+                        builder,
+                        tableDataSet
+                    );
 
                 builder.OpenElement(seq, "table");
                 builder.AddAttribute(++seq, "class", "table");
 
-                builder.OpenElement(++seq, "thead");
-                builder.OpenElement(++seq, "tr");
-                foreach (var property in itemTypeProperties)
-                {
-                    builder.OpenElement(++seq, "th");
+                foreach (var renderer in Renderers)
+                    renderer.Render(rendererContext);
 
-                    var columnConfiguration = gridConfiguration.FindProperty(property.Name);
-                    if (columnConfiguration != null)
-                    {
-                        var columnCaption = columnConfiguration[GridViewAnnotationNames.ColumnCaption] as Annotation;
-                        if (columnCaption is null)
-                        {
-                            builder.AddContent(++seq, property.Name);
-                        }
-                        else
-                        {
-                            builder.AddContent(++seq, columnCaption.Value.ToString());
-                        }
-                    }
-                    else
-                    {
-
-                        builder.AddContent(++seq, property.Name);
-                    }
-
-                    builder.CloseElement();
-                }
-
-                builder.CloseElement();
-                builder.CloseElement();
-
-                builder.OpenElement(++seq, "tbody");
-                foreach (var item in tableDataSet.Items)
-                {
-                    builder.OpenElement(++seq, "tr");
-                    foreach (var property in itemTypeProperties)
-                    {
-                        builder.OpenElement(++seq, "td");
-                        builder.AddContent(++seq, property.GetValue(item).ToString());
-                        builder.CloseElement();
-                    }
-
-                    builder.CloseElement();
-                }
-
-                builder.CloseElement();
                 builder.CloseElement();
             }
 
