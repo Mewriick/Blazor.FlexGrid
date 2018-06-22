@@ -3,7 +3,7 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
-    public class ModelBuilder
+    public class ModelBuilder : IModelConfiguration
     {
         private readonly InternalModelBuilder builder;
 
@@ -25,6 +25,18 @@ namespace Blazor.FlexGrid.Components.Configuration
             }
 
             return new EntityTypeBuilder<TEntity>(builder.Entity(type));
+        }
+
+        public ModelBuilder ApplyConfiguration<TEntity>(IEntityTypeConfiguration<TEntity> entityTypeConfiguration) where TEntity : class
+        {
+            if (entityTypeConfiguration is null)
+            {
+                throw new ArgumentNullException(nameof(entityTypeConfiguration));
+            }
+
+            entityTypeConfiguration.Configure(Entity<TEntity>());
+
+            return this;
         }
     }
 }

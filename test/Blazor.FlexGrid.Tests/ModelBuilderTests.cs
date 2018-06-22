@@ -12,7 +12,10 @@ namespace Blazor.FlexGrid.Tests
             var modelBuilder = new ModelBuilder();
             modelBuilder
                 .Entity<WeatherForecast>()
-                .Property(p => p.Summary);
+                    .Property(p => p.Summary)
+                    .HasCaption("Summary!")
+                    .HasOrder(5)
+                    .IsVisible(true);
 
             var model = modelBuilder.Model;
         }

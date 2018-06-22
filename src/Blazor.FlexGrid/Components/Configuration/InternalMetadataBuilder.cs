@@ -22,5 +22,12 @@ namespace Blazor.FlexGrid.Components.Configuration
         {
             Metadata = metadata;
         }
+
+        public virtual bool HasAnnotation(string name, object value)
+        {
+            Metadata[name] = value;
+
+            return true;
+        }
     }
 }

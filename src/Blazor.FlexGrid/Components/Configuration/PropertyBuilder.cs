@@ -10,5 +10,26 @@ namespace Blazor.FlexGrid.Components.Configuration
         {
             Builder = internalPropertyBuilder ?? throw new ArgumentNullException(nameof(internalPropertyBuilder));
         }
+
+        public PropertyBuilder<TProperty> HasCaption(string caption)
+        {
+            Builder.HasCaption(caption);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty> IsVisible(bool isVisible)
+        {
+            Builder.IsVisible(isVisible);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty> HasOrder(int order)
+        {
+            Builder.HasOrder(order);
+
+            return this;
+        }
     }
 }

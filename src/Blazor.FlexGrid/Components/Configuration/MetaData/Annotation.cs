@@ -19,4 +19,21 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
+
+
+    public class NullAnnotation : Annotation
+    {
+        public static NullAnnotation Instance = new NullAnnotation();
+
+        public NullAnnotation()
+            : this("Null", "Null")
+        {
+
+        }
+
+        private NullAnnotation(string name, object value)
+            : base(name, value)
+        {
+        }
+    }
 }

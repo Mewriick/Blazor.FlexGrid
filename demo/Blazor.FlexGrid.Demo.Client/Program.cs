@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Blazor.Browser.Rendering;
+﻿using Blazor.FlexGrid.Demo.Client.GridConfigurations;
+using Microsoft.AspNetCore.Blazor.Browser.Rendering;
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 
 namespace Blazor.FlexGrid.Demo.Client
@@ -9,7 +10,10 @@ namespace Blazor.FlexGrid.Demo.Client
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                services.AddFlexGrid();
+                services.AddFlexGrid(cfg =>
+                {
+                    cfg.ApplyConfiguration(new WeatherForecastGridConfiguration());
+                });
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
