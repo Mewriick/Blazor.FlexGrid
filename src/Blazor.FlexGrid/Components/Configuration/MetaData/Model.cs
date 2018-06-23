@@ -17,6 +17,12 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public EntityType AddEntityType(Type clrType)
         {
+            var findedEntityType = FindEntityType(clrType);
+            if (findedEntityType != null)
+            {
+                return findedEntityType;
+            }
+
             var entityType = new EntityType(clrType, this);
 
             entityTypes.Add(entityType.Name, entityType);

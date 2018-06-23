@@ -7,5 +7,6 @@
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";
         public const string ColumnOrder = "GridColumnOrder";
+        public const string ColumnValueFormatter = "GridColumnValueFormatter";
     }
 }

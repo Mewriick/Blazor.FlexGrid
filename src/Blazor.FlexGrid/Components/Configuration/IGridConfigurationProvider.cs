@@ -3,7 +3,7 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
-    public interface IGridComponentsContext
+    public interface IGridConfigurationProvider
     {
         IEntityType FindGridConfigurationByType(Type clrType);
     }

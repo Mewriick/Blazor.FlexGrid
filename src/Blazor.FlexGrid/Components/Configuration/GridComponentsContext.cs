@@ -3,7 +3,7 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
-    public class GridComponentsContext : IGridComponentsContext
+    public class GridComponentsContext : IGridConfigurationProvider
     {
         private readonly IModel model;
 

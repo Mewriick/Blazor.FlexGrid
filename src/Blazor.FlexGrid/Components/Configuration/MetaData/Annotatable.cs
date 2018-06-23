@@ -9,7 +9,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public object this[string name]
         {
-            get => FindAnnotation(name);
+            get => FindAnnotation(name).Value;
             set
             {
                 if (string.IsNullOrWhiteSpace(name))

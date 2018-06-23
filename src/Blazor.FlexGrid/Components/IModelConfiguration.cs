@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.Builders;
 
 namespace Blazor.FlexGrid.Components
 {

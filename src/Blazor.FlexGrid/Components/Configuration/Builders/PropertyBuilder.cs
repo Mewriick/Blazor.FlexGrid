@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Linq.Expressions;
 
-namespace Blazor.FlexGrid.Components.Configuration
+namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
     public class PropertyBuilder<TProperty>
     {
@@ -28,6 +29,13 @@ namespace Blazor.FlexGrid.Components.Configuration
         public PropertyBuilder<TProperty> HasOrder(int order)
         {
             Builder.HasOrder(order);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty> HasValueFormatter(Expression<Func<TProperty, string>> valueFormatterExpression)
+        {
+            Builder.HasValueFormatter(valueFormatterExpression);
 
             return this;
         }

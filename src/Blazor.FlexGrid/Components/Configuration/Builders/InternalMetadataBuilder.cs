@@ -1,6 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
 
-namespace Blazor.FlexGrid.Components.Configuration
+namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
     public abstract class InternalMetadataBuilder<TMetadata> : InternalMetadataBuilder where TMetadata : Annotatable
     {

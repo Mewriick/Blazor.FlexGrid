@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.Components.Configuration.MetaData
+﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+
+namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
     /// <summary>
     ///     Properties for grid column annotations accessed through
@@ -10,5 +12,7 @@
         int Order { get; }
 
         bool IsVisible { get; }
+
+        ValueFormatter ValueFormatter { get; }
     }
 }

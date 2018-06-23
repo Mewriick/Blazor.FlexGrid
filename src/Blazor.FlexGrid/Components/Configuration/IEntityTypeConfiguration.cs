@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.Components.Configuration
+﻿using Blazor.FlexGrid.Components.Configuration.Builders;
+
+namespace Blazor.FlexGrid.Components.Configuration
 {
     public interface IEntityTypeConfiguration<TEntity> where TEntity : class
     {

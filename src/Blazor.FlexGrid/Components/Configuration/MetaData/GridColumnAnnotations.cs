@@ -1,20 +1,79 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using System;
+using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
     public class GridColumnAnnotations : IGridViewColumnAnnotations
     {
-        public string Caption => throw new NotImplementedException();
+        private readonly IProperty propertyMetadata;
 
-        public int Order => throw new NotImplementedException();
+        public string Caption
+        {
+            get
+            {
+                var captionAnnotation = Annotations[GridViewAnnotationNames.ColumnCaption];
+                if (captionAnnotation is NullAnotationValue)
+                {
+                    return propertyMetadata.Name;
+                }
 
-        public bool IsVisible => throw new NotImplementedException();
+                return captionAnnotation.ToString();
+            }
+        }
+
+        public int Order
+        {
+            get
+            {
+                var orderAnnotation = Annotations[GridViewAnnotationNames.ColumnOrder];
+                if (orderAnnotation is NullAnotationValue)
+                {
+                    return 0;
+                }
+
+                return (int)orderAnnotation;
+            }
+        }
+
+        public bool IsVisible
+        {
+            get
+            {
+                var orderAnnotation = Annotations[GridViewAnnotationNames.ColumnIsVisible];
+                if (orderAnnotation is NullAnotationValue)
+                {
+                    return true;
+                }
+
+                return (bool)orderAnnotation;
+            }
+        }
+        public ValueFormatter ValueFormatter
+        {
+            get
+            {
+                var formatterValueAnnotation = Annotations[GridViewAnnotationNames.ColumnValueFormatter];
+                if (formatterValueAnnotation is NullAnotationValue)
+                {
+                    Expression<Func<object, string>> defaultExpression =
+                        v => v == null ? string.Empty : v.ToString();
+
+                    return new DefaultValueFormatter(defaultExpression);
+                }
+
+                return formatterValueAnnotation as ValueFormatter;
+            }
+        }
+
 
         protected IAnnotatable Annotations { get; }
+
 
         public GridColumnAnnotations(IProperty property)
         {
             Annotations = property ?? throw new ArgumentNullException(nameof(property));
+            this.propertyMetadata = property;
         }
     }
 }

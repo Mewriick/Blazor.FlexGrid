@@ -1,7 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
 using System;
 
-namespace Blazor.FlexGrid.Components.Configuration
+namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
     public class ModelBuilder : IModelConfiguration
     {

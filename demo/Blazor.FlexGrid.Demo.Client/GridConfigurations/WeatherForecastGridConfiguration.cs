@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Demo.Shared;
 
 namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
@@ -8,7 +9,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
             builder.Property(e => e.Date)
-                .HasCaption("Datum");
+                .HasCaption("Datum")
+                .HasValueFormatter(d => d.ToShortDateString());
         }
     }
 }

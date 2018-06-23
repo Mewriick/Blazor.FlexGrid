@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Blazor.FlexGrid.Components.Configuration
+namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
     public class EntityTypeBuilder<TEntity> where TEntity : class
     {

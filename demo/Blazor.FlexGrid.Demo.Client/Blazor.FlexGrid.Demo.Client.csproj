@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <BlazorLinkerDescriptor Include="Linker.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Blazor.FlexGrid\Blazor.FlexGrid.csproj" />
     <ProjectReference Include="..\Blazor.FlexGrid.Demo.Shared\Blazor.FlexGrid.Demo.Shared.csproj" />
   </ItemGroup>

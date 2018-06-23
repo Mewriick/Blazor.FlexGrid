@@ -1,12 +1,26 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
-using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridHeaderRenderer : IGridRenderer
+    public class GridHeaderRenderer : GridPartRenderer
     {
-        public void Render(GridRendererContext rendererContext)
+        private readonly ILogger<GridHeaderRenderer> logger;
+
+        public GridHeaderRenderer(ILogger<GridHeaderRenderer> logger)
         {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        public override void Render(GridRendererContext rendererContext)
+        {
+            if (rendererContext.TableDataSet.Items == null ||
+                rendererContext.TableDataSet.Items.Count <= 0)
+            {
+                return;
+            }
+
             var builder = rendererContext.RenderTreeBuilder;
             var seq = rendererContext.Sequence;
 
@@ -15,23 +29,13 @@ namespace Blazor.FlexGrid.Components.Renderers
             foreach (var property in rendererContext.GridItemProperties)
             {
                 builder.OpenElement(++seq, "th");
-
-                var columnConfiguration = rendererContext.GridConfiguration.FindProperty(property.Name);
+                var columnConfiguration = rendererContext.GridConfiguration.FindColumnConfiguration(property.Name);
                 if (columnConfiguration != null)
                 {
-                    var columnCaption = columnConfiguration[GridViewAnnotationNames.ColumnCaption] as Annotation;
-                    if (columnCaption is null)
-                    {
-                        builder.AddContent(++seq, property.Name);
-                    }
-                    else
-                    {
-                        builder.AddContent(++seq, columnCaption.Value.ToString());
-                    }
+                    builder.AddContent(++seq, columnConfiguration.Caption);
                 }
                 else
                 {
-
                     builder.AddContent(++seq, property.Name);
                 }
 

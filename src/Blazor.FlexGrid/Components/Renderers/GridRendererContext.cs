@@ -20,14 +20,13 @@ namespace Blazor.FlexGrid.Components.Renderers
         public ITableDataSet TableDataSet { get; }
 
         public GridRendererContext(
-            IEntityType gridConfiguration,
-            List<PropertyInfo> itemProperties,
+            ImutableGridRendererContext imutableGridRendererContext,
             RenderTreeBuilder renderTreeBuilder,
             ITableDataSet tableDataSet)
         {
             Sequence = 0;
-            GridConfiguration = gridConfiguration ?? throw new ArgumentNullException(nameof(gridConfiguration));
-            GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
+            GridConfiguration = imutableGridRendererContext?.GridConfiguration ?? throw new ArgumentNullException(nameof(ImutableGridRendererContext.GridConfiguration));
+            GridItemProperties = imutableGridRendererContext?.GridItemProperties ?? throw new ArgumentNullException(nameof(ImutableGridRendererContext.GridItemProperties));
             RenderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
         }

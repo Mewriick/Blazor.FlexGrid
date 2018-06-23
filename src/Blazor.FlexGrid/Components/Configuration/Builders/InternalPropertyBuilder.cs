@@ -1,7 +1,9 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using System;
+using System.Linq.Expressions;
 
-namespace Blazor.FlexGrid.Components.Configuration
+namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
     public class InternalPropertyBuilder : InternalMetadataBuilder<Property>
     {
@@ -21,5 +23,8 @@ namespace Blazor.FlexGrid.Components.Configuration
 
         public bool HasOrder(int order)
             => HasAnnotation(GridViewAnnotationNames.ColumnOrder, order);
+
+        public bool HasValueFormatter<TProperty>(Expression<Func<TProperty, string>> valueFormatterExpression)
+            => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TProperty>(valueFormatterExpression));
     }
 }

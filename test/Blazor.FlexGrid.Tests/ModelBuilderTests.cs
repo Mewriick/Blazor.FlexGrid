@@ -1,4 +1,4 @@
-using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Demo.Shared;
 using Xunit;
 
@@ -16,6 +16,11 @@ namespace Blazor.FlexGrid.Tests
                     .HasCaption("Summary!")
                     .HasOrder(5)
                     .IsVisible(true);
+
+            modelBuilder
+                .Entity<WeatherForecast>()
+                    .Property(p => p.Date)
+                    .HasValueFormatter(d => d.ToShortDateString());
 
             var model = modelBuilder.Model;
         }
