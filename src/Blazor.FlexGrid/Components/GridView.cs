@@ -25,7 +25,10 @@ namespace Blazor.FlexGrid.Components
         private ITableDataAdapter DataAdapter { get; set; }
 
         [Parameter]
-        private ILazyLoadingOptions LazyLoadingOptions { get; set; }
+        private ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+
+        [Parameter]
+        private int PageSize { get; set; }
 
 
         public GridView()
@@ -43,7 +46,11 @@ namespace Blazor.FlexGrid.Components
 
         protected override Task OnInitAsync()
         {
-            tableDataSet = DataAdapter.GetTableDataSet(conf => conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri);
+            tableDataSet = DataAdapter.GetTableDataSet(conf =>
+            {
+                conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri;
+                conf.PageableOptions.PageSize = PageSize;
+            });
 
             return tableDataSet.GoToPage(0);
         }

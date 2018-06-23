@@ -37,6 +37,7 @@ namespace Blazor.FlexGrid.DataSet
         private void LoadFromQueryableSource()
         {
             Items = source.ToList();
+            PageableOptions.TotalItemsCount = source.Count();
         }
     }
 }

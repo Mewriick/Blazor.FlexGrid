@@ -30,7 +30,9 @@ namespace Blazor.FlexGrid.DataSet
         public async Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            Items = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions);
+            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions);
+            PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+            Items = pagedDataResult.Items;
         }
     }
 }

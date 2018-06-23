@@ -14,52 +14,10 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (dataSet.Items == null || !dataSet.Items.Any())
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in dataSet.Items)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
 
-        </tbody>
-    </table>
+<GridView DataAdapter="@forecastAdapter" LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts" })" PageSize="10"></GridView>
 
-    <GridView DataAdapter="@forecastAdapter" LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts" })"></GridView>
 
-    <button onclick="@(async => NextButton())">Next</button>
-}
 
-@functions {
-LazyTableDataSet<WeatherForecast> dataSet;
 
-protected override async Task OnInitAsync()
-{
-    //forecasts = await Http.GetJsonAsync<WeatherForecast[]>("/api/SampleData/WeatherForecasts");
-    dataSet = forecastAdapter.GetTableDataSet(o => o.LazyLoadingOptions.DataUri = "/api/SampleData/WeatherForecasts") as LazyTableDataSet<WeatherForecast>;
-    await dataSet.GoToPage(1);
-}
 
-public Task NextButton()
-{
-    return dataSet.GoToPage(1);
-}
-}

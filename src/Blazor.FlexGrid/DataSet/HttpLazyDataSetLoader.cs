@@ -1,7 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -19,9 +18,9 @@ namespace Blazor.FlexGrid.DataSet
         }
 
 
-        public Task<IList<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPageableOptions pageableOptions)
+        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPageableOptions pageableOptions)
         {
-            return httpClient.GetJsonAsync<IList<TItem>>(lazyLoadingOptions.DataUri);
+            return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(lazyLoadingOptions.DataUri);
         }
     }
 }

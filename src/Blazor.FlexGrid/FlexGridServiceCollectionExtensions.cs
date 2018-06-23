@@ -30,9 +30,18 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(IGridRenderer), provider =>
             {
                 var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>());
-                gridRenderer.AddRenderer(new GridHeaderRenderer(provider.GetRequiredService<ILogger<GridHeaderRenderer>>()));
-                gridRenderer.AddRenderer(new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>()));
+                gridRenderer.AddRenderer(new GridMesurablePartRenderer(
+                        new GridHeaderRenderer(provider.GetRequiredService<ILogger<GridHeaderRenderer>>()),
+                        provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
+                    );
+
+                gridRenderer.AddRenderer(new GridMesurablePartRenderer(
+                       new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>()),
+                       provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
+                    );
+
                 gridRenderer.AddRenderer(new GridLoadingRenderer());
+                gridRenderer.AddRenderer(new GridPaginationRenderer());
 
                 return gridRenderer;
             });

@@ -6,6 +6,8 @@
 
         int TotalItemsCount { get; set; }
 
+        int PagesCount { get; }
+
         int CurrentPage { get; set; }
 
         bool IsFirstPage { get; }
