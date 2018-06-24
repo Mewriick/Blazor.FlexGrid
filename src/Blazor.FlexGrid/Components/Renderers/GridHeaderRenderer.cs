@@ -25,10 +25,15 @@ namespace Blazor.FlexGrid.Components.Renderers
             var seq = rendererContext.Sequence;
 
             builder.OpenElement(++seq, "thead");
+            builder.AddAttribute(++seq, HtmlAttributes.Class, "table-head");
             builder.OpenElement(++seq, "tr");
+            builder.AddAttribute(++seq, HtmlAttributes.Class, "table-head-row");
+
             foreach (var property in rendererContext.GridItemProperties)
             {
                 builder.OpenElement(++seq, "th");
+                builder.AddAttribute(++seq, HtmlAttributes.Class, "table-cell-head");
+
                 var columnConfiguration = rendererContext.GridConfiguration.FindColumnConfiguration(property.Name);
                 if (columnConfiguration != null)
                 {

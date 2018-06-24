@@ -8,6 +8,7 @@
         public const string TableColumn = "td";
         public const string Paragraph = "p";
         public const string Button = "button";
+        public const string Div = "div";
     }
 
     public class HtmlAttributes

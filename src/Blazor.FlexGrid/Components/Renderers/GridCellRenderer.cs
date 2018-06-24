@@ -4,14 +4,13 @@
     {
         public override void Render(GridRendererContext rendererContext)
         {
-            var builder = rendererContext.RenderTreeBuilder;
-            var seq = rendererContext.Sequence;
 
-            builder.OpenElement(++seq, HtmlTagNames.TableColumn);
-            builder.AddContent(++seq, rendererContext.ValueFormatters[rendererContext.ActualColumnName]
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableColumn);
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-cell");
+            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, rendererContext.ValueFormatters[rendererContext.ActualColumnName]
                 .FormatValue(rendererContext.GetPropertyValueAccessor.GetValue(rendererContext.ActualItem, rendererContext.ActualColumnName)));
 
-            builder.CloseElement();
+            rendererContext.RenderTreeBuilder.CloseElement();
         }
     }
 }

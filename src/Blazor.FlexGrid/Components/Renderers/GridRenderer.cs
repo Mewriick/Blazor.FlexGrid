@@ -22,12 +22,16 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             stopwatch.Restart();
 
-            rendererContext.RenderTreeBuilder.OpenElement(rendererContext.Sequence, HtmlTagNames.Table);
+            rendererContext.RenderTreeBuilder.OpenElement(rendererContext.Sequence, HtmlTagNames.Div);
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, "class", "tableWrapper");
+
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.Table);
             rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, "class", "table");
 
             foreach (var renderer in gridPartRenderers)
                 renderer.Render(rendererContext);
 
+            rendererContext.RenderTreeBuilder.CloseElement();
             rendererContext.RenderTreeBuilder.CloseElement();
 
             stopwatch.Stop();
