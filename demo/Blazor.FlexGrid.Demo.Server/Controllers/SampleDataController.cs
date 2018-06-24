@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Demo.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Blazor.FlexGrid.Demo.Server.Controllers
@@ -29,6 +30,21 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
 
                         }),
                     TotalCount = 100
+                });
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<WeatherForecast> WeatherForecastsSimple()
+        {
+            var rng = new Random();
+
+            return Enumerable.Range(1, 20).Select(index =>
+                new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+
                 });
         }
     }

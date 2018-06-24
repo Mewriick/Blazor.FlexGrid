@@ -1,0 +1,24 @@
+﻿@addTagHelper *, Blazor.FlexGrid
+@using Blazor.FlexGrid.Demo.Shared
+@using Blazor.FlexGrid.DataAdapters
+@using Blazor.FlexGrid.DataSet
+@using Blazor.FlexGrid.DataSet.Options
+@using Blazor.FlexGrid.Components.Configuration
+@using Blazor.FlexGrid.Components
+@page "/grid"
+@inject HttpClient Http
+
+<h1>Weather forecast</h1>
+
+
+<GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
+
+@functions{
+    CollectionTableDataAdapter<WeatherForecast> dataAdapter;
+
+    protected override async Task OnInitAsync()
+    {
+        var forecast = await Http.GetJsonAsync<WeatherForecast[]>("/api/SampleData/WeatherForecastsSimple");
+        dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
+    }
+}

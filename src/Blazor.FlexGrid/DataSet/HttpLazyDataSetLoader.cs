@@ -10,13 +10,10 @@ namespace Blazor.FlexGrid.DataSet
     {
         private readonly HttpClient httpClient;
 
-        public string DataUri { get; set; }
-
         public HttpLazyDataSetLoader(HttpClient httpClient)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
-
 
         public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPageableOptions pageableOptions)
         {

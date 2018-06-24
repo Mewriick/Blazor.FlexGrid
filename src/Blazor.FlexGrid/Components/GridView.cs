@@ -4,6 +4,7 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components
@@ -12,6 +13,7 @@ namespace Blazor.FlexGrid.Components
     public class GridView : BlazorComponent
     {
         private ITableDataSet tableDataSet;
+        private bool dataAdapterWasEmptyInOnInit;
 
         [Inject]
         private IGridRenderer GridRenderer { get; set; }
@@ -31,10 +33,6 @@ namespace Blazor.FlexGrid.Components
         private int PageSize { get; set; }
 
 
-        public GridView()
-        {
-        }
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             GridRenderer.Render(
@@ -46,13 +44,31 @@ namespace Blazor.FlexGrid.Components
 
         protected override Task OnInitAsync()
         {
-            tableDataSet = DataAdapter.GetTableDataSet(conf =>
+            dataAdapterWasEmptyInOnInit = DataAdapter == null;
+
+            tableDataSet = GetTableDataSet() ?? new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable());
+
+            return tableDataSet.GoToPage(0);
+        }
+
+        protected override Task OnParametersSetAsync()
+        {
+            if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
+            {
+                tableDataSet = GetTableDataSet();
+                return tableDataSet.GoToPage(0);
+            }
+
+            return Task.FromResult(0);
+        }
+
+        private ITableDataSet GetTableDataSet()
+        {
+            return DataAdapter?.GetTableDataSet(conf =>
             {
                 conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri;
                 conf.PageableOptions.PageSize = PageSize;
             });
-
-            return tableDataSet.GoToPage(0);
         }
     }
 }

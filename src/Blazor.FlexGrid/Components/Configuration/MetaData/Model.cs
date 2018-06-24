@@ -6,12 +6,12 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     public class Model : Annotatable, IModel
     {
         private readonly SortedDictionary<string, EntityType> entityTypes;
-        private readonly SortedDictionary<Type, EntityType> entityTypesMap;
+        private readonly Dictionary<Type, EntityType> entityTypesMap;
 
         public Model()
         {
             this.entityTypes = new SortedDictionary<string, EntityType>();
-            this.entityTypesMap = new SortedDictionary<Type, EntityType>();
+            this.entityTypesMap = new Dictionary<Type, EntityType>();
         }
 
 

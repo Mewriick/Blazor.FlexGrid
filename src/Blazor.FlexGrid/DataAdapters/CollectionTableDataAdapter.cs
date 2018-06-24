@@ -17,7 +17,13 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
         {
-            var tableDataSet = new TableDataSet<TItem>(items.AsQueryable());
+            var tableDataSetOptions = new TableDataSetOptions();
+            configureDataSet?.Invoke(tableDataSetOptions);
+
+            var tableDataSet = new TableDataSet<TItem>(items.AsQueryable())
+            {
+                PageableOptions = tableDataSetOptions.PageableOptions
+            };
 
             return tableDataSet;
         }

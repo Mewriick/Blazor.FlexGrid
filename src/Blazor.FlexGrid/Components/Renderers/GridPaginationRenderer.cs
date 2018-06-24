@@ -8,17 +8,38 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         public override void Render(GridRendererContext rendererContext)
         {
-            var builder = rendererContext.RenderTreeBuilder;
-            var seq = rendererContext.Sequence;
+            if (!rendererContext.TableDataSet.HasItems())
+            {
+                return;
+            }
 
-            builder.OpenElement(++seq, "p");
-            builder.AddContent(++seq, $"{rendererContext.TableDataSet.PageableOptions.CurrentPage} / {rendererContext.TableDataSet.PageableOptions.PagesCount}");
-            builder.CloseElement();
+            if (!rendererContext.TableDataSet.PageableOptions.IsFirstPage)
+            {
+                rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.Button);
+                rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlJSEvents.OnClick,
+                    BindMethods.GetEventHandlerValue((UIMouseEventArgs async) => rendererContext.TableDataSet.GoToPreviousPage()));
+                rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "Previous");
+                rendererContext.RenderTreeBuilder.CloseElement();
+            }
 
-            builder.OpenElement(++seq, "button");
-            builder.AddAttribute(++seq, "onclick", BindMethods.GetEventHandlerValue((UIMouseEventArgs async) => rendererContext.TableDataSet.GoToNextPage()));
-            builder.AddContent(++seq, "Next");
-            builder.CloseElement();
+            RenderPagesNumbers(rendererContext);
+
+            if (!rendererContext.TableDataSet.PageableOptions.IsLastPage)
+            {
+                rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.Button);
+                rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlJSEvents.OnClick,
+                    BindMethods.GetEventHandlerValue((UIMouseEventArgs async) => rendererContext.TableDataSet.GoToNextPage()));
+                rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "Next");
+                rendererContext.RenderTreeBuilder.CloseElement();
+            }
+        }
+
+        private static void RenderPagesNumbers(GridRendererContext rendererContext)
+        {
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.Paragraph);
+            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence,
+                $"{rendererContext.TableDataSet.PageableOptions.CurrentPage + 1} / {rendererContext.TableDataSet.PageableOptions.PagesCount}");
+            rendererContext.RenderTreeBuilder.CloseElement();
         }
     }
 }

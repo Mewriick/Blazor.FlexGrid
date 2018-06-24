@@ -18,7 +18,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.RenderTreeBuilder.CloseElement();
             rendererContext.RenderTreeBuilder.CloseElement();
             rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "\n");
-
         }
     }
 }

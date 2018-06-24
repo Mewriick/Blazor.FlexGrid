@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid.Demo.Shared
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4879EB58-9DF2-45E9-AF1D-F0E942DF5BFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.FlexGrid.Tests", "test\Blazor.FlexGrid.Tests\Blazor.FlexGrid.Tests.csproj", "{3A240664-60C1-41F1-A5D8-E0E25CD1F322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.FlexGrid.Tests", "test\Blazor.FlexGrid.Tests\Blazor.FlexGrid.Tests.csproj", "{3A240664-60C1-41F1-A5D8-E0E25CD1F322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

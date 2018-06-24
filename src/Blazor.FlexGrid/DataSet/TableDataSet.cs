@@ -28,16 +28,38 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task GoToPage(int index)
         {
-            PageableOptions.CurrentPage = index;
-            LoadFromQueryableSource();
+            Console.Error.WriteLine($"GoToPage {index}");
+            try
+            {
+                PageableOptions.CurrentPage = index;
+                LoadFromQueryableSource();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"{ex}");
+            }
 
             return Task.FromResult(0);
         }
 
         private void LoadFromQueryableSource()
         {
-            Items = source.ToList();
             PageableOptions.TotalItemsCount = source.Count();
+            Items = ApplyFiltersToQueryable(source).ToList();
+        }
+
+        private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
+        {
+            queryable = ApplyPagingToQueryable(queryable);
+
+            return queryable;
+        }
+
+        private IQueryable<TItem> ApplyPagingToQueryable(IQueryable<TItem> queryable)
+        {
+            return PageableOptions != null && PageableOptions.PageSize > 0 ?
+                queryable.Skip(PageableOptions.PageSize * PageableOptions.CurrentPage).Take(PageableOptions.PageSize) :
+                queryable;
         }
     }
 }
