@@ -3,11 +3,11 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
-    public class GridComponentsContext : IGridConfigurationProvider
+    public class GridConfigurationProvider : IGridConfigurationProvider
     {
         private readonly IModel model;
 
-        public GridComponentsContext(IModel model)
+        public GridConfigurationProvider(IModel model)
         {
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }

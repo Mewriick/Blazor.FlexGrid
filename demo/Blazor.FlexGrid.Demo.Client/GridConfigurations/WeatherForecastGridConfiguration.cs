@@ -11,6 +11,10 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             builder.Property(e => e.Date)
                 .HasCaption("Datum")
                 .HasValueFormatter(d => d.ToShortDateString());
+
+            builder.Property(e => e.Summary)
+                .HasCaption("MySummary")
+                .HasValueFormatter(s => $"{s}!!");
         }
     }
 }

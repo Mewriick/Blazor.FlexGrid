@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor.RenderTree;
 using System;
@@ -40,7 +41,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             imutableGridRendererContext = new ImutableGridRendererContext(
                     gridConfigurationProvider.FindGridConfigurationByType(dataSetItemType) ?? NullEntityType.Instance,
-                    dataSetItemType.GetProperties().ToList()
+                    dataSetItemType.GetProperties().ToList(),
+                    new TypeWrapper(dataSetItemType)
                 );
 
             imutableRendererContextCache.Add(dataSetItemType, imutableGridRendererContext);

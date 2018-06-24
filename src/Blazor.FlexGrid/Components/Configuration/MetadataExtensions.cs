@@ -14,5 +14,10 @@ namespace Blazor.FlexGrid.Components.Configuration
 
             return new GridColumnAnnotations(property);
         }
+
+        public static string CreateColumnUniqueName(this IEntityType entityType, string columnName)
+        {
+            return $"{entityType.Name}_{columnName}";
+        }
     }
 }

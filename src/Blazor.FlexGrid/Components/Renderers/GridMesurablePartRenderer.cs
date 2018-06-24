@@ -6,12 +6,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridMesurablePartRenderer : GridPartRenderer
     {
-        private readonly GridPartRenderer gridPartRenderer;
+        private readonly IGridRenderer gridPartRenderer;
         private readonly ILogger<GridMesurablePartRenderer> logger;
         private readonly Stopwatch stopwatch;
 
 
-        public GridMesurablePartRenderer(GridPartRenderer gridPartRenderer, ILogger<GridMesurablePartRenderer> logger)
+        public GridMesurablePartRenderer(IGridRenderer gridPartRenderer, ILogger<GridMesurablePartRenderer> logger)
         {
             this.gridPartRenderer = gridPartRenderer ?? throw new ArgumentNullException(nameof(gridPartRenderer));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

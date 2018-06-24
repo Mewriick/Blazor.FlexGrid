@@ -24,29 +24,35 @@ namespace Blazor.FlexGrid
 
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
-            services.AddSingleton(typeof(IGridConfigurationProvider), new GridComponentsContext(modelBuilder.Model));
+            services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<GridRendererContextFactory>();
 
+            RegisterGridRendererTree(services);
+
+            return services;
+        }
+
+        private static void RegisterGridRendererTree(IServiceCollection services)
+        {
             services.AddSingleton(typeof(IGridRenderer), provider =>
             {
+                var gridRowRenderer = new GridRowRenderer();
+                gridRowRenderer.AddRenderer(new GridCellRenderer());
+                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>());
+                gridBodyRenderer.AddRenderer(gridRowRenderer);
+
                 var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>());
                 gridRenderer.AddRenderer(new GridMesurablePartRenderer(
                         new GridHeaderRenderer(provider.GetRequiredService<ILogger<GridHeaderRenderer>>()),
                         provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
                     );
 
-                gridRenderer.AddRenderer(new GridMesurablePartRenderer(
-                       new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>()),
-                       provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
-                    );
-
                 gridRenderer.AddRenderer(new GridLoadingRenderer());
+                gridRenderer.AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>()));
                 gridRenderer.AddRenderer(new GridPaginationRenderer());
 
                 return gridRenderer;
             });
-
-            return services;
         }
     }
 }

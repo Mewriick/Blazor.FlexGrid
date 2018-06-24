@@ -1,25 +1,24 @@
-﻿namespace Blazor.FlexGrid.Components.Renderers
+﻿using Blazor.FlexGrid.DataSet;
+
+namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridLoadingRenderer : GridPartRenderer
     {
         public override void Render(GridRendererContext rendererContext)
         {
-            var seq = rendererContext.Sequence;
-            var builder = rendererContext.RenderTreeBuilder;
-
-            if (rendererContext.TableDataSet?.Items == null ||
-                rendererContext.TableDataSet.Items.Count <= 0)
+            if (rendererContext.TableDataSet.HasItems())
             {
-                builder.AddContent(++seq, "    ");
-                builder.OpenElement(++seq, "p");
-                builder.OpenElement(++seq, "em");
-                builder.AddContent(++seq, "Loading...");
-                builder.CloseElement();
-                builder.CloseElement();
-                builder.AddContent(++seq, "\n");
+                return;
             }
 
-            rendererContext.Sequence = seq;
+            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "    ");
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, "p");
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, "em");
+            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "Loading...");
+            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "\n");
+
         }
     }
 }

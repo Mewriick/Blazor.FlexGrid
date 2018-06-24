@@ -1,6 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using System;
-using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -56,10 +55,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 var formatterValueAnnotation = Annotations[GridViewAnnotationNames.ColumnValueFormatter];
                 if (formatterValueAnnotation is NullAnotationValue)
                 {
-                    Expression<Func<object, string>> defaultExpression =
-                        v => v == null ? string.Empty : v.ToString();
-
-                    return new DefaultValueFormatter(defaultExpression);
+                    return new DefaultValueFormatter();
                 }
 
                 return formatterValueAnnotation as ValueFormatter;

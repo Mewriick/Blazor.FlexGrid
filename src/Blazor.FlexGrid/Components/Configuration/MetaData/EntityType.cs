@@ -18,6 +18,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         public EntityType(Type clrType, Model model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
+            ClrType = clrType ?? throw new ArgumentNullException(nameof(clrType));
             Name = clrType.FullName;
             this.properties = new SortedDictionary<string, Property>();
         }
