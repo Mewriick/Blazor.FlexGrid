@@ -15,13 +15,13 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         };
 
         [HttpGet("[action]")]
-        public IActionResult WeatherForecasts()
+        public IActionResult WeatherForecasts(int pageNumber, int pageSize)
         {
             var rng = new Random();
             return Ok(
                 new
                 {
-                    Items = Enumerable.Range(1, 20).Select(index =>
+                    Items = Enumerable.Range(1, 100).Skip(pageSize * pageNumber).Take(pageSize).Select(index =>
                         new WeatherForecast
                         {
                             Date = DateTime.Now.AddDays(index),
