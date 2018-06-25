@@ -46,5 +46,13 @@ namespace Blazor.FlexGrid.DataSet
 
             return Task.FromResult(0);
         }
+
+        public static string PageInfoText(this ITableDataSet tableDataSet)
+        {
+            var from = tableDataSet.PageableOptions.CurrentPage * tableDataSet.PageableOptions.PageSize + 1;
+            var to = from + tableDataSet.PageableOptions.PageSize - 1;
+
+            return $"{from} - {to}";
+        }
     }
 }
