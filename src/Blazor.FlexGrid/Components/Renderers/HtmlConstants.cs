@@ -3,17 +3,22 @@
     public class HtmlTagNames
     {
         public const string Table = "table";
+        public const string TableHead = "thead";
+        public const string TableHeadCell = "th";
         public const string TableBody = "tbody";
         public const string TableRow = "tr";
         public const string TableColumn = "td";
         public const string Paragraph = "p";
         public const string Button = "button";
         public const string Div = "div";
+        public const string Span = "span";
+        public const string I = "i";
     }
 
     public class HtmlAttributes
     {
         public const string Class = "class";
+        public const string Disabled = "disabled";
     }
 
     public class HtmlJSEvents

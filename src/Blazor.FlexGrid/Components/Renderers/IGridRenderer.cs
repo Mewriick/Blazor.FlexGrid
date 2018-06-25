@@ -6,7 +6,7 @@
     /// </summary>
     public interface IGridRenderer
     {
-        void AddRenderer(IGridRenderer gridPartRenderer);
+        void AddRenderer(IGridRenderer gridPartRenderer, RendererPosition rendererPosition);
 
         void Render(GridRendererContext rendererContext);
     }

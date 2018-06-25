@@ -5,6 +5,7 @@
         public override void Render(GridRendererContext rendererContext)
         {
             rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableRow);
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-row");
 
             foreach (var property in rendererContext.GridItemProperties)
             {

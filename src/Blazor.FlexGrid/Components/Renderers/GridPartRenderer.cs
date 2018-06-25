@@ -7,9 +7,9 @@ namespace Blazor.FlexGrid.Components.Renderers
     /// </summary>
     public abstract class GridPartRenderer : IGridRenderer
     {
-        public void AddRenderer(IGridRenderer gridPartRenderer)
+        public void AddRenderer(IGridRenderer gridPartRenderer, RendererPosition rendererPosition)
         {
-            throw new InvalidOperationException("Cannot add to a leaf");
+            throw new NotImplementedException();
         }
 
         public abstract void Render(GridRendererContext rendererContext);

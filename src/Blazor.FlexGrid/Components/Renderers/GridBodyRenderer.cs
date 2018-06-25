@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
 
             rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableBody);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-body ");
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-body");
 
             try
             {

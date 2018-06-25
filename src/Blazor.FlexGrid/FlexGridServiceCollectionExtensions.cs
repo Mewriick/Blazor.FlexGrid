@@ -47,9 +47,9 @@ namespace Blazor.FlexGrid
                         provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
                     );
 
-                gridRenderer.AddRenderer(new GridLoadingRenderer());
+                gridRenderer.AddRenderer(new GridLoadingRenderer(), RendererPosition.Before);
                 gridRenderer.AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>()));
-                gridRenderer.AddRenderer(new GridPaginationRenderer());
+                gridRenderer.AddRenderer(new GridPaginationRenderer(), RendererPosition.After);
 
                 return gridRenderer;
             });

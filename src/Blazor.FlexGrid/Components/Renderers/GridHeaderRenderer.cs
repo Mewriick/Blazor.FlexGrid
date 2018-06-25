@@ -1,6 +1,8 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.DataSet;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -15,42 +17,41 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public override void Render(GridRendererContext rendererContext)
         {
-            if (rendererContext.TableDataSet.Items == null ||
-                rendererContext.TableDataSet.Items.Count <= 0)
+            if (!rendererContext.TableDataSet.HasItems())
             {
                 return;
             }
 
-            var builder = rendererContext.RenderTreeBuilder;
-            var seq = rendererContext.Sequence;
-
-            builder.OpenElement(++seq, "thead");
-            builder.AddAttribute(++seq, HtmlAttributes.Class, "table-head");
-            builder.OpenElement(++seq, "tr");
-            builder.AddAttribute(++seq, HtmlAttributes.Class, "table-head-row");
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableHead);
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-head");
+            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableRow);
+            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-head-row");
 
             foreach (var property in rendererContext.GridItemProperties)
             {
-                builder.OpenElement(++seq, "th");
-                builder.AddAttribute(++seq, HtmlAttributes.Class, "table-cell-head");
+                rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableHeadCell);
+                rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-cell-head");
 
-                var columnConfiguration = rendererContext.GridConfiguration.FindColumnConfiguration(property.Name);
-                if (columnConfiguration != null)
-                {
-                    builder.AddContent(++seq, columnConfiguration.Caption);
-                }
-                else
-                {
-                    builder.AddContent(++seq, property.Name);
-                }
+                var columnCaption = GetColumnCaption(rendererContext, property);
+                rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, columnCaption);
 
-                builder.CloseElement();
+                rendererContext.RenderTreeBuilder.CloseElement();
             }
 
-            builder.CloseElement();
-            builder.CloseElement();
+            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.RenderTreeBuilder.CloseElement();
 
-            rendererContext.Sequence = seq;
+        }
+
+        private string GetColumnCaption(GridRendererContext rendererContext, PropertyInfo property)
+        {
+            var columnConfiguration = rendererContext.GridConfiguration.FindColumnConfiguration(property.Name);
+            if (columnConfiguration != null)
+            {
+                return columnConfiguration.Caption;
+            }
+
+            return property.Name;
         }
     }
 }
