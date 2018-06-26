@@ -9,7 +9,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
             builder.Property(e => e.Date)
-                .HasCaption("Datum")
+                .HasCaption("Date")
                 .HasValueFormatter(d => d.ToShortDateString());
 
             builder.Property(e => e.Summary)

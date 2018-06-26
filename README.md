@@ -46,7 +46,7 @@ In your Blazor component add Tag helper and required usings
 ```
 
 Result 
-<img src="/docs/table.PNG" alt="table"/>
+<img src="/docs/flextable.png" alt="table"/>
 
 # Configuration
 You do not need define informations about columns and component will render columns by **properties** of object type which is associated
