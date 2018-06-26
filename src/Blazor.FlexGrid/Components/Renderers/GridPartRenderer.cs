@@ -7,7 +7,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     /// </summary>
     public abstract class GridPartRenderer : IGridRenderer
     {
-        public void AddRenderer(IGridRenderer gridPartRenderer, RendererPosition rendererPosition)
+        public void AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition)
         {
             throw new NotImplementedException();
         }

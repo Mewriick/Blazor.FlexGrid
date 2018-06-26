@@ -21,7 +21,13 @@ namespace Blazor.FlexGrid.Tests
             var modelBuilder = new ModelBuilder();
             modelBuilder.Entity<WeatherForecast>()
                     .Property(p => p.Date)
+                    .HasOrder(2)
                     .HasValueFormatter(d => d.ToShortDateString());
+
+            modelBuilder.Entity<WeatherForecast>()
+                    .Property(p => p.Summary)
+                    .HasOrder(1)
+                    .HasValueFormatter(s => $"{s}!");
 
             var configurationProvider = new GridConfigurationProvider(modelBuilder.Model);
             var rendererContextFactory = new GridRendererContextFactory(configurationProvider);

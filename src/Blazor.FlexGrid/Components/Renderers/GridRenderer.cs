@@ -22,23 +22,18 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             stopwatch.Restart();
 
-            foreach (var renderer in gridPartRenderersBefore)
-                renderer.Render(rendererContext);
+            gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.RenderTreeBuilder.OpenElement(rendererContext.Sequence, HtmlTagNames.Div);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-wrapper");
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.Table);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "flex-table");
+            rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
+            rendererContext.OpenElement(HtmlTagNames.Table, "flex-table");
 
-            foreach (var renderer in gridPartRenderers)
-                renderer.Render(rendererContext);
+            gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.CloseElement(); // Close table
 
-            foreach (var renderer in gridPartRenderersAfter)
-                renderer.Render(rendererContext);
+            gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.CloseElement(); // Close table wrapper
 
             stopwatch.Stop();
             logger.LogInformation($"Rendering time: {stopwatch.ElapsedMilliseconds} ms");

@@ -11,13 +11,13 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "    ");
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, "p");
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, "em");
-            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "Loading...");
-            rendererContext.RenderTreeBuilder.CloseElement();
-            rendererContext.RenderTreeBuilder.CloseElement();
-            rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, "\n");
+            rendererContext.AddContent("    ");
+            rendererContext.OpenElement("p");
+            rendererContext.OpenElement("em");
+            rendererContext.AddContent("Loading...");
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.AddContent("\n");
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Blazor.FlexGrid.Components.Configuration;
-using Blazor.FlexGrid.DataSet;
+﻿using Blazor.FlexGrid.DataSet;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
@@ -22,36 +21,24 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableHead);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-head");
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableRow);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-head-row");
+            rendererContext.OpenElement(HtmlTagNames.TableHead, "table-head");
+            rendererContext.OpenElement(HtmlTagNames.TableRow, "table-head-row");
 
             foreach (var property in rendererContext.GridItemProperties)
             {
-                rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableHeadCell);
-                rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-cell-head");
+                rendererContext.ActualColumnName = property.Name;
 
                 var columnCaption = GetColumnCaption(rendererContext, property);
-                rendererContext.RenderTreeBuilder.AddContent(++rendererContext.Sequence, columnCaption);
-
-                rendererContext.RenderTreeBuilder.CloseElement();
+                rendererContext.OpenElement(HtmlTagNames.TableHeadCell, "table-cell-head");
+                rendererContext.AddContent(columnCaption);
+                rendererContext.CloseElement();
             }
 
-            rendererContext.RenderTreeBuilder.CloseElement();
-            rendererContext.RenderTreeBuilder.CloseElement();
-
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
         }
 
         private string GetColumnCaption(GridRendererContext rendererContext, PropertyInfo property)
-        {
-            var columnConfiguration = rendererContext.GridConfiguration.FindColumnConfiguration(property.Name);
-            if (columnConfiguration != null)
-            {
-                return columnConfiguration.Caption;
-            }
-
-            return property.Name;
-        }
+            => rendererContext.ActualColumnConfiguration?.Caption ?? property.Name;
     }
 }

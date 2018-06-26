@@ -5,6 +5,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
     public class GridColumnAnnotations : IGridViewColumnAnnotations
     {
+        public const int DefaultOrder = 5000;
+
         private readonly IProperty propertyMetadata;
 
         public string Caption
@@ -28,7 +30,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 var orderAnnotation = Annotations[GridViewAnnotationNames.ColumnOrder];
                 if (orderAnnotation is NullAnotationValue)
                 {
-                    return 0;
+                    return DefaultOrder;
                 }
 
                 return (int)orderAnnotation;

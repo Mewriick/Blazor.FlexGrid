@@ -10,45 +10,49 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class ImutableGridRendererContext
     {
+        private Dictionary<string, ValueFormatter> valueFormatters;
+
         public IEntityType GridConfiguration { get; }
 
-        public IReadOnlyCollection<PropertyInfo> GridItemProperties { get; }
+        public IReadOnlyCollection<PropertyInfo> GridItemProperties { get; private set; }
 
         public IPropertyValueAccessor GetPropertyValueAccessor { get; }
 
-        public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters { get; }
+        public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters => valueFormatters;
 
         public ImutableGridRendererContext(
             IEntityType gridConfiguration,
             List<PropertyInfo> itemProperties,
             IPropertyValueAccessor getPropertyValueAccessor)
         {
+            valueFormatters = new Dictionary<string, ValueFormatter>();
             GridConfiguration = gridConfiguration ?? throw new ArgumentNullException(nameof(gridConfiguration));
             GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
             GetPropertyValueAccessor = getPropertyValueAccessor ?? throw new ArgumentNullException(nameof(getPropertyValueAccessor));
-            ValueFormatters = InitializeValueFormatters();
+            InitializeGridProperties();
         }
 
-        private IReadOnlyDictionary<string, ValueFormatter> InitializeValueFormatters()
+        private void InitializeGridProperties()
         {
-            var dictionary = new Dictionary<string, ValueFormatter>();
+            var propertiesListWithOrder = new List<(int Order, PropertyInfo Prop)>();
+            foreach (var property in GridItemProperties)
+            {
+                ValueFormatter columnValueFormatter = new DefaultValueFormatter();
+                var columnOrder = GridColumnAnnotations.DefaultOrder;
+                var columnConfig = GridConfiguration.FindColumnConfiguration(property.Name);
+                if (columnConfig != null)
+                {
+                    columnOrder = columnConfig.Order;
+                    columnValueFormatter = columnConfig.ValueFormatter;
+                }
 
-            GridItemProperties
-               .Select(p => p.Name)
-               .ToList()
-               .ForEach(columnName =>
-               {
-                   var columnAnnotation = GridConfiguration.FindColumnConfiguration(columnName);
-                   ValueFormatter columnValueFormatter = new DefaultValueFormatter();
-                   if (columnAnnotation != null)
-                   {
-                       columnValueFormatter = columnAnnotation.ValueFormatter;
-                   }
+                propertiesListWithOrder.Add((Order: columnOrder, Prop: property));
+                valueFormatters.Add(property.Name, columnValueFormatter);
+            }
 
-                   dictionary.Add(columnName, columnValueFormatter);
-               });
-
-            return dictionary;
+            GridItemProperties = propertiesListWithOrder.OrderBy(p => p.Order)
+                .Select(p => p.Prop)
+                .ToList();
         }
     }
 }

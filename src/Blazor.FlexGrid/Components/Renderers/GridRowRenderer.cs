@@ -4,18 +4,15 @@
     {
         public override void Render(GridRendererContext rendererContext)
         {
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableRow);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-row");
+            rendererContext.OpenElement(HtmlTagNames.TableRow, "table-row");
 
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
-
-                foreach (var renderer in gridPartRenderers)
-                    renderer.Render(rendererContext);
+                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
             }
 
-            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.CloseElement();
         }
     }
 }

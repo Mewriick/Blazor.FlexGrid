@@ -19,9 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            rendererContext.RenderTreeBuilder.OpenElement(++rendererContext.Sequence, HtmlTagNames.TableBody);
-            rendererContext.RenderTreeBuilder.AddAttribute(++rendererContext.Sequence, HtmlAttributes.Class, "table-body");
-
+            rendererContext.OpenElement(HtmlTagNames.TableBody, "table-body");
             try
             {
                 foreach (var item in rendererContext.TableDataSet.Items)
@@ -36,7 +34,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 logger.LogError($"GridBodyRenderer ex: {ex}");
             }
 
-            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.CloseElement();
         }
     }
 }

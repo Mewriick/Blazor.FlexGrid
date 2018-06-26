@@ -14,6 +14,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.Property(e => e.Summary)
                 .HasCaption("MySummary")
+                .HasOrder(1)
                 .HasValueFormatter(s => $"{s}!");
         }
     }

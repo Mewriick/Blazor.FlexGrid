@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor.RenderTree;
@@ -10,9 +11,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridRendererContext
     {
+        private readonly IPropertyValueAccessor propertyValueAccessor;
+        private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
+
         public int Sequence { get; set; }
 
-        public string ActualColumnName { get; set; }
+        public string ActualColumnName { get; set; } = string.Empty;
 
         public object ActualItem { get; set; }
 
@@ -24,9 +28,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public ITableDataSet TableDataSet { get; }
 
-        public IPropertyValueAccessor GetPropertyValueAccessor { get; }
-
-        public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters { get; }
+        public IGridViewColumnAnnotations ActualColumnConfiguration => GridConfiguration.FindColumnConfiguration(ActualColumnName);
 
 
         public GridRendererContext(
@@ -37,10 +39,38 @@ namespace Blazor.FlexGrid.Components.Renderers
             Sequence = 0;
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
-            GetPropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
-            ValueFormatters = imutableGridRendererContext.ValueFormatters;
+            propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
+            valueFormatters = imutableGridRendererContext.ValueFormatters;
             RenderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
+        }
+
+        public void OpenElement(string elementName)
+            => RenderTreeBuilder.OpenElement(++Sequence, elementName);
+
+        public void CloseElement()
+            => RenderTreeBuilder.CloseElement();
+
+        public void AddCssClass(string className)
+            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlAttributes.Class, className);
+
+        public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
+            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlJSEvents.OnClick, onClickBindMethod());
+
+        public void AddContent(string content)
+            => RenderTreeBuilder.AddContent(++Sequence, content);
+
+        public void AddActualColumnValue()
+            => RenderTreeBuilder.AddContent(++Sequence, valueFormatters[ActualColumnName]
+                .FormatValue(propertyValueAccessor.GetValue(ActualItem, ActualColumnName)));
+
+        public void AddDisabled(bool disabled)
+            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlAttributes.Disabled, disabled);
+
+        public void OpenElement(string elementName, string className)
+        {
+            OpenElement(elementName);
+            AddCssClass(className);
         }
     }
 }

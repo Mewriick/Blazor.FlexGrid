@@ -15,17 +15,17 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.gridPartRenderersAfter = new List<IGridRenderer>();
         }
 
-        public void AddRenderer(IGridRenderer gridPartRenderer, RendererPosition rendererPosition = RendererPosition.Default)
+        public void AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
         {
             switch (rendererPosition)
             {
-                case RendererPosition.After:
+                case RendererType.AfterTag:
                     gridPartRenderersAfter.Add(gridPartRenderer);
                     break;
-                case RendererPosition.Before:
+                case RendererType.BeforeTag:
                     gridPartRenderersBefore.Add(gridPartRenderer);
                     break;
-                case RendererPosition.Default:
+                case RendererType.InsideTag:
                     gridPartRenderers.Add(gridPartRenderer);
                     break;
             }
