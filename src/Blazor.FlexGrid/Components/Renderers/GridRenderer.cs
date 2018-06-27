@@ -25,7 +25,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
 
             rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
-            rendererContext.OpenElement(HtmlTagNames.Table, "flex-table");
+            rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
 
             gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
 

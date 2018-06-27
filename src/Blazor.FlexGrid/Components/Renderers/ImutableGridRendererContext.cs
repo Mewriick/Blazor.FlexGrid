@@ -20,15 +20,19 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters => valueFormatters;
 
+        public GridCssClasses CssClasses { get; }
+
         public ImutableGridRendererContext(
             IEntityType gridConfiguration,
             List<PropertyInfo> itemProperties,
-            IPropertyValueAccessor propertyValueAccessor)
+            IPropertyValueAccessor propertyValueAccessor,
+            GridCssClasses gridCssClasses)
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();
             GridConfiguration = gridConfiguration ?? throw new ArgumentNullException(nameof(gridConfiguration));
             GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
+            CssClasses = gridCssClasses ?? throw new ArgumentNullException(nameof(gridCssClasses));
             InitializeGridProperties();
         }
 
@@ -38,7 +42,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             foreach (var property in GridItemProperties)
             {
                 ValueFormatter columnValueFormatter = new DefaultValueFormatter();
-                var columnOrder = GridColumnAnnotations.DefaultOrder;
+                var columnOrder = GridColumnAnotations.DefaultOrder;
                 var columnConfig = GridConfiguration.FindColumnConfiguration(property.Name);
                 if (columnConfig != null)
                 {

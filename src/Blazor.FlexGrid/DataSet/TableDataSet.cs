@@ -11,7 +11,9 @@ namespace Blazor.FlexGrid.DataSet
     {
         private IQueryable<TItem> source;
 
-        public IPageableOptions PageableOptions { get; set; } = new PageableOptions();
+        public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
+
+        public ISortingOptions SortingOptions { get; set; } = new SortingOptions();
 
         /// <summary>
         /// Gets or sets the items for the current page.
@@ -28,18 +30,25 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task GoToPage(int index)
         {
-            Console.Error.WriteLine($"GoToPage {index}");
-            try
-            {
-                PageableOptions.CurrentPage = index;
-                LoadFromQueryableSource();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"{ex}");
-            }
+            PageableOptions.CurrentPage = index;
+            LoadFromQueryableSource();
 
             return Task.FromResult(0);
+        }
+
+        public void SetSortExpression(string expression)
+        {
+            if (SortingOptions.SortExpression != expression)
+            {
+                SortingOptions.SortExpression = expression;
+                SortingOptions.SortDescending = false;
+            }
+            else
+            {
+                SortingOptions.SortDescending = !SortingOptions.SortDescending;
+            }
+
+            GoToPage(0);
         }
 
         private void LoadFromQueryableSource()
@@ -50,6 +59,7 @@ namespace Blazor.FlexGrid.DataSet
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
         {
+            queryable = ApplySortingToQueryable(queryable);
             queryable = ApplyPagingToQueryable(queryable);
 
             return queryable;
@@ -57,9 +67,20 @@ namespace Blazor.FlexGrid.DataSet
 
         private IQueryable<TItem> ApplyPagingToQueryable(IQueryable<TItem> queryable)
         {
-            return PageableOptions != null && PageableOptions.PageSize > 0 ?
-                queryable.Skip(PageableOptions.PageSize * PageableOptions.CurrentPage).Take(PageableOptions.PageSize) :
-                queryable;
+            return PageableOptions != null && PageableOptions.PageSize > 0
+                ? queryable.Skip(PageableOptions.PageSize * PageableOptions.CurrentPage)
+                    .Take(PageableOptions.PageSize)
+                : queryable;
+        }
+
+        private IQueryable<TItem> ApplySortingToQueryable(IQueryable<TItem> queryable)
+        {
+            if (string.IsNullOrEmpty(SortingOptions?.SortExpression))
+            {
+                return queryable;
+            }
+
+            return queryable.ApplyOrder(SortingOptions.SortExpression, SortingOptions.SortDescending ? "OrderByDescending" : "OrderBy");
         }
     }
 }

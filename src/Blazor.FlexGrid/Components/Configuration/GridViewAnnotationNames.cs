@@ -3,6 +3,7 @@
     public static class GridViewAnnotationNames
     {
         public const string UseLoadingBlock = "GridLoadingBlock";
+        public const string CssClasses = "GridCssClasses";
 
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";

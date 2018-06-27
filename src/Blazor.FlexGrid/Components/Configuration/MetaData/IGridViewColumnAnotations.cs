@@ -5,7 +5,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     /// <summary>
     ///     Properties for grid column annotations accessed through
     /// </summary>
-    public interface IGridViewColumnAnnotations
+    public interface IGridViewColumnAnotations
     {
         string Caption { get; }
 

@@ -11,7 +11,9 @@ namespace Blazor.FlexGrid.DataSet
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
 
-        public IPageableOptions PageableOptions { get; set; } = new PageableOptions();
+        public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
+
+        public ISortingOptions SortingOptions { get; set; } = new SortingOptions();
 
         /// <summary>
         /// Gets or sets the items for the current page.
@@ -21,6 +23,7 @@ namespace Blazor.FlexGrid.DataSet
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
         public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader)
         {
@@ -33,6 +36,11 @@ namespace Blazor.FlexGrid.DataSet
             var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions);
             PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
             Items = pagedDataResult.Items;
+        }
+
+        public void SetSortExpression(string expression)
+        {
+            return;
         }
     }
 }

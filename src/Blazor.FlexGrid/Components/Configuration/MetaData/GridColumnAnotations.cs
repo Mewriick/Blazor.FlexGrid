@@ -3,7 +3,7 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
-    public class GridColumnAnnotations : IGridViewColumnAnnotations
+    public class GridColumnAnotations : IGridViewColumnAnotations
     {
         public const int DefaultOrder = 5000;
 
@@ -68,7 +68,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         protected IAnnotatable Annotations { get; }
 
 
-        public GridColumnAnnotations(IProperty property)
+        public GridColumnAnotations(IProperty property)
         {
             Annotations = property ?? throw new ArgumentNullException(nameof(property));
             this.propertyMetadata = property;

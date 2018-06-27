@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using System;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.Builders
@@ -18,6 +19,15 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             var property = Metadata.AddProperty(memberInfo);
 
             return new InternalPropertyBuilder(property, new InternalModelBuilder(Metadata.Model));
+        }
+
+        public bool UseCssClasses(Action<GridCssClasses> gridCssClassesConfig)
+        {
+            var gridCssClasses = new GridCssClasses();
+            gridCssClassesConfig?.Invoke(gridCssClasses);
+            gridCssClasses.AppendDefaultCssClasses(new DefaultGridCssClasses());
+
+            return HasAnnotation(GridViewAnnotationNames.CssClasses, gridCssClasses);
         }
     }
 }

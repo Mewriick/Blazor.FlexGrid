@@ -17,5 +17,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
              new PropertyBuilder<TProperty>(
                 Builder.Property(propertyExpression.GetPropertyAccess())
                 );
+
+        public virtual EntityTypeBuilder<TEntity> UseCssClasses(Action<GridCssClasses> configureCssClasses)
+        {
+            Builder.UseCssClasses(configureCssClasses);
+
+            return this;
+        }
     }
 }

@@ -8,17 +8,17 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         public static NullEntityType Instance = new NullEntityType();
 
-        public object this[string name] => throw new NotImplementedException();
+        public object this[string name] => null;
 
-        public Type ClrType => throw new NotImplementedException();
+        public Type ClrType => null;
 
-        public IModel Model => throw new NotImplementedException();
+        public IModel Model => null;
 
         public string Name => string.Empty;
 
         public IProperty AddProperty(MemberInfo memberInfo)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public IAnnotation FindAnnotation(string name)

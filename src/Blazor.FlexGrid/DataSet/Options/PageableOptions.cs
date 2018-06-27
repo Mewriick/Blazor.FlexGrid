@@ -2,7 +2,7 @@
 
 namespace Blazor.FlexGrid.DataSet.Options
 {
-    public class PageableOptions : IPageableOptions
+    public class PageableOptions : IPagingOptions
     {
         public int PageSize { get; set; }
 

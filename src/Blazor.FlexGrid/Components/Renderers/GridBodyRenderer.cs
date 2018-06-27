@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            rendererContext.OpenElement(HtmlTagNames.TableBody, "table-body");
+            rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
             try
             {
                 foreach (var item in rendererContext.TableDataSet.Items)
@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
             catch (Exception ex)
             {
-                logger.LogError($"GridBodyRenderer ex: {ex}");
+                logger.LogError($"Error raised during rendering grid view body. Ex: {ex}");
             }
 
             rendererContext.CloseElement();

@@ -5,6 +5,6 @@ namespace Blazor.FlexGrid.DataSet
 {
     public interface ILazyDataSetLoader<TItem> where TItem : class
     {
-        Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPageableOptions pageableOptions);
+        Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions);
     }
 }

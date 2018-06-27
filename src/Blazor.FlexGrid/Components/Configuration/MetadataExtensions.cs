@@ -4,7 +4,7 @@ namespace Blazor.FlexGrid.Components.Configuration
 {
     public static class MetadataExtensions
     {
-        public static IGridViewColumnAnnotations FindColumnConfiguration(this IEntityType entityType, string columnName)
+        public static IGridViewColumnAnotations FindColumnConfiguration(this IEntityType entityType, string columnName)
         {
             var property = entityType.FindProperty(columnName);
             if (property is null)
@@ -12,7 +12,18 @@ namespace Blazor.FlexGrid.Components.Configuration
                 return null;
             }
 
-            return new GridColumnAnnotations(property);
+            return new GridColumnAnotations(property);
+        }
+
+        public static GridCssClasses CssClasses(this IEntityType entityType)
+        {
+            var cssClasses = entityType[GridViewAnnotationNames.CssClasses];
+            if (cssClasses is NullAnotationValue)
+            {
+                return new DefaultGridCssClasses();
+            }
+
+            return cssClasses as GridCssClasses;
         }
 
         public static string CreateColumnUniqueName(this IEntityType entityType, string columnName)

@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.DataSet
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPageableOptions pageableOptions)
+        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions)
         {
             var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?pagenumber={pageableOptions.CurrentPage}&pagesize={pageableOptions.PageSize}";
             try

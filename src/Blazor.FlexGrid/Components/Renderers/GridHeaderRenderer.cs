@@ -1,4 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
@@ -21,15 +23,21 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            rendererContext.OpenElement(HtmlTagNames.TableHead, "table-head");
-            rendererContext.OpenElement(HtmlTagNames.TableRow, "table-head-row");
+            rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
+            rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
 
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
 
                 var columnCaption = GetColumnCaption(rendererContext, property);
-                rendererContext.OpenElement(HtmlTagNames.TableHeadCell, "table-cell-head");
+                rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+                rendererContext.AddOnClickEvent(() =>
+                    BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
+                    {
+                        rendererContext.TableDataSet.SetSortExpression(property.Name);
+                    })
+                );
                 rendererContext.AddContent(columnCaption);
                 rendererContext.CloseElement();
             }

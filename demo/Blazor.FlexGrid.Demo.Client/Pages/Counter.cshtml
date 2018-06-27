@@ -7,8 +7,11 @@
 <button class="btn btn-primary" onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" onclick="@DecrementCount">Click me</button>
 
+ Enter your name: <input type="text" bind="@Name" /><br />
+
 @functions {
 int currentCount = 0;
+string Name = string.Empty;
 
 void IncrementCount()
 {

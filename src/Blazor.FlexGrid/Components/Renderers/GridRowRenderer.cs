@@ -4,7 +4,7 @@
     {
         public override void Render(GridRendererContext rendererContext)
         {
-            rendererContext.OpenElement(HtmlTagNames.TableRow, "table-row");
+            rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableRow);
 
             foreach (var property in rendererContext.GridItemProperties)
             {

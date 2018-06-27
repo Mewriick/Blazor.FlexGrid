@@ -28,7 +28,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public ITableDataSet TableDataSet { get; }
 
-        public IGridViewColumnAnnotations ActualColumnConfiguration => GridConfiguration.FindColumnConfiguration(ActualColumnName);
+        public IGridViewColumnAnotations ActualColumnConfiguration => GridConfiguration.FindColumnConfiguration(ActualColumnName);
+
+        public GridCssClasses CssClasses { get; }
 
 
         public GridRendererContext(
@@ -36,11 +38,17 @@ namespace Blazor.FlexGrid.Components.Renderers
             RenderTreeBuilder renderTreeBuilder,
             ITableDataSet tableDataSet)
         {
+            if (imutableGridRendererContext is null)
+            {
+                throw new ArgumentNullException(nameof(imutableGridRendererContext));
+            }
+
             Sequence = 0;
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
             propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             valueFormatters = imutableGridRendererContext.ValueFormatters;
+            CssClasses = imutableGridRendererContext.CssClasses;
             RenderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
         }

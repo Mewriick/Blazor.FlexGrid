@@ -22,7 +22,8 @@ namespace Blazor.FlexGrid.DataAdapters
 
             var tableDataSet = new TableDataSet<TItem>(items.AsQueryable())
             {
-                PageableOptions = tableDataSetOptions.PageableOptions
+                PageableOptions = tableDataSetOptions.PageableOptions,
+                SortingOptions = new SortingOptions()
             };
 
             return tableDataSet;

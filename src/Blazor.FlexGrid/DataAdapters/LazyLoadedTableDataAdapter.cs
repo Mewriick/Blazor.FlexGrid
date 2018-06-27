@@ -27,7 +27,8 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader)
             {
                 LazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions,
-                PageableOptions = tableDataSetOptions.PageableOptions
+                PageableOptions = tableDataSetOptions.PageableOptions,
+                SortingOptions = new SortingOptions()
             };
 
             return tableDataSet;

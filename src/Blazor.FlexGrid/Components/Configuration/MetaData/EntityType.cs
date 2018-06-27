@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
-    public class EntityType : Annotatable, IEntityType, IComparable
+    public class EntityType : Annotatable, IEntityType
     {
         private readonly SortedDictionary<string, Property> properties;
 
@@ -60,16 +60,5 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         IModel IEntityType.Model => Model;
 
         IProperty IEntityType.AddProperty(MemberInfo memberInfo) => AddProperty(memberInfo);
-
-
-        public int CompareTo(object other)
-        {
-            if (other is EntityType typedOther)
-            {
-                return Name.CompareTo(typedOther.Name);
-            }
-
-            return 0;
-        }
     }
 }

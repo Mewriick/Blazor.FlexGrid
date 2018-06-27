@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.DataSet
     /// </summary>
     public interface IPageableTableDataSet : IBaseTableDataSet
     {
-        IPageableOptions PageableOptions { get; }
+        IPagingOptions PageableOptions { get; }
 
         Task GoToPage(int index);
     }
