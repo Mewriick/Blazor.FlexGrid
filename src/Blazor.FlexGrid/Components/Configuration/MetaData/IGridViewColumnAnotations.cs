@@ -13,6 +13,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         bool IsVisible { get; }
 
+        bool IsSortable { get; }
+
         ValueFormatter ValueFormatter { get; }
     }
 }

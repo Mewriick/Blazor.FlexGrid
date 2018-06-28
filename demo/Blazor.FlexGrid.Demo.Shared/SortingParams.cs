@@ -1,6 +1,6 @@
-﻿namespace Blazor.FlexGrid.DataSet.Options
+﻿namespace Blazor.FlexGrid.Demo.Shared
 {
-    public class SortingOptions : ISortingOptions
+    public class SortingParams
     {
         public bool SortDescending { get; set; } = false;
 

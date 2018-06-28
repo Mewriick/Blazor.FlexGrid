@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet.Options;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
@@ -9,6 +10,6 @@ namespace Blazor.FlexGrid.DataSet
     {
         ISortingOptions SortingOptions { get; }
 
-        void SetSortExpression(string expression);
+        Task SetSortExpression(string expression);
     }
 }

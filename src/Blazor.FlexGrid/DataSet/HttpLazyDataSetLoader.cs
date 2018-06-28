@@ -19,9 +19,10 @@ namespace Blazor.FlexGrid.DataSet
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions)
+        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
+            ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions)
         {
-            var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?pagenumber={pageableOptions.CurrentPage}&pagesize={pageableOptions.PageSize}";
+            var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?{PagingParams(pageableOptions)}{SortingParams(sortingOptions)}";
             try
             {
                 return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);
@@ -38,5 +39,13 @@ namespace Blazor.FlexGrid.DataSet
                 return Task.FromResult(emptyResult);
             }
         }
+
+        private string PagingParams(IPagingOptions pagingOptions)
+            => $"pagenumber={pagingOptions.CurrentPage}&pagesize={pagingOptions.PageSize}";
+
+        private string SortingParams(ISortingOptions sortingOptions)
+            => string.IsNullOrWhiteSpace(sortingOptions.SortExpression)
+                ? string.Empty
+                : $"&sortExpression={sortingOptions.SortExpression}&sortDescending={sortingOptions.SortDescending}";
     }
 }

@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.DataSet;
+﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.Extensions.Logging;
@@ -29,24 +30,69 @@ namespace Blazor.FlexGrid.Components.Renderers
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
-
-                var columnCaption = GetColumnCaption(rendererContext, property);
-                rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
-                rendererContext.AddOnClickEvent(() =>
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
-                    {
-                        rendererContext.TableDataSet.SetSortExpression(property.Name);
-                    })
-                );
-                rendererContext.AddContent(columnCaption);
-                rendererContext.CloseElement();
+                RenderColumnHeader(rendererContext, property);
             }
 
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
 
-        private string GetColumnCaption(GridRendererContext rendererContext, PropertyInfo property)
-            => rendererContext.ActualColumnConfiguration?.Caption ?? property.Name;
+        private void RenderColumnHeader(GridRendererContext rendererContext, PropertyInfo property)
+        {
+            var columnConfiguration = rendererContext.ActualColumnConfiguration;
+            if (columnConfiguration == null)
+            {
+                RenderSimpleColumnHeader(rendererContext, property, columnConfiguration);
+
+                return;
+            }
+
+            if (columnConfiguration.IsSortable)
+            {
+                RenderSortableColumnHeader(rendererContext, property, columnConfiguration);
+            }
+            else
+            {
+                RenderSimpleColumnHeader(rendererContext, property, columnConfiguration);
+            }
+        }
+
+        private void RenderSortableColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
+        {
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.OpenElement(HtmlTagNames.Span,
+                rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
+            rendererContext.AddOnClickEvent(() =>
+                BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
+                {
+                    rendererContext.TableDataSet.SetSortExpression(property.Name);
+                })
+            );
+
+            if (rendererContext.SortingByActualColumnName)
+            {
+                var arrowDirection = rendererContext.TableDataSet.SortingOptions.SortDescending ? "fas fa-arrow-down" : "fas fa-arrow-up";
+                rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
+                rendererContext.OpenElement(HtmlTagNames.I, $"table-cell-head-arrow {arrowDirection}");
+                rendererContext.CloseElement();
+            }
+            else
+            {
+                rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
+            }
+
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+        }
+
+        private void RenderSimpleColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
+        {
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
+            rendererContext.CloseElement();
+        }
+
+        private string GetColumnCaption(IGridViewColumnAnotations columnConfiguration, PropertyInfo property)
+            => columnConfiguration?.Caption ?? property.Name;
     }
 }

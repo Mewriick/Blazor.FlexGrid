@@ -36,7 +36,7 @@ namespace Blazor.FlexGrid.DataSet
             return Task.FromResult(0);
         }
 
-        public void SetSortExpression(string expression)
+        public Task SetSortExpression(string expression)
         {
             if (SortingOptions.SortExpression != expression)
             {
@@ -48,7 +48,7 @@ namespace Blazor.FlexGrid.DataSet
                 SortingOptions.SortDescending = !SortingOptions.SortDescending;
             }
 
-            GoToPage(0);
+            return GoToPage(0);
         }
 
         private void LoadFromQueryableSource()

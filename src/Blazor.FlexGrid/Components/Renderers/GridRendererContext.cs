@@ -11,12 +11,13 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridRendererContext
     {
+        private int sequence = 0;
         private readonly IPropertyValueAccessor propertyValueAccessor;
         private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
 
-        public int Sequence { get; set; }
-
         public string ActualColumnName { get; set; } = string.Empty;
+
+        public bool SortingByActualColumnName => TableDataSet.SortingOptions.SortExpression.Equals(ActualColumnName);
 
         public object ActualItem { get; set; }
 
@@ -43,7 +44,6 @@ namespace Blazor.FlexGrid.Components.Renderers
                 throw new ArgumentNullException(nameof(imutableGridRendererContext));
             }
 
-            Sequence = 0;
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
             propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
@@ -54,26 +54,26 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public void OpenElement(string elementName)
-            => RenderTreeBuilder.OpenElement(++Sequence, elementName);
+            => RenderTreeBuilder.OpenElement(++sequence, elementName);
 
         public void CloseElement()
             => RenderTreeBuilder.CloseElement();
 
         public void AddCssClass(string className)
-            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlAttributes.Class, className);
+            => RenderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Class, className);
 
         public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
-            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlJSEvents.OnClick, onClickBindMethod());
+            => RenderTreeBuilder.AddAttribute(++sequence, HtmlJSEvents.OnClick, onClickBindMethod());
 
         public void AddContent(string content)
-            => RenderTreeBuilder.AddContent(++Sequence, content);
+            => RenderTreeBuilder.AddContent(++sequence, content);
 
         public void AddActualColumnValue()
-            => RenderTreeBuilder.AddContent(++Sequence, valueFormatters[ActualColumnName]
+            => RenderTreeBuilder.AddContent(++sequence, valueFormatters[ActualColumnName]
                 .FormatValue(propertyValueAccessor.GetValue(ActualItem, ActualColumnName)));
 
         public void AddDisabled(bool disabled)
-            => RenderTreeBuilder.AddAttribute(++Sequence, HtmlAttributes.Disabled, disabled);
+            => RenderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Disabled, disabled);
 
         public void OpenElement(string elementName, string className)
         {

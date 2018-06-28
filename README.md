@@ -3,6 +3,8 @@ GridView component for Blazor
 
 > Easy way for displaying lits of items in table
 
+<img src="/docs/table_gif.gif" alt="table_gif"/>
+
 ## IMPORTANT!
 **Still development not completely finished. Nuget package coming soon.** 
 
@@ -58,13 +60,19 @@ public class WeatherForecastGridConfiguration : IEntityTypeConfiguration<Weather
     public void Configure(EntityTypeBuilder<WeatherForecast> builder)
     {
         builder.Property(e => e.Date)
-            .HasCaption("Datum")
+            .HasCaption("Date")
             .HasValueFormatter(d => d.ToShortDateString());
 
         builder.Property(e => e.Summary)
             .HasCaption("MySummary")
             .HasOrder(1)
             .HasValueFormatter(s => $"{s}!");
+
+        builder.Property(e => e.TemperatureC)
+            .IsSortable();
+
+        builder.Property(e => e.TemperatureF)
+            .IsSortable();
     }
 }
 ```
@@ -109,29 +117,35 @@ is registered in dependency injection conatiner and you only must provide **Lazy
 Also you must provide the server side part
 
 ```cs
-public IActionResult WeatherForecasts(int pageNumber, int pageSize)
+public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParams sortingParams)
 {
     var rng = new Random();
-    return Ok(
-        new
-        {
-            Items = Enumerable.Range(1, 100).Skip(pageSize * pageNumber).Take(pageSize).Select(index =>
+
+    var items = Enumerable.Range(1, 100).Skip(pageSize * pageNumber).Take(pageSize).Select(index =>
                 new WeatherForecast
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = rng.Next(-20, 55),
                     Summary = Summaries[rng.Next(Summaries.Length)]
 
-                }),
+                });
+
+    items = string.IsNullOrEmpty(sortingParams.SortExpression)
+        ? items
+        : items.AsQueryable().OrderBy(sortingParams.SortExpression).ToList();
+
+    return Ok(
+        new
+        {
+            Items = items,
             TotalCount = 100
         });
 }
 ```
-After that you have fully pageable table with lazy loaded data after you select new page
+After that you have fully pageable and sortable table with lazy loaded data after you select new page
 
 ## RoadMap
 ``More fluent API configuration``
-``Sorting support``
 ``Filtration support``
 ``Inline editing``
 ``Show detatil of item support``

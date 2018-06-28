@@ -13,13 +13,13 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         {
             get
             {
-                var captionAnnotation = Annotations[GridViewAnnotationNames.ColumnCaption];
-                if (captionAnnotation is NullAnotationValue)
+                var captionAnnotationValue = Annotations[GridViewAnnotationNames.ColumnCaption];
+                if (captionAnnotationValue is NullAnotationValue)
                 {
                     return propertyMetadata.Name;
                 }
 
-                return captionAnnotation.ToString();
+                return captionAnnotationValue.ToString();
             }
         }
 
@@ -27,13 +27,13 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         {
             get
             {
-                var orderAnnotation = Annotations[GridViewAnnotationNames.ColumnOrder];
-                if (orderAnnotation is NullAnotationValue)
+                var orderAnnotationValue = Annotations[GridViewAnnotationNames.ColumnOrder];
+                if (orderAnnotationValue is NullAnotationValue)
                 {
                     return DefaultOrder;
                 }
 
-                return (int)orderAnnotation;
+                return (int)orderAnnotationValue;
             }
         }
 
@@ -41,15 +41,30 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         {
             get
             {
-                var orderAnnotation = Annotations[GridViewAnnotationNames.ColumnIsVisible];
-                if (orderAnnotation is NullAnotationValue)
+                var orderAnnotationValue = Annotations[GridViewAnnotationNames.ColumnIsVisible];
+                if (orderAnnotationValue is NullAnotationValue)
                 {
                     return true;
                 }
 
-                return (bool)orderAnnotation;
+                return (bool)orderAnnotationValue;
             }
         }
+
+        public bool IsSortable
+        {
+            get
+            {
+                var sortAnnotationValue = Annotations[GridViewAnnotationNames.ColumnIsSortable];
+                if (sortAnnotationValue is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)sortAnnotationValue;
+            }
+        }
+
         public ValueFormatter ValueFormatter
         {
             get

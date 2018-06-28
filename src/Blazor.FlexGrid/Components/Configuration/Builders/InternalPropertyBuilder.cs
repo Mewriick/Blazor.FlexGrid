@@ -21,6 +21,9 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public bool IsVisible(bool isVisible)
             => HasAnnotation(GridViewAnnotationNames.ColumnIsVisible, isVisible);
 
+        public bool IsSortable(bool isSortable)
+            => HasAnnotation(GridViewAnnotationNames.ColumnIsSortable, isSortable);
+
         public bool HasOrder(int order)
             => HasAnnotation(GridViewAnnotationNames.ColumnOrder, order);
 

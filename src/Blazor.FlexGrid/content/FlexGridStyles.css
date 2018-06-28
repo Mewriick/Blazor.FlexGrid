@@ -33,7 +33,7 @@
     vertical-align: middle;
 }
 
-.table thead th {
+.table-cell-head {
     display: table-cell;
     padding: 4px 56px 4px 24px;
     border-bottom: 1px solid rgba(224, 224, 224, 1);
@@ -45,16 +45,22 @@
     flex-direction: row-reverse;
 }
 
-.table-cell-head {
-    display: table-cell;
-    padding: 4px 56px 4px 24px;
-    border-bottom: 1px solid rgba(224, 224, 224, 1);
-    vertical-align: inherit;
-    color: rgba(0, 0, 0, 0.54);
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-align: right;
-    flex-direction: row-reverse;
+.table-cell-head-sortable {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: inherit;
+    justify-content: flex-start;
+}
+
+.table-cell-head-sortable-active {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.table-cell-head-arrow {
+    margin-left: 4px;
+    user-select: none;
+    margin-right: 4px;
 }
 
 .table-row {

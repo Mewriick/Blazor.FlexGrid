@@ -26,6 +26,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public PropertyBuilder<TProperty> IsSortable()
+        {
+            Builder.IsSortable(true);
+
+            return this;
+        }
+
         public PropertyBuilder<TProperty> HasOrder(int order)
         {
             Builder.HasOrder(order);
