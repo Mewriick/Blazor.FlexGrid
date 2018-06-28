@@ -6,7 +6,32 @@ GridView component for Blazor
 <img src="/docs/table_gif.gif" alt="table_gif"/>
 
 ## IMPORTANT!
-**Still development not completely finished. Nuget package coming soon.** 
+**Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
+
+# Instalation
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-v0.1.1-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+
+After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
+(https://github.com/mono/mono/issues/8872)
+
+```cs
+<linker>
+  <assembly fullname="mscorlib">
+    <!-- Preserve all methods on WasmRuntime, because these are called by JS-side code
+    to implement timers. Fixes https://github.com/aspnet/Blazor/issues/239 -->
+    <type fullname="System.Threading.WasmRuntime" />
+  </assembly>
+  <assembly fullname="System.Core">
+    <!-- This is required by JSon.NET and any expression.Compile caller -->
+    <type fullname="System.Linq.Expressions*" />
+    <type fullname="System.Linq.EnumerableRewriter*" />
+    <type fullname="System.Linq.Queryable*" />
+    <type fullname="System.Linq.Enumerable*" />
+  </assembly>
+  <!-- Name of the entry point assembly -->
+  <assembly fullname="Blazor.FlexGrid.Demo.Client" />
+</linker>
+```
 
 # Setup
 ```cs
@@ -143,6 +168,9 @@ public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParam
 }
 ```
 After that you have fully pageable and sortable table with lazy loaded data after you select new page
+
+# Contributions and feedback
+Please feel free to use the component, open issues, fix bugs or provide feedback.
 
 ## RoadMap
 ``More fluent API configuration``
