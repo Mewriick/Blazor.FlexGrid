@@ -169,6 +169,24 @@ public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParam
 ```
 After that you have fully pageable and sortable table with lazy loaded data after you select new page
 
+# Design
+You can ovveride some default CssClasses by your own CssClasses by using fluent api configuration
+```cs
+public void Configure(EntityTypeBuilder<WeatherForecast> builder)
+{  
+	builder.UseCssClasses(conf =>
+	{
+		conf.Table = "my-table";
+		conf.TableBody = "my-table-body";
+		conf.TableCell = "my-table-cell";
+		conf.TableHeader = "my-table-header";
+		conf.TableHeaderCell = "my-table-header-cell";
+		conf.TableHeaderRow = "my-table-header-row";
+		conf.TableRow = "my-table-row";
+	});
+}
+```
+
 # Contributions and feedback
 Please feel free to use the component, open issues, fix bugs or provide feedback.
 
