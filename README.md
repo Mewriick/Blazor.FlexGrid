@@ -37,10 +37,7 @@ After nuget instalation you must create in Blazor.Client app Linker.xml file bec
 ```cs
 var serviceProvider = new BrowserServiceProvider(services =>
 {
-    services.AddFlexGrid(cfg =>
-    {
-        cfg.ApplyConfiguration();
-    });
+    services.AddFlexGrid();
 });
 ```
 
