@@ -37,10 +37,7 @@ After nuget instalation you must create in Blazor.Client app Linker.xml file bec
 ```cs
 var serviceProvider = new BrowserServiceProvider(services =>
 {
-    services.AddFlexGrid(cfg =>
-    {
-        cfg.ApplyConfiguration();
-    });
+    services.AddFlexGrid();
 });
 ```
 
@@ -170,7 +167,7 @@ public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParam
 After that you have fully pageable and sortable table with lazy loaded data after you select new page
 
 # Design
-You can ovveride some default CssClasses by your own CssClasses by using fluent api configuration
+You can override some default CssClasses by your own CssClasses by using fluent api configuration
 ```cs
 public void Configure(EntityTypeBuilder<WeatherForecast> builder)
 {  
