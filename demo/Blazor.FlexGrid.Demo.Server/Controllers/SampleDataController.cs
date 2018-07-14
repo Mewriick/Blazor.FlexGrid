@@ -29,9 +29,9 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
 
                         });
 
-           items = string.IsNullOrEmpty(sortingParams.SortExpression)
-                ? items
-                : items.AsQueryable().OrderBy(sortingParams.SortExpression).ToList();
+            items = string.IsNullOrEmpty(sortingParams.SortExpression)
+                 ? items
+                 : items.AsQueryable().OrderBy(sortingParams.SortExpression).ToList();
 
             return Ok(
                 new

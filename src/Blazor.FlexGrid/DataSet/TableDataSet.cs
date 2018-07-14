@@ -10,6 +10,7 @@ namespace Blazor.FlexGrid.DataSet
     public class TableDataSet<TItem> : ITableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
         private IQueryable<TItem> source;
+        private HashSet<object> selectedItems;
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
 
@@ -26,6 +27,7 @@ namespace Blazor.FlexGrid.DataSet
         public TableDataSet(IQueryable<TItem> source)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
+            this.selectedItems = new HashSet<object>();
         }
 
         public Task GoToPage(int index)
@@ -50,6 +52,20 @@ namespace Blazor.FlexGrid.DataSet
 
             return GoToPage(0);
         }
+
+        public void ToggleRowItem(object item)
+        {
+            if (ItemIsSelected(item))
+            {
+                selectedItems.Remove(item);
+                return;
+            }
+
+            selectedItems.Add(item);
+        }
+
+        public bool ItemIsSelected(object item)
+            => selectedItems.Contains(item);
 
         private void LoadFromQueryableSource()
         {

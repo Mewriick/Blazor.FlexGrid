@@ -1,7 +1,9 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
+using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
 using System;
 using System.Collections.Generic;
@@ -79,6 +81,14 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             OpenElement(elementName);
             AddCssClass(className);
+        }
+
+        public void AddGridViewComponent(ITableDataAdapter tableDataAdapter)
+        {
+            RenderTreeBuilder.OpenComponent<GridView>(++sequence);
+            RenderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            RenderTreeBuilder.AddAttribute(++sequence, "PageSize", RuntimeHelpers.TypeCheck(5));
+            RenderTreeBuilder.CloseComponent();
         }
     }
 }

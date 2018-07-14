@@ -7,6 +7,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class GridBodyRenderer : GridCompositeRenderer
     {
         private readonly ILogger<GridBodyRenderer> logger;
+
         public GridBodyRenderer(ILogger<GridBodyRenderer> logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

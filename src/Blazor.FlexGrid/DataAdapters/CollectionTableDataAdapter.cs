@@ -6,21 +6,27 @@ using System.Linq;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
-    public class CollectionTableDataAdapter<TItem> : ITableDataAdapter where TItem : class
+    /// <summary>
+    /// Create <seealso cref="TableDataSet{TItem}"/> from collection of items
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    public class CollectionTableDataAdapter<TItem> : BaseTableDataAdapter where TItem : class
     {
         private readonly ICollection<TItem> items;
+
+        public Func<TItem, bool> Filter { get; set; } = item => true;
 
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
             this.items = items ?? throw new ArgumentNullException(nameof(items));
         }
 
-        public ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
+        public override ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
         {
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            var tableDataSet = new TableDataSet<TItem>(items.AsQueryable())
+            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter).AsQueryable())
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = new SortingOptions()

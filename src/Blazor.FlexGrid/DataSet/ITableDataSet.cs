@@ -2,9 +2,9 @@
 {
 
     /// <summary>
-    /// Represents a collection of Items with paging, sorting
+    /// Represents a collection of Items with paging, sorting and 
     /// </summary>
-    public interface ITableDataSet : IPageableTableDataSet, ISortableTableDataSet
+    public interface ITableDataSet : IPageableTableDataSet, ISortableTableDataSet, ISelectableDataSet
     {
     }
 }

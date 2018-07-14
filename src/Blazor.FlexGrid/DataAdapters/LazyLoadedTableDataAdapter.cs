@@ -4,7 +4,11 @@ using System;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
-    public class LazyLoadedTableDataAdapter<TItem> : ITableDataAdapter where TItem : class
+    /// <summary>
+    /// Create <seealso cref="LazyTableDataSet{TItem}"/> 
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
 
@@ -13,7 +17,7 @@ namespace Blazor.FlexGrid.DataAdapters
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
         }
 
-        public ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
+        public override ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
         {
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);

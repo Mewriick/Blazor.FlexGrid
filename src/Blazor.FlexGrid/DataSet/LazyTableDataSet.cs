@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
+    /// <summary>
+    /// Collection of items which are fetched from server API
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
     public class LazyTableDataSet<TItem> : ILazyTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
+        private HashSet<object> selectedItems;
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
 
@@ -28,6 +33,7 @@ namespace Blazor.FlexGrid.DataSet
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
+            this.selectedItems = new HashSet<object>();
         }
 
         public async Task GoToPage(int index)
@@ -52,5 +58,18 @@ namespace Blazor.FlexGrid.DataSet
 
             return GoToPage(0);
         }
+        public void ToggleRowItem(object item)
+        {
+            if (ItemIsSelected(item))
+            {
+                selectedItems.Remove(item);
+                return;
+            }
+
+            selectedItems.Add(item);
+        }
+
+        public bool ItemIsSelected(object item)
+            => selectedItems.Contains(item);
     }
 }
