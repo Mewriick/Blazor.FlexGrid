@@ -13,6 +13,7 @@ namespace Blazor.FlexGrid.Demo.Client
                 services.AddFlexGrid(cfg =>
                 {
                     cfg.ApplyConfiguration(new WeatherForecastGridConfiguration());
+                    cfg.ApplyConfiguration(new CustomerGridConfiguration());
                 });
             });
 

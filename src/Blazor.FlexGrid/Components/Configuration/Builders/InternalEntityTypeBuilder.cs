@@ -29,5 +29,10 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return HasAnnotation(GridViewAnnotationNames.CssClasses, gridCssClasses);
         }
+
+        public bool IsMasterTable()
+        {
+            return HasAnnotation(GridViewAnnotationNames.IsMasterTable, true);
+        }
     }
 }

@@ -24,5 +24,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public virtual EntityTypeBuilder<TEntity> IsMasterTable()
+        {
+            Builder.IsMasterTable();
+
+            return this;
+        }
     }
 }

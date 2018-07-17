@@ -22,21 +22,31 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             stopwatch.Restart();
 
-            gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
+            try
+            {
+                gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
-            rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
+                rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
+                rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
 
-            gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
+                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.CloseElement(); // Close table
+                rendererContext.CloseElement(); // Close table
 
-            gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext));
+                gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext));
 
-            rendererContext.CloseElement(); // Close table wrapper
+                rendererContext.CloseElement(); // Close table wrapper
 
-            stopwatch.Stop();
-            logger.LogInformation($"Rendering time: {stopwatch.ElapsedMilliseconds} ms");
+                stopwatch.Stop();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error during rendering GridView component. Ex: {ex}");
+            }
+            finally
+            {
+                logger.LogInformation($"Rendering time: {stopwatch.ElapsedMilliseconds} ms");
+            }
         }
     }
 }

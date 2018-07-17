@@ -37,7 +37,9 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(IGridRenderer), provider =>
             {
                 var gridRowRenderer = new GridRowRenderer();
+                gridRowRenderer.AddRenderer(new GridCellMasterActionRenderer());
                 gridRowRenderer.AddRenderer(new GridCellRenderer());
+
                 var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>());
                 gridBodyRenderer.AddRenderer(gridRowRenderer);
 

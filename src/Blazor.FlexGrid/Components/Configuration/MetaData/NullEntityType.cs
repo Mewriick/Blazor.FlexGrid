@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         public static NullEntityType Instance = new NullEntityType();
 
-        public object this[string name] => null;
+        public object this[string name] => FindAnnotation(name).Value;
 
         public Type ClrType => null;
 
@@ -23,7 +23,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public IAnnotation FindAnnotation(string name)
         {
-            return null;
+            return NullAnnotation.Instance;
         }
 
         public IProperty FindProperty(string name)

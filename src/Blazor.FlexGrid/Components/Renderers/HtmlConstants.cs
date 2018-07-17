@@ -19,6 +19,7 @@
     {
         public const string Class = "class";
         public const string Disabled = "disabled";
+        public const string Colspan = "colspan";
     }
 
     public class HtmlJSEvents

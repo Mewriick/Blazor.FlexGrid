@@ -6,6 +6,7 @@
 
 <button class="btn btn-primary" onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" onclick="@DecrementCount">Click me</button>
+<button onclick=@((UIMouseEventArgs e) => Console.WriteLine("Inline:Button Clicked"))>Inline Event Binding</button>
 
  Enter your name: <input type="text" bind="@Name" /><br />
 

@@ -30,9 +30,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             RenderButton(rendererContext, PaginationButtonType.Next, nextButtonIsDisabled, "fas fa-angle-right");
             RenderButton(rendererContext, PaginationButtonType.Last, nextButtonIsDisabled, "fas fa-angle-double-right");
 
-            rendererContext.RenderTreeBuilder.CloseElement();
-            rendererContext.RenderTreeBuilder.CloseElement();
-            rendererContext.RenderTreeBuilder.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
         }
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)

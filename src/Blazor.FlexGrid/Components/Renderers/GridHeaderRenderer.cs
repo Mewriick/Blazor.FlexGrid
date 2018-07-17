@@ -27,6 +27,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
 
+            if (rendererContext.GridConfiguration.IsMasterTable)
+            {
+                RenderEmptyColumnHeader(rendererContext);
+            }
+
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
@@ -89,6 +94,12 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
             rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
+            rendererContext.CloseElement();
+        }
+
+        private void RenderEmptyColumnHeader(GridRendererContext rendererContext)
+        {
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
             rendererContext.CloseElement();
         }
 
