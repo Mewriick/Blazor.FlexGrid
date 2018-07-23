@@ -16,6 +16,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         IProperty FindProperty(string name);
 
+        IMasterDetailRelationship FindDetailRelationship(Type detailType);
+
         IProperty AddProperty(MemberInfo memberInfo);
     }
 }

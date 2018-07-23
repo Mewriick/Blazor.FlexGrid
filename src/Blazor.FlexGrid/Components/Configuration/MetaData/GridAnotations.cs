@@ -27,5 +27,10 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));
             annotations = entityType;
         }
+
+        public IMasterDetailRelationship FindRelationshipConfiguration(Type detailType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

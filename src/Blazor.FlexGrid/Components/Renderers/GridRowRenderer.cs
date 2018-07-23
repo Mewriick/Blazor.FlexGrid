@@ -1,5 +1,7 @@
-﻿using Blazor.FlexGrid.DataSet;
-using System.Linq;
+﻿using Blazor.FlexGrid.DataAdapters;
+using Blazor.FlexGrid.DataSet;
+using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Blazor.Components;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -24,8 +26,26 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
                 rendererContext.AddColspan();
 
-                rendererContext.AddGridViewComponent(
-                        (rendererContext.TableDataSet as IMasterTableDataSet)?.DetailDataAdapters.First());
+                if (rendererContext.TableDataSet is IMasterTableDataSet masterTableDataSet)
+                {
+                    rendererContext.OpenElement("ul");
+
+                    foreach (var dataAdapter in masterTableDataSet.DetailDataAdapters)
+                    {
+                        rendererContext.OpenElement("li");
+                        rendererContext.AddOnClickEvent(() => BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
+                            masterTableDataSet.SelectDataAdapter(dataAdapter)
+                        ));
+                        rendererContext.AddContent(dataAdapter.GetUnderlyingType().Name);
+                        rendererContext.CloseElement();
+                    }
+
+                    rendererContext.CloseElement();
+
+                    rendererContext.OpenElement("div");
+                    rendererContext.AddGridViewComponent(masterTableDataSet.SelectedDataAdapter);
+                    rendererContext.CloseElement();
+                }
 
                 rendererContext.CloseElement();
                 rendererContext.CloseElement();

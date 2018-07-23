@@ -13,10 +13,15 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         }
 
         public virtual PropertyBuilder<TProperty> Property<TProperty>(Expression<Func<TEntity, TProperty>> propertyExpression)
-            =>
-             new PropertyBuilder<TProperty>(
-                Builder.Property(propertyExpression.GetPropertyAccess())
+            => new PropertyBuilder<TProperty>(
+                    Builder.Property(propertyExpression.GetPropertyAccess())
                 );
+
+        public virtual MasterDetailRelationshipBuilder HasDetailRelationship<TDetailEntity>
+            (Expression<Func<TEntity, object>> propertyKeyExpression, Expression<Func<TDetailEntity, object>> propertyDetailExpression)
+            => new MasterDetailRelationshipBuilder(
+                    Builder.HasDetailRelationship(typeof(TDetailEntity), propertyKeyExpression.GetPropertyAccess().Name, propertyDetailExpression.GetPropertyAccess().Name)
+                    );
 
         public virtual EntityTypeBuilder<TEntity> UseCssClasses(Action<GridCssClasses> configureCssClasses)
         {

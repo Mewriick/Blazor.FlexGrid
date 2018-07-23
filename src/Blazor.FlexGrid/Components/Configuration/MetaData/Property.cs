@@ -13,7 +13,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public PropertyInfo PropertyInfo { get; }
 
-
         public Property(string name, Type clrType, PropertyInfo propertyInfo, EntityType declaringType)
         {
             if (string.IsNullOrWhiteSpace(name))

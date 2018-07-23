@@ -24,5 +24,19 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
                  })
             );
         }
+
+        [HttpGet("[action]")]
+        public IActionResult CustomersAddresses()
+        {
+            return Ok(Enumerable.Range(1, 20).Select(index =>
+                 new CustomerAddress
+                 {
+                     City = "London",
+                     CustomerId = index,
+                     Number = $"22 - {index}",
+                     Street = "Baker Street"
+                 })
+            );
+        }
     }
 }

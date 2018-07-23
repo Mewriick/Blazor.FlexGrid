@@ -10,20 +10,27 @@ namespace Blazor.FlexGrid.DataAdapters
         private readonly ITableDataAdapter mainTableDataAdapter;
         private readonly List<ITableDataAdapter> detailTableDataAdapters;
 
-        public MasterTableDataAdapter(ITableDataAdapter mainTableDataAdapter)
+        public MasterTableDataAdapter(CollectionTableDataAdapter<TItem> mainTableDataAdapter)
         {
             this.mainTableDataAdapter = mainTableDataAdapter ?? throw new ArgumentNullException(nameof(mainTableDataAdapter));
-            if (mainTableDataAdapter.GetType() == typeof(MasterDetailDataSet<>))
-            {
-                throw new InvalidOperationException($"The type of {nameof(mainTableDataAdapter)} cannot be {mainTableDataAdapter.GetType()}." +
-                    $"{nameof(ITableDataAdapter)} must provide collection of items e.g {nameof(CollectionTableDataAdapter<TItem>)}");
-            }
+            this.detailTableDataAdapters = new List<ITableDataAdapter>();
+        }
 
+        public MasterTableDataAdapter(LazyLoadedTableDataAdapter<TItem> mainTableDataAdapter)
+        {
+            this.mainTableDataAdapter = mainTableDataAdapter ?? throw new ArgumentNullException(nameof(mainTableDataAdapter));
             this.detailTableDataAdapters = new List<ITableDataAdapter>();
         }
 
         public void AddDetailTableSet(ITableDataAdapter tableDataAdapter)
-            => detailTableDataAdapters.Add(tableDataAdapter);
+        {
+            if (tableDataAdapter is null)
+            {
+                throw new ArgumentNullException(nameof(tableDataAdapter));
+            }
+
+            detailTableDataAdapters.Add(tableDataAdapter);
+        }
 
         public override ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
         {

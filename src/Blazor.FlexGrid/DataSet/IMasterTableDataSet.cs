@@ -9,5 +9,9 @@ namespace Blazor.FlexGrid.DataSet
     public interface IMasterTableDataSet : ITableDataSet
     {
         IEnumerable<ITableDataAdapter> DetailDataAdapters { get; }
+
+        ITableDataAdapter SelectedDataAdapter { get; }
+
+        void SelectDataAdapter(ITableDataAdapter tableDataAdapter);
     }
 }

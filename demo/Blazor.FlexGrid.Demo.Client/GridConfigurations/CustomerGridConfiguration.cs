@@ -8,7 +8,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.IsMasterTable();
+            builder.IsMasterTable()
+                .HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId);
         }
     }
 }

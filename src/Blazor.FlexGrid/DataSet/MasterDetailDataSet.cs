@@ -23,6 +23,8 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
+        public ITableDataAdapter SelectedDataAdapter { get; private set; }
+
         public MasterDetailDataSet(ITableDataSet tableDataSet)
         {
             this.tableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
@@ -39,8 +41,24 @@ namespace Blazor.FlexGrid.DataSet
             tableDataAdapters.Add(tableDataAdapter);
         }
 
+        public void SelectDataAdapter(ITableDataAdapter tableDataAdapter)
+        {
+            if (tableDataAdapter is null)
+            {
+                throw new ArgumentNullException(nameof(tableDataAdapter));
+            }
+
+            Console.Error.WriteLine($"{tableDataAdapter.GetType().FullName}");
+
+            SelectedDataAdapter = tableDataAdapter;
+        }
+
         public Task GoToPage(int index)
-            => tableDataSet.GoToPage(index);
+        {
+            //SelectedDataAdapter = tableDataAdapters.First();
+
+            return tableDataSet.GoToPage(index);
+        }
 
         public Task SetSortExpression(string expression)
             => tableDataSet.SetSortExpression(expression);

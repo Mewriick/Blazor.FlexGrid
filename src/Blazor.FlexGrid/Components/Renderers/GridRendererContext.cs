@@ -97,7 +97,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
-            renderTreeBuilder.OpenComponent<GridView>(++sequence);
+            if (tableDataAdapter is null)
+            {
+                return;
+            }
+
+            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.GetUnderlyingType()));
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
             renderTreeBuilder.AddAttribute(++sequence, "PageSize", RuntimeHelpers.TypeCheck(5));
             renderTreeBuilder.CloseComponent();

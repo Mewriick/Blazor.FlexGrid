@@ -21,6 +21,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return new InternalPropertyBuilder(property, new InternalModelBuilder(Metadata.Model));
         }
 
+        public InternalMasterDetailRelationshipBuilder HasDetailRelationship(Type detailType, string masterPropertyName, string foreignPropertyName)
+        {
+            var masterDetailRelationship = Metadata.AddDetailRelationship(detailType, masterPropertyName, foreignPropertyName);
+
+            return new InternalMasterDetailRelationshipBuilder(masterDetailRelationship, new InternalModelBuilder(Metadata.Model));
+        }
+
         public bool UseCssClasses(Action<GridCssClasses> gridCssClassesConfig)
         {
             var gridCssClasses = new GridCssClasses();
