@@ -20,6 +20,9 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         {
             return null;
         }
+        
+        public IMasterDetailRelationship FindDetailRelationship(Type detailType)
+            => null;
 
         public IAnnotation FindAnnotation(string name)
         {
