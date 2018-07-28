@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.Builders;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Demo.Shared;
@@ -30,7 +31,7 @@ namespace Blazor.FlexGrid.Tests
                     .HasValueFormatter(s => $"{s}!");
 
             var configurationProvider = new GridConfigurationProvider(modelBuilder.Model);
-            var rendererContextFactory = new GridRendererContextFactory(configurationProvider);
+            var rendererContextFactory = new GridRendererContextFactory(configurationProvider, new PropertyValueAccessorCache());
 
             var source = Enumerable.Range(1, 20).Select(index =>
                         new WeatherForecast

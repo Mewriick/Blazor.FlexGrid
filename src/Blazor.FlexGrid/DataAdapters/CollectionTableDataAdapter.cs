@@ -3,6 +3,7 @@ using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
@@ -14,7 +15,7 @@ namespace Blazor.FlexGrid.DataAdapters
     {
         private readonly ICollection<TItem> items;
 
-        public Func<TItem, bool> Filter { get; set; } = item => true;
+        public Expression<Func<TItem, bool>> Filter { get; set; } = item => true;
 
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
@@ -26,7 +27,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter).AsQueryable())
+            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable())
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = new SortingOptions()
@@ -34,5 +35,8 @@ namespace Blazor.FlexGrid.DataAdapters
 
             return tableDataSet;
         }
+
+        public override object Clone()
+            => new CollectionTableDataAdapter<TItem>(items);
     }
 }

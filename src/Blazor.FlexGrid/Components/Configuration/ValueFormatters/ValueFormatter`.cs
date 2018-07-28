@@ -17,7 +17,6 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
             FormatValue = SanitizeConverter(formatValueExpression);
         }
 
-
         private Func<object, string> SanitizeConverter(Expression<Func<TProperty, string>> formatValueExpression)
         {
             var compiled = formatValueExpression.Compile();

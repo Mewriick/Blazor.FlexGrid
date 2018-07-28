@@ -1,5 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
-using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor.RenderTree;
@@ -13,10 +12,12 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private readonly Dictionary<Type, ImutableGridRendererContext> imutableRendererContextCache;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
+        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
 
-        public GridRendererContextFactory(IGridConfigurationProvider gridConfigurationProvider)
+        public GridRendererContextFactory(IGridConfigurationProvider gridConfigurationProvider, IPropertyValueAccessorCache propertyValueAccessorCache)
         {
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
+            this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
             this.imutableRendererContextCache = new Dictionary<Type, ImutableGridRendererContext>();
         }
 
@@ -26,8 +27,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             var rendererContext = new GridRendererContext(
                 GetImutableGridRendererContext(itemType),
                 renderTreeBuilder,
-                tableDataSet
-            );
+                tableDataSet);
 
             return rendererContext;
         }
@@ -39,13 +39,15 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return imutableGridRendererContext;
             }
 
-            var gridConfiguration = gridConfigurationProvider.FindGridConfigurationByType(dataSetItemType) ?? NullEntityType.Instance;
-            var gridCssClasses = gridConfiguration?.CssClasses() ?? new DefaultGridCssClasses();
+            var gridConfiguration = gridConfigurationProvider.FindGridEntityConfigurationByType(dataSetItemType);
+            var gridCssClasses = gridConfiguration.CssClasses();
+
+            propertyValueAccessorCache.AddPropertyAccessor(dataSetItemType, new TypeWrapper(dataSetItemType));
 
             imutableGridRendererContext = new ImutableGridRendererContext(
                     gridConfiguration,
                     dataSetItemType.GetProperties().ToList(),
-                    new TypeWrapper(dataSetItemType),
+                    propertyValueAccessorCache.GetPropertyAccesor(dataSetItemType),
                     gridCssClasses
                 );
 

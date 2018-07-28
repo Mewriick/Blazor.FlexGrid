@@ -30,7 +30,13 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public IMasterDetailRelationship FindRelationshipConfiguration(Type detailType)
         {
-            throw new NotImplementedException();
+            var masterDetailConnection = entityTypeMetadata.FindDetailRelationship(detailType);
+            if (masterDetailConnection is null)
+            {
+                throw new InvalidOperationException($"If you want to use Master/Detail functionallity, you must configure relationship using method HasDetailRelationship");
+            }
+
+            return masterDetailConnection;
         }
     }
 }

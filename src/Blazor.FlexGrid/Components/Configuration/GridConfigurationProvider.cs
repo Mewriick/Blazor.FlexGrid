@@ -12,7 +12,10 @@ namespace Blazor.FlexGrid.Components.Configuration
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
-        public IEntityType FindGridConfigurationByType(Type clrType)
-            => model.FindEntityType(clrType);
+        public IEntityType FindGridEntityConfigurationByType(Type clrType)
+            => model.FindEntityType(clrType) ?? NullEntityType.Instance;
+
+        public IGridViewAnotations GetGridConfigurationByType(Type clrType)
+            => new GridAnotations(FindGridEntityConfigurationByType(clrType));
     }
 }

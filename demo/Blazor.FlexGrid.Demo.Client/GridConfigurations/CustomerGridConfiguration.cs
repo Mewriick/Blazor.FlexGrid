@@ -10,6 +10,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
         {
             builder.IsMasterTable()
                 .HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId);
+
+            builder.HasDetailRelationship<CustomerAddress>(c => c.Id, o => o.CustomerId);
         }
     }
 }

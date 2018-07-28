@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 
@@ -32,9 +33,10 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                     foreach (var dataAdapter in masterTableDataSet.DetailDataAdapters)
                     {
+                        var actualItem = rendererContext.ActualItem;
                         rendererContext.OpenElement("li");
                         rendererContext.AddOnClickEvent(() => BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
-                            masterTableDataSet.SelectDataAdapter(dataAdapter)
+                            masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, actualItem))
                         ));
                         rendererContext.AddContent(dataAdapter.GetUnderlyingType().Name);
                         rendererContext.CloseElement();
@@ -43,7 +45,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                     rendererContext.CloseElement();
 
                     rendererContext.OpenElement("div");
-                    rendererContext.AddGridViewComponent(masterTableDataSet.SelectedDataAdapter);
+                    rendererContext.AddGridViewComponent(masterTableDataSet.GetSelectedDataAdapter(rendererContext.ActualItem));
                     rendererContext.CloseElement();
                 }
 

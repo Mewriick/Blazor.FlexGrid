@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components;
 using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.Builders;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
@@ -23,9 +24,12 @@ namespace Blazor.FlexGrid
                 .SetMinimumLevel(LogLevel.Debug));
 
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
+            services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<GridRendererContextFactory>();
+            services.AddSingleton<IPropertyValueAccessorCache, PropertyValueAccessorCache>();
+            services.AddSingleton<IDetailDataAdapterDependencies, DetailDataAdapterDependencies>();
 
             RegisterGridRendererTree(services);
 

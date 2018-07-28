@@ -2,6 +2,7 @@
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @inject HttpClient Http
+@inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
 @page "/masterdetailgrid"
 
 <h1>Customers</h1>
@@ -23,8 +24,10 @@
         ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
         customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 
-        customersMasterDataAdapter = new MasterTableDataAdapter<Customer>(customerDataAdapter);
-        customersMasterDataAdapter.AddDetailTableSet(ordersDataAdapter);
-        customersMasterDataAdapter.AddDetailTableSet(customerAddressesDataAdapter);
+        customersMasterDataAdapter = MasterAdapterBuilder
+            .MasterTableDataAdapter(customerDataAdapter)
+            .WithDetailTableDataAdapter(ordersDataAdapter)
+            .WithDetailTableDataAdapter(customerAddressesDataAdapter)
+            .Build();
     }
 }

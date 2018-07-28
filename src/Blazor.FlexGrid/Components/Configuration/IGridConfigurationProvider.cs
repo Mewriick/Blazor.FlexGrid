@@ -5,6 +5,8 @@ namespace Blazor.FlexGrid.Components.Configuration
 {
     public interface IGridConfigurationProvider
     {
-        IEntityType FindGridConfigurationByType(Type clrType);
+        IEntityType FindGridEntityConfigurationByType(Type clrType);
+
+        IGridViewAnotations GetGridConfigurationByType(Type clrType);
     }
 }

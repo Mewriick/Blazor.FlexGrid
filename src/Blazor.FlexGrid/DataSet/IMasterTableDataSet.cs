@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
+using Blazor.FlexGrid.DataSet.Options;
 using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.DataSet
@@ -10,8 +11,8 @@ namespace Blazor.FlexGrid.DataSet
     {
         IEnumerable<ITableDataAdapter> DetailDataAdapters { get; }
 
-        ITableDataAdapter SelectedDataAdapter { get; }
+        ITableDataAdapter GetSelectedDataAdapter(object selectedItem);
 
-        void SelectDataAdapter(ITableDataAdapter tableDataAdapter);
+        void SelectDataAdapter(IMasterDetailRowArguments masterDetailRowArguments);
     }
 }

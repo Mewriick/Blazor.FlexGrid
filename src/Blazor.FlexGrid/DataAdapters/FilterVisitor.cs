@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
     public class FilterVisitor<TItem> : IDataTableAdapterVisitor where TItem : class
     {
-        private readonly Func<TItem, bool> filter;
+        private readonly Expression<Func<TItem, bool>> filter;
 
-        public FilterVisitor(Func<TItem, bool> filter)
+        public FilterVisitor(BinaryExpression binaryExpression, ParameterExpression parameterExpression)
         {
-            this.filter = filter ?? throw new ArgumentNullException(nameof(filter));
+            this.filter = Expression.Lambda<Func<TItem, bool>>(binaryExpression, parameterExpression);
         }
 
         public void Visit(ITableDataAdapter tableDataAdapter)

@@ -10,5 +10,7 @@ namespace Blazor.FlexGrid.DataAdapters
             => dataTableAdapterVisitor?.Visit(this);
 
         public abstract ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet);
+
+        public abstract object Clone();
     }
 }

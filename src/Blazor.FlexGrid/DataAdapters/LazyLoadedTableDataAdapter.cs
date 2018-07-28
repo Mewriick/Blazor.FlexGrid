@@ -37,5 +37,8 @@ namespace Blazor.FlexGrid.DataAdapters
 
             return tableDataSet;
         }
+
+        public override object Clone()
+            => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader);
     }
 }
