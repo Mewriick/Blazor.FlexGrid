@@ -10,7 +10,7 @@ namespace Blazor.FlexGrid.DataSet
 {
     public class MasterDetailTableDataSet<TItem> : IMasterTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
-        private readonly IDetailDataAdapterVisitors detailDataAdapterDependencies;
+        private readonly IDetailDataAdapterVisitors detailDataAdapterVisitors;
         private readonly Dictionary<object, ITableDataAdapter> selectedDataAdapters;
         private readonly ITableDataSet tableDataSet;
         private readonly HashSet<ITableDataAdapter> tableDataAdapters;
@@ -25,10 +25,10 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public MasterDetailTableDataSet(ITableDataSet tableDataSet, IDetailDataAdapterVisitors detailDataAdapterDependencies)
+        public MasterDetailTableDataSet(ITableDataSet tableDataSet, IDetailDataAdapterVisitors detailDataAdapterVisitors)
         {
             this.tableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
-            this.detailDataAdapterDependencies = detailDataAdapterDependencies ?? throw new ArgumentNullException(nameof(detailDataAdapterDependencies));
+            this.detailDataAdapterVisitors = detailDataAdapterVisitors ?? throw new ArgumentNullException(nameof(detailDataAdapterVisitors));
             this.tableDataAdapters = new HashSet<ITableDataAdapter>();
             this.selectedDataAdapters = new Dictionary<object, ITableDataAdapter>();
         }
@@ -84,7 +84,7 @@ namespace Blazor.FlexGrid.DataSet
             var detailAdapterType = typeof(DetailTableDataAdapter<>).MakeGenericType(dataAdapter.UnderlyingTypeOfItem);
 
             return Activator.CreateInstance(detailAdapterType,
-                new object[] { detailDataAdapterDependencies, new MasterDetailRowArguments(dataAdapter, selectedItem) }) as ITableDataAdapter;
+                new object[] { detailDataAdapterVisitors, new MasterDetailRowArguments(dataAdapter, selectedItem) }) as ITableDataAdapter;
         }
     }
 }

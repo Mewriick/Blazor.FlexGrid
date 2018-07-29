@@ -78,6 +78,22 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             return masterDetailRelationship;
         }
 
+        public MasterDetailRelationship AddDetailRelationship(Type detailType)
+        {
+            if (detailType is null)
+            {
+                throw new ArgumentNullException(nameof(detailType));
+            }
+
+            ValidationDetailRelationshipCanBeAdded(detailType);
+
+            var masterDetailRelationship = new MasterDetailRelationship();
+            detailRelationships.Add(detailType.FullName, masterDetailRelationship);
+
+            return masterDetailRelationship;
+        }
+
+
         private void ValidationPropertyCanBeAdded(string propertyName)
         {
             if (properties.TryGetValue(propertyName, out var property))

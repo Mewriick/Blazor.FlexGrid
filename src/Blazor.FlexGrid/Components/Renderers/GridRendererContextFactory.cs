@@ -1,4 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor.RenderTree;
@@ -13,35 +15,42 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly Dictionary<Type, ImutableGridRendererContext> imutableRendererContextCache;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
         private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ConventionsSet conventionsSet;
 
-        public GridRendererContextFactory(IGridConfigurationProvider gridConfigurationProvider, IPropertyValueAccessorCache propertyValueAccessorCache)
+        public GridRendererContextFactory(
+            IGridConfigurationProvider gridConfigurationProvider,
+            IPropertyValueAccessorCache propertyValueAccessorCache,
+            ConventionsSet conventionsSet)
         {
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
             this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
+            this.conventionsSet = conventionsSet ?? throw new ArgumentNullException(nameof(conventionsSet));
             this.imutableRendererContextCache = new Dictionary<Type, ImutableGridRendererContext>();
         }
 
         public GridRendererContext CreateRendererContext(ITableDataSet tableDataSet, RenderTreeBuilder renderTreeBuilder)
         {
             var itemType = tableDataSet.GetType().GenericTypeArguments[0];
+            //conventionsSet.RunConventions(itemType);
+
+            var gridConfiguration = gridConfigurationProvider.FindGridEntityConfigurationByType(itemType);
+
             var rendererContext = new GridRendererContext(
-                GetImutableGridRendererContext(itemType),
+                GetImutableGridRendererContext(itemType, gridConfiguration),
                 renderTreeBuilder,
                 tableDataSet);
 
             return rendererContext;
         }
 
-        private ImutableGridRendererContext GetImutableGridRendererContext(Type dataSetItemType)
+        private ImutableGridRendererContext GetImutableGridRendererContext(Type dataSetItemType, IEntityType gridConfiguration)
         {
             if (imutableRendererContextCache.TryGetValue(dataSetItemType, out var imutableGridRendererContext))
             {
                 return imutableGridRendererContext;
             }
 
-            var gridConfiguration = gridConfigurationProvider.FindGridEntityConfigurationByType(dataSetItemType);
             propertyValueAccessorCache.AddPropertyAccessor(dataSetItemType, new TypeWrapper(dataSetItemType));
-
             imutableGridRendererContext = new ImutableGridRendererContext(
                     gridConfiguration,
                     dataSetItemType.GetProperties().ToList(),

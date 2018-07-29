@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.Builders
@@ -22,6 +23,11 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             => new MasterDetailRelationshipBuilder(
                     Builder.HasDetailRelationship(typeof(TDetailEntity), propertyKeyExpression.GetPropertyAccess().Name, propertyDetailExpression.GetPropertyAccess().Name)
                     );
+
+        public virtual MasterDetailRelationshipBuilder HasDetailRelationship<TDetailEntity>(Expression<Func<TEntity, IEnumerable<TDetailEntity>>> collectionProperty)
+            => new MasterDetailRelationshipBuilder(
+                    Builder.HasDetailRelationship(typeof(TDetailEntity))
+                );
 
         public virtual EntityTypeBuilder<TEntity> UseCssClasses(Action<GridCssClasses> configureCssClasses)
         {

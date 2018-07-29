@@ -29,16 +29,16 @@ namespace Blazor.FlexGrid.DataAdapters
             var selectedItemType = masterDetailRowArguments.SelectedItem.GetType();
             var detailAdapterItemType = masterDetailRowArguments.DataAdapter.UnderlyingTypeOfItem;
 
-            var masterDetailConnection = gridConfigurationProvider
+            var masterDetailConfiguration = gridConfigurationProvider
                 .GetGridConfigurationByType(selectedItemType)
                 .FindRelationshipConfiguration(detailAdapterItemType);
 
             var constantValue = propertyValueAccessorCache
                 .GetPropertyAccesor(selectedItemType)
-                .GetValue(masterDetailRowArguments.SelectedItem, masterDetailConnection.MasterPropertyName);
+                .GetValue(masterDetailRowArguments.SelectedItem, masterDetailConfiguration.MasterDetailConnection.MasterPropertyName);
 
             var parameter = Expression.Parameter(detailAdapterItemType, "x");
-            var member = Expression.Property(parameter, masterDetailConnection.ForeignPropertyName);
+            var member = Expression.Property(parameter, masterDetailConfiguration.MasterDetailConnection.ForeignPropertyName);
             var constant = Expression.Constant(constantValue);
             var body = Expression.Equal(member, constant);
 
