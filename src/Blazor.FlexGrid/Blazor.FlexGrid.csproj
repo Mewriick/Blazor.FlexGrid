@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <BlazorLinkerDescriptor Include="content\Linker.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="content\fontawesome\css\all.css" />
     <None Remove="content\fontawesome\css\brands.css" />
     <None Remove="content\fontawesome\css\fontawesome.css" />

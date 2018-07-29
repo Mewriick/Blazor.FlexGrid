@@ -12,5 +12,11 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         {
             ModelBuilder = internalModelBuilder ?? throw new ArgumentNullException(nameof(internalModelBuilder));
         }
+
+        public bool HasPageSize(int pageSize)
+            => HasAnnotation(GridViewAnnotationNames.DetailTabPageSize, pageSize);
+
+        public bool HasCaption(string caption)
+            => HasAnnotation(GridViewAnnotationNames.DetailTabPageCaption, caption);
     }
 }

@@ -12,6 +12,8 @@ namespace Blazor.FlexGrid.DataAdapters
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
 
+        public override Type UnderlyingTypeOfItem => typeof(TItem);
+
         public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));

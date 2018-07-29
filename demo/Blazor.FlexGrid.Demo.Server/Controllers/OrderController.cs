@@ -11,11 +11,13 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet("[action]")]
         public IActionResult Orders()
         {
-            return Ok(Enumerable.Range(1, 20).Select(index =>
+            var random = new Random();
+
+            return Ok(Enumerable.Range(1, 100).Select(index =>
                 new Order
                 {
                     Id = index,
-                    CustomerId = index,
+                    CustomerId = random.Next(1, 20),
                     OrderDate = DateTimeOffset.Now,
                     Status = "New"
                 })

@@ -1,4 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.DataAdapters;
+using Blazor.FlexGrid.DataSet;
+using System;
 
 namespace Blazor.FlexGrid.Components.Configuration
 {
@@ -15,20 +18,36 @@ namespace Blazor.FlexGrid.Components.Configuration
             return new GridColumnAnotations(property);
         }
 
-        public static GridCssClasses CssClasses(this IEntityType entityType)
+        public static int DetailGridViewPageSize(this IMasterDetailRelationship masterDetailRelationship, ITableDataSet masterTableDataSet)
         {
-            var cssClasses = entityType[GridViewAnnotationNames.CssClasses];
-            if (cssClasses is NullAnotationValue)
+            if (masterTableDataSet == null)
             {
-                return new DefaultGridCssClasses();
+                throw new ArgumentNullException(nameof(masterTableDataSet));
             }
 
-            return cssClasses as GridCssClasses;
+            var pageSizeAnnotationValue = masterDetailRelationship[GridViewAnnotationNames.DetailTabPageSize];
+            if (pageSizeAnnotationValue is NullAnotationValue)
+            {
+                return masterTableDataSet.PageableOptions.PageSize;
+            }
+
+            return (int)pageSizeAnnotationValue;
         }
 
-        public static string CreateColumnUniqueName(this IEntityType entityType, string columnName)
+        public static string DetailGridViewPageCaption(this IMasterDetailRelationship masterDetailRelationship, ITableDataAdapter tableDataAdapter)
         {
-            return $"{entityType.Name}_{columnName}";
+            if (tableDataAdapter == null)
+            {
+                throw new ArgumentNullException(nameof(tableDataAdapter));
+            }
+
+            var pageSizeAnnotationValue = masterDetailRelationship[GridViewAnnotationNames.DetailTabPageCaption];
+            if (pageSizeAnnotationValue is NullAnotationValue)
+            {
+                return tableDataAdapter.DefaultTitle();
+            }
+
+            return pageSizeAnnotationValue.ToString();
         }
     }
 }

@@ -50,9 +50,9 @@ namespace Blazor.FlexGrid.Components.Renderers
                 throw new ArgumentNullException(nameof(imutableGridRendererContext));
             }
 
-            GridItemProperties = imutableGridRendererContext.GridItemProperties;
-            CssClasses = imutableGridRendererContext.CssClasses;
             GridConfiguration = new GridAnotations(imutableGridRendererContext.GridEntityConfiguration);
+            GridItemProperties = imutableGridRendererContext.GridItemProperties;
+            CssClasses = GridConfiguration.CssClasses;
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
@@ -102,9 +102,25 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.GetUnderlyingType()));
+            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            renderTreeBuilder.AddAttribute(++sequence, "PageSize", RuntimeHelpers.TypeCheck(5));
+            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), RuntimeHelpers.TypeCheck(TableDataSet.PageableOptions.PageSize));
+            renderTreeBuilder.CloseComponent();
+        }
+
+        public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
+        {
+            if (tableDataAdapter is null)
+            {
+                return;
+            }
+
+            var masterDetailRelationship = GridConfiguration.FindRelationshipConfiguration(tableDataAdapter.UnderlyingTypeOfItem);
+            var pageSize = RuntimeHelpers.TypeCheck(masterDetailRelationship.DetailGridViewPageSize(TableDataSet));
+
+            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
+            renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
             renderTreeBuilder.CloseComponent();
         }
     }

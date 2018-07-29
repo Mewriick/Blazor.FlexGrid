@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -39,17 +40,10 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.Button, !disabled ? "pagination-button" : "pagination-button pagination-button-disabled");
             rendererContext.AddDisabled(disabled);
-
-            // This is not good but when click function is passed as parameter every button
-            // Have seme on click events           
-            rendererContext.AddOnClickEvent(() => BindMethods.GetEventHandlerValue((UIMouseEventArgs async) =>
-               buttonType == PaginationButtonType.Previous
-                  ? rendererContext.TableDataSet.GoToPreviousPage()
-                  : buttonType == PaginationButtonType.Next
-                      ? rendererContext.TableDataSet.GoToNextPage()
-                      : buttonType == PaginationButtonType.First
-                          ? rendererContext.TableDataSet.GoToFirstPage()
-                          : rendererContext.TableDataSet.GoToLastPage()));
+            rendererContext.AddOnClickEvent(() =>
+                BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
+                    await GetPaginationTask(rendererContext, buttonType))
+            );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");
             rendererContext.OpenElement(HtmlTagNames.I, buttonArrowClass);
@@ -57,6 +51,17 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
+
+        private Task GetPaginationTask(GridRendererContext rendererContext, PaginationButtonType paginationButtonType)
+            =>
+            paginationButtonType == PaginationButtonType.Previous
+               ? rendererContext.TableDataSet.GoToPreviousPage()
+               : paginationButtonType == PaginationButtonType.Next
+                   ? rendererContext.TableDataSet.GoToNextPage()
+                   : paginationButtonType == PaginationButtonType.First
+                       ? rendererContext.TableDataSet.GoToFirstPage()
+                       : rendererContext.TableDataSet.GoToLastPage();
+
     }
 
     internal enum PaginationButtonType

@@ -22,6 +22,20 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public GridCssClasses CssClasses
+        {
+            get
+            {
+                var cssClasses = annotations[GridViewAnnotationNames.CssClasses];
+                if (cssClasses is NullAnotationValue)
+                {
+                    return new DefaultGridCssClasses();
+                }
+
+                return cssClasses as GridCssClasses;
+            }
+        }
+
         public GridAnotations(IEntityType entityType)
         {
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));

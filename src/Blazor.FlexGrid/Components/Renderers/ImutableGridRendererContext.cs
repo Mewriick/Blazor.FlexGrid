@@ -25,14 +25,13 @@ namespace Blazor.FlexGrid.Components.Renderers
         public ImutableGridRendererContext(
             IEntityType gridEntityConfiguration,
             List<PropertyInfo> itemProperties,
-            IPropertyValueAccessor propertyValueAccessor,
-            GridCssClasses gridCssClasses)
+            IPropertyValueAccessor propertyValueAccessor
+            )
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
             GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
-            CssClasses = gridCssClasses ?? throw new ArgumentNullException(nameof(gridCssClasses));
             InitializeGridProperties();
         }
 

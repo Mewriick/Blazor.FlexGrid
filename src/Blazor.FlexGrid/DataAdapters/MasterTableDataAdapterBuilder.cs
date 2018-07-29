@@ -4,10 +4,10 @@ namespace Blazor.FlexGrid.DataAdapters
 {
     public class MasterTableDataAdapterBuilder<TItem> where TItem : class
     {
-        private readonly IDetailDataAdapterDependencies detailDataAdapterDependencies;
+        private readonly IDetailDataAdapterVisitors detailDataAdapterDependencies;
         private MasterTableDataAdapter<TItem> masterTableDataAdapter;
 
-        public MasterTableDataAdapterBuilder(IDetailDataAdapterDependencies detailDataAdapterDependencies)
+        public MasterTableDataAdapterBuilder(IDetailDataAdapterVisitors detailDataAdapterDependencies)
         {
             this.detailDataAdapterDependencies = detailDataAdapterDependencies ?? throw new ArgumentNullException(nameof(detailDataAdapterDependencies));
         }

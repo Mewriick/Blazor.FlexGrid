@@ -6,6 +6,8 @@ namespace Blazor.FlexGrid.DataAdapters
 {
     public abstract class BaseTableDataAdapter : ITableDataAdapter
     {
+        public abstract Type UnderlyingTypeOfItem { get; }
+
         public void Accept(IDataTableAdapterVisitor dataTableAdapterVisitor)
             => dataTableAdapterVisitor?.Visit(this);
 

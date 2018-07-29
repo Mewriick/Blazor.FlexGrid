@@ -17,6 +17,8 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public Expression<Func<TItem, bool>> Filter { get; set; } = item => true;
 
+        public override Type UnderlyingTypeOfItem => typeof(TItem);
+
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
             this.items = items ?? throw new ArgumentNullException(nameof(items));

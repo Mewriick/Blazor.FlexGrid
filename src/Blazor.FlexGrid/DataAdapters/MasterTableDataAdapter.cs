@@ -8,21 +8,23 @@ namespace Blazor.FlexGrid.DataAdapters
     public sealed class MasterTableDataAdapter<TItem> : BaseTableDataAdapter where TItem : class
     {
         private readonly ITableDataAdapter mainTableDataAdapter;
-        private readonly IDetailDataAdapterDependencies detailDataAdapterDependencies;
+        private readonly IDetailDataAdapterVisitors detailDataAdapterDependencies;
         private readonly List<ITableDataAdapter> detailTableDataAdapters;
 
-        public MasterTableDataAdapter(CollectionTableDataAdapter<TItem> mainTableDataAdapter, IDetailDataAdapterDependencies detailDataAdapterDependencies)
+        public override Type UnderlyingTypeOfItem => typeof(TItem);
+
+        public MasterTableDataAdapter(CollectionTableDataAdapter<TItem> mainTableDataAdapter, IDetailDataAdapterVisitors detailDataAdapterDependencies)
             : this(detailDataAdapterDependencies, mainTableDataAdapter)
         {
         }
 
-        public MasterTableDataAdapter(LazyLoadedTableDataAdapter<TItem> mainTableDataAdapter, IDetailDataAdapterDependencies detailDataAdapterDependencies)
+        public MasterTableDataAdapter(LazyLoadedTableDataAdapter<TItem> mainTableDataAdapter, IDetailDataAdapterVisitors detailDataAdapterDependencies)
             : this(detailDataAdapterDependencies, mainTableDataAdapter)
         {
 
         }
 
-        internal MasterTableDataAdapter(IDetailDataAdapterDependencies detailDataAdapterDependencies, ITableDataAdapter mainTableDataAdapter)
+        internal MasterTableDataAdapter(IDetailDataAdapterVisitors detailDataAdapterDependencies, ITableDataAdapter mainTableDataAdapter)
         {
             this.mainTableDataAdapter = mainTableDataAdapter ?? throw new ArgumentNullException(nameof(mainTableDataAdapter));
             this.detailDataAdapterDependencies = detailDataAdapterDependencies ?? throw new ArgumentNullException(nameof(detailDataAdapterDependencies));

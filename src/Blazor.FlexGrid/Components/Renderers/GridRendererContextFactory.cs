@@ -40,15 +40,12 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
 
             var gridConfiguration = gridConfigurationProvider.FindGridEntityConfigurationByType(dataSetItemType);
-            var gridCssClasses = gridConfiguration.CssClasses();
-
             propertyValueAccessorCache.AddPropertyAccessor(dataSetItemType, new TypeWrapper(dataSetItemType));
 
             imutableGridRendererContext = new ImutableGridRendererContext(
                     gridConfiguration,
                     dataSetItemType.GetProperties().ToList(),
-                    propertyValueAccessorCache.GetPropertyAccesor(dataSetItemType),
-                    gridCssClasses
+                    propertyValueAccessorCache.GetPropertyAccesor(dataSetItemType)
                 );
 
             imutableRendererContextCache.Add(dataSetItemType, imutableGridRendererContext);

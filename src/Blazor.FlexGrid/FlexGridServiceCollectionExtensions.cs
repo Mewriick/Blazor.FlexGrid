@@ -29,7 +29,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<GridRendererContextFactory>();
             services.AddSingleton<IPropertyValueAccessorCache, PropertyValueAccessorCache>();
-            services.AddSingleton<IDetailDataAdapterDependencies, DetailDataAdapterDependencies>();
+            services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
 
             RegisterGridRendererTree(services);
 
@@ -43,6 +43,7 @@ namespace Blazor.FlexGrid
                 var gridRowRenderer = new GridRowRenderer();
                 gridRowRenderer.AddRenderer(new GridCellMasterActionRenderer());
                 gridRowRenderer.AddRenderer(new GridCellRenderer());
+                gridRowRenderer.AddRenderer(new GridTabControlRenderer(), RendererType.AfterTag);
 
                 var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>());
                 gridBodyRenderer.AddRenderer(gridRowRenderer);

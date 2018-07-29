@@ -13,6 +13,7 @@
         public const string Div = "div";
         public const string Span = "span";
         public const string I = "i";
+        public const string Header = "header";
     }
 
     public class HtmlAttributes

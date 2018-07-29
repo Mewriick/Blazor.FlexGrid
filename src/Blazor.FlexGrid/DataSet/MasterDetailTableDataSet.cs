@@ -10,7 +10,7 @@ namespace Blazor.FlexGrid.DataSet
 {
     public class MasterDetailTableDataSet<TItem> : IMasterTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
-        private readonly IDetailDataAdapterDependencies detailDataAdapterDependencies;
+        private readonly IDetailDataAdapterVisitors detailDataAdapterDependencies;
         private readonly Dictionary<object, ITableDataAdapter> selectedDataAdapters;
         private readonly ITableDataSet tableDataSet;
         private readonly HashSet<ITableDataAdapter> tableDataAdapters;
@@ -25,7 +25,7 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public MasterDetailTableDataSet(ITableDataSet tableDataSet, IDetailDataAdapterDependencies detailDataAdapterDependencies)
+        public MasterDetailTableDataSet(ITableDataSet tableDataSet, IDetailDataAdapterVisitors detailDataAdapterDependencies)
         {
             this.tableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             this.detailDataAdapterDependencies = detailDataAdapterDependencies ?? throw new ArgumentNullException(nameof(detailDataAdapterDependencies));
@@ -53,7 +53,9 @@ namespace Blazor.FlexGrid.DataSet
                 throw new ArgumentNullException(nameof(masterDetailRowArguments));
             }
 
-            selectedDataAdapters[masterDetailRowArguments.SelectedItem] = CreateDetailTableDataAdapter(masterDetailRowArguments.DataAdapter, masterDetailRowArguments.SelectedItem);
+            selectedDataAdapters[masterDetailRowArguments.SelectedItem] = CreateDetailTableDataAdapter(
+                masterDetailRowArguments.DataAdapter,
+                masterDetailRowArguments.SelectedItem);
         }
 
         public Task GoToPage(int index)
@@ -79,7 +81,7 @@ namespace Blazor.FlexGrid.DataSet
 
         private ITableDataAdapter CreateDetailTableDataAdapter(ITableDataAdapter dataAdapter, object selectedItem)
         {
-            var detailAdapterType = typeof(DetailTableDataAdapter<>).MakeGenericType(dataAdapter.GetUnderlyingType());
+            var detailAdapterType = typeof(DetailTableDataAdapter<>).MakeGenericType(dataAdapter.UnderlyingTypeOfItem);
 
             return Activator.CreateInstance(detailAdapterType,
                 new object[] { detailDataAdapterDependencies, new MasterDetailRowArguments(dataAdapter, selectedItem) }) as ITableDataAdapter;
