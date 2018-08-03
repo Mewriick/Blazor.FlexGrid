@@ -2,6 +2,6 @@
 {
     public interface IMasterDetailTableDataSetFactory
     {
-        IMasterTableDataSet ConvertToMasterTableIfIsRequired(ITableDataSet tableDataSet);
+        ITableDataSet ConvertToMasterTableIfIsRequired(ITableDataSet tableDataSet);
     }
 }

@@ -77,12 +77,7 @@ namespace Blazor.FlexGrid.Components
                 conf.PageableOptions.PageSize = PageSize;
             });
 
-            // TODO Only For Test
-            var itemType = DataAdapter.UnderlyingTypeOfItem;
-            if (itemType.Name.Contains("Order"))
-            {
-                tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
-            }
+            tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
 
             return tableDataSet;
         }

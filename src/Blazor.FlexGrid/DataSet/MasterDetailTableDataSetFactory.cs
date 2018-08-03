@@ -15,11 +15,17 @@ namespace Blazor.FlexGrid.DataSet
             this.tableDataAdapterProvider = tableDataAdapterProvider ?? throw new ArgumentNullException(nameof(tableDataAdapterProvider));
         }
 
-        public IMasterTableDataSet ConvertToMasterTableIfIsRequired(ITableDataSet tableDataSet)
+        public ITableDataSet ConvertToMasterTableIfIsRequired(ITableDataSet tableDataSet)
         {
             if (tableDataSet is IMasterTableDataSet masterTableDataSet)
             {
                 return masterTableDataSet;
+            }
+
+            var entityConfiguration = gridConfigurationProvider.GetGridConfigurationByType(tableDataSet.UnderlyingTypeOfItem());
+            if (!entityConfiguration.IsMasterTable)
+            {
+                return tableDataSet;
             }
 
             var masterDetailTableDataSetType = typeof(MasterDetailTableDataSet<>).MakeGenericType(tableDataSet.UnderlyingTypeOfItem());
