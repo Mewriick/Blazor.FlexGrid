@@ -1,4 +1,6 @@
-﻿using Blazor.FlexGrid.DataAdapters;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Collections;
@@ -8,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
-    public class MasterDetailTableDataSet<TItem> : IMasterTableDataSet, IBaseTableDataSet<TItem> where TItem : class
+    internal class MasterDetailTableDataSet<TItem> : IMasterTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
-        private readonly IDetailDataAdapterVisitors detailDataAdapterVisitors;
+        private IEntityType gridConfiguration;
         private readonly Dictionary<object, ITableDataAdapter> selectedDataAdapters;
         private readonly ITableDataSet tableDataSet;
+        private readonly ITableDataAdapterProvider tableDataAdapterProvider;
         private readonly HashSet<ITableDataAdapter> tableDataAdapters;
 
         public IEnumerable<ITableDataAdapter> DetailDataAdapters => tableDataAdapters;
@@ -25,12 +28,16 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public MasterDetailTableDataSet(ITableDataSet tableDataSet, IDetailDataAdapterVisitors detailDataAdapterVisitors)
+        public MasterDetailTableDataSet(
+            ITableDataSet tableDataSet,
+            IGridConfigurationProvider gridConfigurationProvider,
+            ITableDataAdapterProvider tableDataAdapterProvider)
         {
             this.tableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
-            this.detailDataAdapterVisitors = detailDataAdapterVisitors ?? throw new ArgumentNullException(nameof(detailDataAdapterVisitors));
+            this.tableDataAdapterProvider = tableDataAdapterProvider ?? throw new ArgumentNullException(nameof(tableDataAdapterProvider));
             this.tableDataAdapters = new HashSet<ITableDataAdapter>();
             this.selectedDataAdapters = new Dictionary<object, ITableDataAdapter>();
+            this.gridConfiguration = gridConfigurationProvider?.FindGridEntityConfigurationByType(typeof(TItem)) ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
         }
 
         public void AttachDetailDataSetAdapter(ITableDataAdapter tableDataAdapter)
@@ -53,7 +60,7 @@ namespace Blazor.FlexGrid.DataSet
                 throw new ArgumentNullException(nameof(masterDetailRowArguments));
             }
 
-            selectedDataAdapters[masterDetailRowArguments.SelectedItem] = CreateDetailTableDataAdapter(
+            selectedDataAdapters[masterDetailRowArguments.SelectedItem] = tableDataAdapterProvider.ConvertToDetailTableDataAdapter(
                 masterDetailRowArguments.DataAdapter,
                 masterDetailRowArguments.SelectedItem);
         }
@@ -69,22 +76,28 @@ namespace Blazor.FlexGrid.DataSet
         public void ToggleRowItem(object item)
         {
             tableDataSet.ToggleRowItem(item);
-
-            if (!selectedDataAdapters.ContainsKey(item))
+            if (selectedDataAdapters.ContainsKey(item))
             {
-                selectedDataAdapters.Add(item, CreateDetailTableDataAdapter(tableDataAdapters.First(), item));
+                return;
             }
+
+            var tableDataAdapter = default(ITableDataAdapter);
+
+            if (tableDataAdapters.Any())
+            {
+                tableDataAdapter = tableDataAdapterProvider.ConvertToDetailTableDataAdapter(
+                    tableDataAdapters.First(), item);
+            }
+            else
+            {
+                tableDataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(
+                    item, gridConfiguration.ClrTypeCollectionProperties.First());
+            }
+
+            selectedDataAdapters.Add(item, tableDataAdapter);
         }
 
         public bool ItemIsSelected(object item)
             => tableDataSet.ItemIsSelected(item);
-
-        private ITableDataAdapter CreateDetailTableDataAdapter(ITableDataAdapter dataAdapter, object selectedItem)
-        {
-            var detailAdapterType = typeof(DetailTableDataAdapter<>).MakeGenericType(dataAdapter.UnderlyingTypeOfItem);
-
-            return Activator.CreateInstance(detailAdapterType,
-                new object[] { detailDataAdapterVisitors, new MasterDetailRowArguments(dataAdapter, selectedItem) }) as ITableDataAdapter;
-        }
     }
 }

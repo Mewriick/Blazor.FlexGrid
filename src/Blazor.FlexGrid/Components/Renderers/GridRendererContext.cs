@@ -34,6 +34,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyCollection<PropertyInfo> GridItemProperties { get; }
 
+        public IReadOnlyCollection<PropertyInfo> GridItemCollectionProperties { get; }
+
         public ITableDataSet TableDataSet { get; }
 
         public IGridViewColumnAnotations ActualColumnConfiguration => gridEntityConfiguration.FindColumnConfiguration(ActualColumnName);
@@ -52,6 +54,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             GridConfiguration = new GridAnotations(imutableGridRendererContext.GridEntityConfiguration);
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
+            GridItemCollectionProperties = imutableGridRendererContext.GridEntityConfiguration.ClrTypeCollectionProperties;
             CssClasses = GridConfiguration.CssClasses;
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;

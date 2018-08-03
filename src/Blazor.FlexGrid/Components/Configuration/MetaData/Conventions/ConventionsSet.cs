@@ -21,7 +21,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
             };
         }
 
-        public void RunConventions(Type type)
+        public virtual void RunConventions(Type type)
         {
             if (conventionsRunnedTypes.Contains(type))
             {

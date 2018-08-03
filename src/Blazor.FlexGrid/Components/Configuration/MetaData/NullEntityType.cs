@@ -16,11 +16,13 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public string Name => string.Empty;
 
+        public IReadOnlyCollection<PropertyInfo> ClrTypeCollectionProperties => new List<PropertyInfo>();
+
         public IProperty AddProperty(MemberInfo memberInfo)
         {
             return null;
         }
-        
+
         public IMasterDetailRelationship FindDetailRelationship(Type detailType)
             => null;
 

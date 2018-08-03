@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Renderers;
+﻿using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
+using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
@@ -20,6 +21,11 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private GridRendererContextFactory RendererContextFactory { get; set; }
 
+        [Inject]
+        private IMasterDetailTableDataSetFactory MasterDetailTableDataSetFactory { get; set; }
+
+        [Inject]
+        private ConventionsSet ConventionsSet { get; set; }
 
 
         [Parameter]
@@ -43,6 +49,8 @@ namespace Blazor.FlexGrid.Components
 
         protected override Task OnInitAsync()
         {
+            ConventionsSet.RunConventions(DataAdapter.UnderlyingTypeOfItem);
+
             dataAdapterWasEmptyInOnInit = DataAdapter == null;
 
             tableDataSet = GetTableDataSet() ?? new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable());
@@ -63,11 +71,20 @@ namespace Blazor.FlexGrid.Components
 
         private ITableDataSet GetTableDataSet()
         {
-            return DataAdapter?.GetTableDataSet(conf =>
+            var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
             {
                 conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri;
                 conf.PageableOptions.PageSize = PageSize;
             });
+
+            // TODO Only For Test
+            var itemType = DataAdapter.UnderlyingTypeOfItem;
+            if (itemType.Name.Contains("Order"))
+            {
+                tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
+            }
+
+            return tableDataSet;
         }
     }
 }

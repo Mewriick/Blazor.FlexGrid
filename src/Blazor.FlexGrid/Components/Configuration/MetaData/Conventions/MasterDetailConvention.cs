@@ -1,8 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.Builders;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
@@ -18,9 +14,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
 
         public override void Apply(InternalEntityTypeBuilder internalEntityTypeBuilder)
         {
-            var clrType = internalEntityTypeBuilder.Metadata.ClrType;
-            var collectionProperties = GetCollectionProperties(clrType);
-            foreach (var property in collectionProperties)
+            var entityType = internalEntityTypeBuilder.Metadata;
+            foreach (var property in entityType.ClrTypeCollectionProperties)
             {
                 var propertyType = property.PropertyType;
                 var masterDetailConfiguration = internalEntityTypeBuilder.Metadata.FindDetailRelationship(propertyType);
@@ -36,9 +31,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
                 }
             }
         }
-
-        private IEnumerable<PropertyInfo> GetCollectionProperties(Type type)
-            => type.GetProperties().Where(t => typeof(IEnumerable).IsAssignableFrom(t.PropertyType));
 
         private void ConfigureMasterDetailRelationShip(IMasterDetailRelationship masterDetailRelationship, PropertyInfo propertyInfo)
         {

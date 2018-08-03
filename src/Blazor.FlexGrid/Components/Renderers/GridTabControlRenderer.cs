@@ -4,11 +4,19 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridTabControlRenderer : GridPartRenderer
     {
+        private readonly ITableDataAdapterProvider tableDataAdapterProvider;
+
+        public GridTabControlRenderer(ITableDataAdapterProvider tableDataAdapterProvider)
+        {
+            this.tableDataAdapterProvider = tableDataAdapterProvider ?? throw new ArgumentNullException(nameof(tableDataAdapterProvider));
+        }
+
         public override void Render(GridRendererContext rendererContext)
         {
             if (!rendererContext.TableDataSet.ItemIsSelected(rendererContext.ActualItem) ||
@@ -44,24 +52,39 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             foreach (var dataAdapter in masterTableDataSet.DetailDataAdapters)
             {
-                var masterDetailRelationship = rendererContext
-                    .GridConfiguration
-                    .FindRelationshipConfiguration(dataAdapter.UnderlyingTypeOfItem);
-
-                var actualItem = rendererContext.ActualItem;
-                rendererContext.OpenElement(HtmlTagNames.Button,
-                    selectedDataAdapter.IsForSameUnderlyingType(dataAdapter) ? "tabs-button tabs-button-active" : "tabs-button");
-
-                rendererContext.AddOnClickEvent(() =>
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                        masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, actualItem)))
-                );
-
-                rendererContext.OpenElement(HtmlTagNames.Span, "tabs-button-text");
-                rendererContext.AddContent(masterDetailRelationship.DetailGridViewPageCaption(dataAdapter));
-                rendererContext.CloseElement();
-                rendererContext.CloseElement();
+                RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);
             }
+
+            foreach (var collectionProperty in rendererContext.GridItemCollectionProperties)
+            {
+                var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.ActualItem, collectionProperty);
+                RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);
+            }
+        }
+
+        private void RenderTab(
+            GridRendererContext rendererContext,
+            IMasterTableDataSet masterTableDataSet,
+            ITableDataAdapter selectedDataAdapter,
+            ITableDataAdapter dataAdapter)
+        {
+            var masterDetailRelationship = rendererContext
+                .GridConfiguration
+                .FindRelationshipConfiguration(dataAdapter.UnderlyingTypeOfItem);
+
+            var localActualItem = rendererContext.ActualItem;
+            rendererContext.OpenElement(HtmlTagNames.Button,
+                selectedDataAdapter.IsForSameUnderlyingType(dataAdapter) ? "tabs-button tabs-button-active" : "tabs-button");
+
+            rendererContext.AddOnClickEvent(() =>
+                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, localActualItem)))
+            );
+
+            rendererContext.OpenElement(HtmlTagNames.Span, "tabs-button-text");
+            rendererContext.AddContent(masterDetailRelationship.DetailGridViewPageCaption(dataAdapter));
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
         }
     }
 }

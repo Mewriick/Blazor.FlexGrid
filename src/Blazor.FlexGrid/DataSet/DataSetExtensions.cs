@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
     public static class DataSetExtensions
     {
+        public static Type UnderlyingTypeOfItem(this ITableDataSet tableDataSet)
+            => tableDataSet.GetType().GenericTypeArguments[0];
+
         public static bool HasItems(this ITableDataSet tableDataSet)
             => !(tableDataSet.Items == null || tableDataSet.Items.Count <= 0);
 

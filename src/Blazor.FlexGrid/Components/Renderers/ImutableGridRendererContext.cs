@@ -11,6 +11,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class ImutableGridRendererContext
     {
         private Dictionary<string, ValueFormatter> valueFormatters;
+        private List<PropertyInfo> gridItemCollectionProperties;
 
         public IEntityType GridEntityConfiguration { get; }
 
@@ -29,6 +30,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             )
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();
+            gridItemCollectionProperties = new List<PropertyInfo>();
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
             GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
@@ -37,9 +39,16 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void InitializeGridProperties()
         {
+            var collectionProperties = GridEntityConfiguration.ClrTypeCollectionProperties;
             var propertiesListWithOrder = new List<(int Order, PropertyInfo Prop)>();
+
             foreach (var property in GridItemProperties)
             {
+                if (collectionProperties.Contains(property))
+                {
+                    continue;
+                }
+
                 ValueFormatter columnValueFormatter = new DefaultValueFormatter();
                 var columnOrder = GridColumnAnotations.DefaultOrder;
                 var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);

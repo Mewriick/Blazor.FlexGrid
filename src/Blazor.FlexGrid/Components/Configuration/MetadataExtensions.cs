@@ -18,6 +18,17 @@ namespace Blazor.FlexGrid.Components.Configuration
             return new GridColumnAnotations(property);
         }
 
+        public static bool IsConfiguredAsMasterTable(this IEntityType entityType)
+        {
+            var masterTableAnnotationValue = entityType[GridViewAnnotationNames.IsMasterTable];
+            if (masterTableAnnotationValue is NullAnotationValue)
+            {
+                return false;
+            }
+
+            return (bool)masterTableAnnotationValue;
+        }
+
         public static int DetailGridViewPageSize(this IMasterDetailRelationship masterDetailRelationship, ITableDataSet masterTableDataSet)
         {
             if (masterTableDataSet == null)

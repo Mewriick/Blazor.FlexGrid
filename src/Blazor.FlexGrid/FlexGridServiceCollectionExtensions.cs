@@ -15,23 +15,35 @@ namespace Blazor.FlexGrid
 {
     public static class FlexGridServiceCollectionExtensions
     {
-        public static IServiceCollection AddFlexGrid(this IServiceCollection services, Action<IModelConfiguration> configureGridComponents = null)
+        public static IServiceCollection AddFlexGridServerSide(this IServiceCollection services, Action<IModelConfiguration> configureGridComponents = null)
+            => services.AddFlexGrid(configureGridComponents, true);
+
+        public static IServiceCollection AddFlexGrid(this IServiceCollection services, Action<IModelConfiguration> configureGridComponents = null, bool isServerSideBlazorApp = false)
         {
             var modelBuilder = new ModelBuilder();
             configureGridComponents?.Invoke(modelBuilder);
 
-            services.AddLogging(builder => builder
-                .AddBrowserConsole()
-                .SetMinimumLevel(LogLevel.Debug));
+            if (isServerSideBlazorApp)
+            {
+                services.AddLogging(builder => builder.AddConsole());
+            }
+            else
+            {
+                services.AddLogging(builder => builder
+                    .AddBrowserConsole()
+                    .SetMinimumLevel(LogLevel.Debug));
+            }
 
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<GridRendererContextFactory>();
+            services.AddSingleton<IMasterDetailTableDataSetFactory, MasterDetailTableDataSetFactory>();
             services.AddSingleton<ConventionsSet>();
             services.AddSingleton<IPropertyValueAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
+            services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
 
             RegisterGridRendererTree(services);
 
@@ -45,7 +57,7 @@ namespace Blazor.FlexGrid
                 var gridRowRenderer = new GridRowRenderer();
                 gridRowRenderer.AddRenderer(new GridCellMasterActionRenderer());
                 gridRowRenderer.AddRenderer(new GridCellRenderer());
-                gridRowRenderer.AddRenderer(new GridTabControlRenderer(), RendererType.AfterTag);
+                gridRowRenderer.AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag);
 
                 var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>());
                 gridBodyRenderer.AddRenderer(gridRowRenderer);

@@ -15,6 +15,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         public string Name { get; }
 
+        public IReadOnlyCollection<PropertyInfo> ClrTypeCollectionProperties { get; }
 
         public EntityType(Type clrType, Model model)
         {
@@ -23,6 +24,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             Name = clrType.FullName;
             this.properties = new SortedDictionary<string, Property>();
             this.detailRelationships = new SortedDictionary<string, MasterDetailRelationship>();
+            ClrTypeCollectionProperties = GetClrTypeCollectionProperties();
         }
 
         public IProperty FindProperty(string name)
@@ -36,7 +38,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 : null;
 
         public IEnumerable<IProperty> GetProperties() => properties.Values;
-
 
         public Property AddProperty(MemberInfo memberInfo)
         {
@@ -112,7 +113,25 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        private IReadOnlyCollection<PropertyInfo> GetClrTypeCollectionProperties()
+        {
+            var collectionProperties = new List<PropertyInfo>();
+
+            foreach (var property in ClrType.GetProperties())
+            {
+                if (property.PropertyType != typeof(string) &&
+                    property.PropertyType.GetInterface(nameof(System.Collections.IEnumerable)) != null)
+                {
+                    collectionProperties.Add(property);
+                }
+            }
+
+            return collectionProperties;
+        }
+
         IModel IEntityType.Model => Model;
+
+        IReadOnlyCollection<PropertyInfo> IEntityType.ClrTypeCollectionProperties => ClrTypeCollectionProperties;
 
         IProperty IEntityType.AddProperty(MemberInfo memberInfo) => AddProperty(memberInfo);
     }

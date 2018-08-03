@@ -24,8 +24,10 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
 
                 Apply(entityTypeBuilder);
             }
-
-            Apply(new InternalEntityTypeBuilder(entityType as EntityType, internalModelBuilder));
+            else
+            {
+                Apply(new InternalEntityTypeBuilder(entityType as EntityType, internalModelBuilder));
+            }
         }
 
         public abstract void Apply(InternalEntityTypeBuilder internalEntityTypeBuilder);
