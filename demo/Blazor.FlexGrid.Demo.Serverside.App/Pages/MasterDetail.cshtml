@@ -1,0 +1,35 @@
+﻿@addTagHelper *, Blazor.FlexGrid
+@using Blazor.FlexGrid.Demo.Shared
+@using Blazor.FlexGrid.DataAdapters
+@page "/masterdetailgrid"
+@inject CustomerService CustomerService
+@inject OrderService OrderService
+@inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
+
+<h1>Customers</h1>
+
+<GridView DataAdapter="@customersMasterDataAdapter" PageSize="5"></GridView>
+
+@functions
+{
+CollectionTableDataAdapter<Customer> customerDataAdapter;
+CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
+CollectionTableDataAdapter<Order> ordersDataAdapter;
+MasterTableDataAdapter<Customer> customersMasterDataAdapter;
+
+protected override void OnInit()
+{
+    var customers = CustomerService.Customers();
+    var customersAddresses = CustomerService.CustomersAddresses();
+    var orders = OrderService.Orders();
+    customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
+    ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
+    customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
+
+    customersMasterDataAdapter = MasterAdapterBuilder
+        .MasterTableDataAdapter(customerDataAdapter)
+        .WithDetailTableDataAdapter(ordersDataAdapter)
+        .WithDetailTableDataAdapter(customerAddressesDataAdapter)
+        .Build();
+}
+}

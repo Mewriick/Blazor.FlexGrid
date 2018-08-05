@@ -24,12 +24,6 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            if (string.IsNullOrWhiteSpace(tableDataSetOptions.LazyLoadingOptions.DataUri))
-            {
-                throw new ArgumentNullException($"When you using {nameof(LazyLoadedTableDataAdapter<TItem>)} you must specify " +
-                    $"{nameof(LazyLoadingOptions.DataUri)} for lazy data retrieving. If you do not want use lazy loading feature use {nameof(CollectionTableDataAdapter<TItem>)} instead.");
-            }
-
             var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader)
             {
                 LazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions,

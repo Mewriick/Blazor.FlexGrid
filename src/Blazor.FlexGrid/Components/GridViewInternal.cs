@@ -49,11 +49,13 @@ namespace Blazor.FlexGrid.Components
 
         protected override Task OnInitAsync()
         {
-            ConventionsSet.RunConventions(DataAdapter.UnderlyingTypeOfItem);
-
             dataAdapterWasEmptyInOnInit = DataAdapter == null;
+            if (!dataAdapterWasEmptyInOnInit)
+            {
+                ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
+            }
 
-            tableDataSet = GetTableDataSet() ?? new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable());
+            tableDataSet = GetTableDataSet();
 
             return tableDataSet.GoToPage(0);
         }
@@ -62,6 +64,7 @@ namespace Blazor.FlexGrid.Components
         {
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {
+                ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 tableDataSet = GetTableDataSet();
                 return tableDataSet.GoToPage(0);
             }
@@ -76,6 +79,11 @@ namespace Blazor.FlexGrid.Components
                 conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri;
                 conf.PageableOptions.PageSize = PageSize;
             });
+
+            if (tableDataSet is null)
+            {
+                return new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable());
+            }
 
             tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
 

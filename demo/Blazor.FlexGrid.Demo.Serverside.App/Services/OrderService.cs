@@ -22,7 +22,7 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
                     {
                         new OrderItem
                         {
-                            Id = 1,
+                            Id = index + 1,
                             Name = "Test",
                             OrderId = index,
                             Price = 100

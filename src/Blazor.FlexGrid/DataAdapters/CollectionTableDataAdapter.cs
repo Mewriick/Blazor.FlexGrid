@@ -1,7 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -23,11 +22,6 @@ namespace Blazor.FlexGrid.DataAdapters
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
             this.items = items ?? throw new ArgumentNullException(nameof(items));
-        }
-
-        public CollectionTableDataAdapter(ICollection items, bool isInternal)
-        {
-            this.items = new List<TItem>(items as ICollection<TItem>);
         }
 
         public override ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)

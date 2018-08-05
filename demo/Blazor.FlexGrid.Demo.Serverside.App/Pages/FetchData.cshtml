@@ -1,4 +1,4 @@
-﻿@using BlazorApp1.App.Services
+﻿@using Blazor.FlexGrid.Demo.Serverside.App.Services
 @page "/fetchdata"
 @inject WeatherForecastService ForecastService
 
@@ -36,10 +36,10 @@ else
 }
 
 @functions {
-    WeatherForecast[] forecasts;
+WeatherForecast[] forecasts;
 
-    protected override async Task OnInitAsync()
-    {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-    }
+protected override async Task OnInitAsync()
+{
+    forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+}
 }

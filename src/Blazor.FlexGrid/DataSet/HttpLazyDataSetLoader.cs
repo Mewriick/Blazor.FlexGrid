@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
+﻿using Blazor.FlexGrid.DataAdapters;
+using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,6 +23,12 @@ namespace Blazor.FlexGrid.DataSet
         public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
             ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions)
         {
+            if (string.IsNullOrWhiteSpace(lazyLoadingOptions.DataUri))
+            {
+                throw new ArgumentNullException($"When you using {nameof(LazyLoadedTableDataAdapter<TItem>)} you must specify " +
+                    $"{nameof(LazyLoadingOptions.DataUri)} for lazy data retrieving. If you do not want use lazy loading feature use {nameof(CollectionTableDataAdapter<TItem>)} instead.");
+            }
+
             var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?{PagingParams(pageableOptions)}{SortingParams(sortingOptions)}";
             try
             {

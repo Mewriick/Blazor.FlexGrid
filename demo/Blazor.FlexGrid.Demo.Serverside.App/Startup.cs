@@ -1,6 +1,5 @@
 using Blazor.FlexGrid.Demo.Client.GridConfigurations;
 using Blazor.FlexGrid.Demo.Serverside.App.Services;
-using BlazorApp1.App.Services;
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

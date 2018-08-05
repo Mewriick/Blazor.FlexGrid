@@ -39,7 +39,7 @@ namespace Blazor.FlexGrid.DataAdapters
 
             var dataAdapterType = typeof(CollectionTableDataAdapter<>).MakeGenericType(propertyType);
             var dataAdapter = Activator.CreateInstance(dataAdapterType,
-                new object[] { collectionValue, true }) as ITableDataAdapter;
+                new object[] { collectionValue }) as ITableDataAdapter;
 
             return dataAdapter;
         }

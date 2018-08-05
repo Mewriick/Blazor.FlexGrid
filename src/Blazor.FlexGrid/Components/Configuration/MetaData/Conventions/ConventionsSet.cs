@@ -15,13 +15,14 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData.Conventions
         {
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
             this.conventionsRunnedTypes = new HashSet<Type>();
+
             Conventions = new List<IConvention>()
             {
                 new MasterDetailConvention(gridConfigurationProvider)
             };
         }
 
-        public virtual void RunConventions(Type type)
+        public virtual void ApplyConventions(Type type)
         {
             if (conventionsRunnedTypes.Contains(type))
             {

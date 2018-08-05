@@ -1,0 +1,28 @@
+﻿@addTagHelper *, Blazor.FlexGrid
+@using Blazor.FlexGrid.Demo.Shared
+@using Blazor.FlexGrid.DataAdapters
+@using Blazor.FlexGrid.Demo.Serverside.App.Services
+@inject WeatherForecastService WeatherService
+@page "/lazyloadedgrid"
+
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+
+<GridView DataAdapter="@lazyLoadedTableDataAdapter" PageSize="10"></GridView>
+
+@functions {
+LazyLoadedTableDataAdapter<WeatherForecast> lazyLoadedTableDataAdapter;
+
+protected override void OnInit()
+{
+
+    lazyLoadedTableDataAdapter = new LazyLoadedTableDataAdapter<WeatherForecast>(WeatherService);
+}
+}
+
+
+
+
