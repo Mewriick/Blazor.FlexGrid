@@ -9,7 +9,7 @@ GridView component for Blazor
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-v0.1.1-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.2.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
@@ -35,10 +35,18 @@ After nuget instalation you must create in Blazor.Client app Linker.xml file bec
 
 # Setup
 ```cs
-var serviceProvider = new BrowserServiceProvider(services =>
+public void ConfigureServices(IServiceCollection services)
 {
     services.AddFlexGrid();
-});
+}
+```
+
+# Setup ServerSide Blazor App
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddFlexGridServerSide();
+}
 ```
 
 In your Blazor component add Tag helper and required usings
@@ -166,6 +174,75 @@ public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParam
 ```
 After that you have fully pageable and sortable table with lazy loaded data after you select new page
 
+# Master / Detail 
+You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is collection
+**FlexGrid** component automatically find out this and will render this kind of object as Master / Detail grid.
+
+Example configuration
+```cs
+public void Configure(EntityTypeBuilder<Customer> builder)
+{
+    builder.IsMasterTable();
+    builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
+        .HasCaption("Orders")
+        .HasPageSize(10);
+
+    builder.HasDetailRelationship<CustomerAddress>(c => c.Id, o => o.CustomerId)
+        .HasCaption("Customer addresses");
+}
+
+public void Configure(EntityTypeBuilder<Order> builder)
+{
+    builder.IsMasterTable();
+    builder.HasDetailRelationship(o => o.OrderItems)
+        .HasCaption("Order products");
+}
+```
+
+For correct working of Master / Detail grid you must configure relation ships between objects. Also you can define some additional options for related grid component.
+
+Example page with Master/Detail grid
+
+```cs
+@addTagHelper *, Blazor.FlexGrid
+@using Blazor.FlexGrid.Demo.Shared
+@using Blazor.FlexGrid.DataAdapters
+@page "/masterdetailgrid"
+@inject CustomerService CustomerService
+@inject OrderService OrderService
+@inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
+
+<h1>Customers</h1>
+
+<GridView DataAdapter="@customersMasterDataAdapter" PageSize="5"></GridView>
+
+@functions
+{
+	CollectionTableDataAdapter<Customer> customerDataAdapter;
+	CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
+	CollectionTableDataAdapter<Order> ordersDataAdapter;
+	MasterTableDataAdapter<Customer> customersMasterDataAdapter;
+
+	protected override void OnInit()
+	{
+		var customers = CustomerService.Customers();
+		var customersAddresses = CustomerService.CustomersAddresses();
+		var orders = OrderService.Orders();
+		customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
+		ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
+		customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
+
+		customersMasterDataAdapter = MasterAdapterBuilder
+			.MasterTableDataAdapter(customerDataAdapter)
+			.WithDetailTableDataAdapter(ordersDataAdapter)
+			.WithDetailTableDataAdapter(customerAddressesDataAdapter)
+			.Build();
+	}
+}
+```
+For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is register in DI container. Master / Detail now can fully work only with 
+**CollectionTableDataAdapter** as detail data adapters. In future also **LazyLoadedTableDataAdapter** will be supported.
+
 # Design
 You can override some default CssClasses by your own CssClasses by using fluent api configuration
 ```cs
@@ -188,6 +265,7 @@ public void Configure(EntityTypeBuilder<WeatherForecast> builder)
 Please feel free to use the component, open issues, fix bugs or provide feedback.
 
 ## RoadMap
+``Add UnitTests``
 ``More fluent API configuration``
 ``Filtration support``
 ``Inline editing``

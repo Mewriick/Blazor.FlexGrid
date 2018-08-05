@@ -15,6 +15,9 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.HasDetailRelationship<CustomerAddress>(c => c.Id, o => o.CustomerId)
                 .HasCaption("Customer addresses");
+
+            builder.Property(c => c.Id)
+                .IsSortable();
         }
     }
 }
