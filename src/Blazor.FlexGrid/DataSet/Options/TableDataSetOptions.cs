@@ -5,5 +5,7 @@
         public LazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
         public PageableOptions PageableOptions { get; set; } = new PageableOptions();
+
+        public SortingOptions SortingOptions { get; set; } = new SortingOptions();
     }
 }

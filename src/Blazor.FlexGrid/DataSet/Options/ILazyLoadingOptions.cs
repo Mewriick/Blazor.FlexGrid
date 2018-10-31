@@ -3,5 +3,7 @@
     public interface ILazyLoadingOptions
     {
         string DataUri { get; set; }
+
+        LazyRequestParams RequestParams { get; }
     }
 }

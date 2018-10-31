@@ -29,5 +29,17 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public MasterDetailRelationshipBuilder HasLazyLoadingUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
+            Builder.HasLazyLoadingUrl(url);
+
+            return this;
+        }
     }
 }

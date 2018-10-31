@@ -3,6 +3,7 @@ using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
 using System;
@@ -124,6 +125,13 @@ namespace Blazor.FlexGrid.Components.Renderers
             renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
             renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
+
+            var lazyLoadingUrl = masterDetailRelationship.DetailGridLazyLoadingUrl();
+            if (!string.IsNullOrEmpty(lazyLoadingUrl))
+            {
+                renderTreeBuilder.AddAttribute(++sequence, nameof(ILazyTableDataSet.LazyLoadingOptions), new LazyLoadingOptions { DataUri = lazyLoadingUrl });
+            }
+
             renderTreeBuilder.CloseComponent();
         }
     }

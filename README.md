@@ -9,7 +9,7 @@ GridView component for Blazor
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.2.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.3.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
@@ -184,6 +184,7 @@ public void Configure(EntityTypeBuilder<Customer> builder)
 {
     builder.IsMasterTable();
     builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
+        .HasLazyLoadingUrl("/api/Order/Orders")
         .HasCaption("Orders")
         .HasPageSize(10);
 
@@ -200,6 +201,8 @@ public void Configure(EntityTypeBuilder<Order> builder)
 ```
 
 For correct working of Master / Detail grid you must configure relation ships between objects. Also you can define some additional options for related grid component.
+If you want use **LazyTableDataSet** you must provide url address for loading. This is not required in ServerSide solution because you have to create your own DataSet
+which implements **ILazyDataSetLoader**.
 
 Example page with Master/Detail grid
 
@@ -207,41 +210,37 @@ Example page with Master/Detail grid
 @addTagHelper *, Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
-@page "/masterdetailgrid"
-@inject CustomerService CustomerService
-@inject OrderService OrderService
+@inject HttpClient Http
 @inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
+@inject LazyLoadedTableDataAdapter<Order> ordersAdapter
+@page "/masterdetailgrid"
 
 <h1>Customers</h1>
 
 <GridView DataAdapter="@customersMasterDataAdapter" PageSize="5"></GridView>
 
-@functions
-{
-	CollectionTableDataAdapter<Customer> customerDataAdapter;
-	CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
-	CollectionTableDataAdapter<Order> ordersDataAdapter;
-	MasterTableDataAdapter<Customer> customersMasterDataAdapter;
+@functions{
+    CollectionTableDataAdapter<Customer> customerDataAdapter;
+    CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
+    MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
-	protected override void OnInit()
-	{
-		var customers = CustomerService.Customers();
-		var customersAddresses = CustomerService.CustomersAddresses();
-		var orders = OrderService.Orders();
-		customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
-		ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
-		customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
+    protected override async Task OnInitAsync()
+    {
+        var customers = await Http.GetJsonAsync<Customer[]>("/api/Customer/Customers");
+        var customersAddresses = await Http.GetJsonAsync<CustomerAddress[]>("/api/Customer/CustomersAddresses");
+        customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
+        customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 
-		customersMasterDataAdapter = MasterAdapterBuilder
-			.MasterTableDataAdapter(customerDataAdapter)
-			.WithDetailTableDataAdapter(ordersDataAdapter)
-			.WithDetailTableDataAdapter(customerAddressesDataAdapter)
-			.Build();
-	}
+        customersMasterDataAdapter = MasterAdapterBuilder
+            .MasterTableDataAdapter(customerDataAdapter)
+            .WithDetailTableDataAdapter(ordersAdapter)
+            .WithDetailTableDataAdapter(customerAddressesDataAdapter)
+            .Build();
+    }
 }
 ```
-For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is register in DI container. Master / Detail now can fully work only with 
-**CollectionTableDataAdapter** as detail data adapters. In future also **LazyLoadedTableDataAdapter** will be supported.
+For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is register in DI container. 
+Master / Detail usage you can find in ServerSide Blazor demo project
 
 # Design
 You can override some default CssClasses by your own CssClasses by using fluent api configuration

@@ -14,16 +14,15 @@
 {
 CollectionTableDataAdapter<Customer> customerDataAdapter;
 CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
-CollectionTableDataAdapter<Order> ordersDataAdapter;
+LazyLoadedTableDataAdapter<Order> ordersDataAdapter;
 MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
 protected override void OnInit()
 {
     var customers = CustomerService.Customers();
     var customersAddresses = CustomerService.CustomersAddresses();
-    var orders = OrderService.Orders();
     customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
-    ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
+    ordersDataAdapter = new LazyLoadedTableDataAdapter<Order>(OrderService);
     customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 
     customersMasterDataAdapter = MasterAdapterBuilder

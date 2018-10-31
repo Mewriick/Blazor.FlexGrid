@@ -22,13 +22,14 @@ namespace Blazor.FlexGrid.DataSet
                 return masterTableDataSet;
             }
 
-            var entityConfiguration = gridConfigurationProvider.GetGridConfigurationByType(tableDataSet.UnderlyingTypeOfItem());
+            var tableDataSetItemType = tableDataSet.UnderlyingTypeOfItem();
+            var entityConfiguration = gridConfigurationProvider.GetGridConfigurationByType(tableDataSetItemType);
             if (!entityConfiguration.IsMasterTable)
             {
                 return tableDataSet;
             }
 
-            var masterDetailTableDataSetType = typeof(MasterDetailTableDataSet<>).MakeGenericType(tableDataSet.UnderlyingTypeOfItem());
+            var masterDetailTableDataSetType = typeof(MasterDetailTableDataSet<>).MakeGenericType(tableDataSetItemType);
             var masterDetailTableDataSet = Activator.CreateInstance(masterDetailTableDataSetType,
                 new object[] { tableDataSet, gridConfigurationProvider, tableDataAdapterProvider }) as IMasterTableDataSet;
 

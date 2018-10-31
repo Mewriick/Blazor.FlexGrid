@@ -49,14 +49,15 @@ namespace Blazor.FlexGrid.Components.Renderers
                     continue;
                 }
 
-                ValueFormatter columnValueFormatter = new DefaultValueFormatter();
-                var columnOrder = GridColumnAnotations.DefaultOrder;
                 var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);
-                if (columnConfig != null)
+                var columnVisibility = columnConfig?.IsVisible;
+                if (columnVisibility.HasValue && !columnVisibility.Value)
                 {
-                    columnOrder = columnConfig.Order;
-                    columnValueFormatter = columnConfig.ValueFormatter;
+                    continue;
                 }
+
+                var columnOrder = columnConfig == null ? GridColumnAnotations.DefaultOrder : columnConfig.Order;
+                ValueFormatter columnValueFormatter = columnConfig?.ValueFormatter ?? new DefaultValueFormatter();
 
                 propertiesListWithOrder.Add((Order: columnOrder, Prop: property));
                 valueFormatters.Add(property.Name, columnValueFormatter);

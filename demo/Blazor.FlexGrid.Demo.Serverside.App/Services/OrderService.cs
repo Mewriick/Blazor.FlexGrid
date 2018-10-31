@@ -1,17 +1,21 @@
-﻿using Blazor.FlexGrid.Demo.Shared;
+﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Demo.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 {
-    public class OrderService
+    public class OrderService : ILazyDataSetLoader<Order>
     {
-        public ICollection<Order> Orders()
+        private List<Order> orders;
+
+        public OrderService()
         {
             var random = new Random();
-
-            return Enumerable.Range(1, 100).Select(index =>
+            orders = Enumerable.Range(1, 1000).Select(index =>
                 new Order
                 {
                     Id = index,
@@ -30,5 +34,27 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
                     }
                 }).ToList();
         }
+
+        public Task<LazyLoadingDataSetResult<Order>> GetTablePageData(
+            ILazyLoadingOptions lazyLoadingOptions,
+            IPagingOptions pageableOptions,
+            ISortingOptions sortingOptions)
+        {
+
+            var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams["CustomerId"]);
+            var customerOrders = orders.Where(o => o.CustomerId == customerId);
+            var pageableCustomerOrders = customerOrders
+                .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
+                .Take(pageableOptions.PageSize)
+                .ToList();
+
+            return Task.FromResult(new LazyLoadingDataSetResult<Order>
+            {
+                Items = pageableCustomerOrders,
+                TotalCount = customerOrders.Count()
+            });
+        }
+
+        public ICollection<Order> Orders() => orders;
     }
 }

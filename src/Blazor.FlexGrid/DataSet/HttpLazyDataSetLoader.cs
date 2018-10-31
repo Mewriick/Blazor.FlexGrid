@@ -29,7 +29,7 @@ namespace Blazor.FlexGrid.DataSet
                     $"{nameof(LazyLoadingOptions.DataUri)} for lazy data retrieving. If you do not want use lazy loading feature use {nameof(CollectionTableDataAdapter<TItem>)} instead.");
             }
 
-            var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?{PagingParams(pageableOptions)}{SortingParams(sortingOptions)}";
+            var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?{lazyLoadingOptions.RequestParams}{PagingParams(pageableOptions)}{SortingParams(sortingOptions)}";
             try
             {
                 return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);

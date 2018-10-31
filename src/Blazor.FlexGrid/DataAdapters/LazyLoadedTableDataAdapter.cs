@@ -8,11 +8,13 @@ namespace Blazor.FlexGrid.DataAdapters
     /// Create <seealso cref="LazyTableDataSet{TItem}"/> 
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter where TItem : class
+    public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter, ILazyLoadedTableDataAdapter where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
+
+        public Action<LazyRequestParams> AddRequestParamsAction { get; set; }
 
         public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader)
         {
@@ -24,11 +26,14 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
+            var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions;
+            AddRequestParamsAction?.Invoke(lazyLoadingOptions.RequestParams);
+
             var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader)
             {
-                LazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions,
+                LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
-                SortingOptions = new SortingOptions()
+                SortingOptions = tableDataSetOptions.SortingOptions
             };
 
             return tableDataSet;
@@ -36,5 +41,13 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public override object Clone()
             => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader);
+    }
+
+    /// <summary>
+    /// Only for type check purposes
+    /// </summary>
+    internal interface ILazyLoadedTableDataAdapter
+    {
+        Action<LazyRequestParams> AddRequestParamsAction { set; }
     }
 }

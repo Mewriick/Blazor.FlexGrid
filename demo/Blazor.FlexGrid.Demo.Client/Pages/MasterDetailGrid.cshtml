@@ -3,6 +3,7 @@
 @using Blazor.FlexGrid.DataAdapters
 @inject HttpClient Http
 @inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
+@inject LazyLoadedTableDataAdapter<Order> ordersAdapter
 @page "/masterdetailgrid"
 
 <h1>Customers</h1>
@@ -12,21 +13,18 @@
 @functions{
     CollectionTableDataAdapter<Customer> customerDataAdapter;
     CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
-    CollectionTableDataAdapter<Order> ordersDataAdapter;
     MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
     protected override async Task OnInitAsync()
     {
         var customers = await Http.GetJsonAsync<Customer[]>("/api/Customer/Customers");
         var customersAddresses = await Http.GetJsonAsync<CustomerAddress[]>("/api/Customer/CustomersAddresses");
-        var orders = await Http.GetJsonAsync<Order[]>("/api/Order/Orders");
         customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
-        ordersDataAdapter = new CollectionTableDataAdapter<Order>(orders);
         customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 
         customersMasterDataAdapter = MasterAdapterBuilder
             .MasterTableDataAdapter(customerDataAdapter)
-            .WithDetailTableDataAdapter(ordersDataAdapter)
+            .WithDetailTableDataAdapter(ordersAdapter)
             .WithDetailTableDataAdapter(customerAddressesDataAdapter)
             .Build();
     }

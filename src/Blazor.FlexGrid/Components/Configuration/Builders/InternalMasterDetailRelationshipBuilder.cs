@@ -18,5 +18,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasCaption(string caption)
             => HasAnnotation(GridViewAnnotationNames.DetailTabPageCaption, caption);
+
+        public bool HasLazyLoadingUrl(string url)
+            => HasAnnotation(GridViewAnnotationNames.DetailLazyLoadingUrl, url);
     }
 }
