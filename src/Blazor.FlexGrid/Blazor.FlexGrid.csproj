@@ -7,7 +7,7 @@
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <LangVersion>7.3</LangVersion>
     <PackageId>Blazor.FlexGrid</PackageId>
-    <PackageVersion>0.3.1</PackageVersion>
+    <PackageVersion>0.3.2</PackageVersion>
     <Title>Blazor.FlexGrid</Title>
     <Description>GridView component for Blazor</Description>
     <Authors>Jaroslav Surala</Authors>
