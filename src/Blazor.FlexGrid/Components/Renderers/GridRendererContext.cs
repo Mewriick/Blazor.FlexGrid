@@ -4,6 +4,7 @@ using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
 using System;
@@ -81,8 +82,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             => renderTreeBuilder.AddContent(++sequence, content);
 
         public void AddActualColumnValue()
-            => renderTreeBuilder.AddContent(++sequence, valueFormatters[ActualColumnName]
-                .FormatValue(propertyValueAccessor.GetValue(ActualItem, ActualColumnName)));
+            => renderTreeBuilder.AddContent(++sequence, new MarkupString(
+                valueFormatters[ActualColumnName].FormatValue(
+                    propertyValueAccessor.GetValue(ActualItem, ActualColumnName))
+                )
+              );
 
         public void AddDisabled(bool disabled)
             => renderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Disabled, disabled);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Blazor.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Tests.Mocks
 {
@@ -22,16 +23,13 @@ namespace Blazor.FlexGrid.Tests.Mocks
         public List<CapturedBatch> Batches { get; }
             = new List<CapturedBatch>();
 
-        public new int AssignComponentId(IComponent component)
-            => base.AssignComponentId(component);
-
         public new void DispatchEvent(int componentId, int eventHandlerId, UIEventArgs args)
             => base.DispatchEvent(componentId, eventHandlerId, args);
 
         public T InstantiateComponent<T>() where T : IComponent
             => (T)InstantiateComponent(typeof(T));
 
-        protected override void UpdateDisplay(in RenderBatch renderBatch)
+        protected override Task UpdateDisplayAsync(in RenderBatch renderBatch)
         {
             OnUpdateDisplay?.Invoke(renderBatch);
 
@@ -47,6 +45,8 @@ namespace Blazor.FlexGrid.Tests.Mocks
             // Clone other data, as underlying storage will get reused by later batches
             capturedBatch.ReferenceFrames = renderBatch.ReferenceFrames.ToArray();
             capturedBatch.DisposedComponentIDs = renderBatch.DisposedComponentIDs.ToList();
+
+            return Task.FromResult(0);
         }
     }
 }
