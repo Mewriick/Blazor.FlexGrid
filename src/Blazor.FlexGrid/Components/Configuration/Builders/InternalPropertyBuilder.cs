@@ -29,5 +29,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasValueFormatter<TProperty>(Expression<Func<TProperty, string>> valueFormatterExpression)
             => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TProperty>(valueFormatterExpression));
+
+        public bool HasCompositeValueFormatter<TInputValue>(Expression<Func<TInputValue, string>> valueFormatterExpression)
+            => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TInputValue>(valueFormatterExpression, ValueFormatterType.WholeRowObject));
     }
 }

@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.Builders
 {
-    public class PropertyBuilder<TProperty>
+    public class PropertyBuilder<TProperty, TEntity>
     {
         private InternalPropertyBuilder Builder { get; }
 
@@ -12,37 +12,44 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             Builder = internalPropertyBuilder ?? throw new ArgumentNullException(nameof(internalPropertyBuilder));
         }
 
-        public PropertyBuilder<TProperty> HasCaption(string caption)
+        public PropertyBuilder<TProperty, TEntity> HasCaption(string caption)
         {
             Builder.HasCaption(caption);
 
             return this;
         }
 
-        public PropertyBuilder<TProperty> IsVisible(bool isVisible)
+        public PropertyBuilder<TProperty, TEntity> IsVisible(bool isVisible)
         {
             Builder.IsVisible(isVisible);
 
             return this;
         }
 
-        public PropertyBuilder<TProperty> IsSortable()
+        public PropertyBuilder<TProperty, TEntity> IsSortable()
         {
             Builder.IsSortable(true);
 
             return this;
         }
 
-        public PropertyBuilder<TProperty> HasOrder(int order)
+        public PropertyBuilder<TProperty, TEntity> HasOrder(int order)
         {
             Builder.HasOrder(order);
 
             return this;
         }
 
-        public PropertyBuilder<TProperty> HasValueFormatter(Expression<Func<TProperty, string>> valueFormatterExpression)
+        public PropertyBuilder<TProperty, TEntity> HasValueFormatter(Expression<Func<TProperty, string>> valueFormatterExpression)
         {
             Builder.HasValueFormatter(valueFormatterExpression);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty, TEntity> HasCompositeValueFormatter(Expression<Func<TEntity, string>> valueFormatterExpression)
+        {
+            Builder.HasCompositeValueFormatter(valueFormatterExpression);
 
             return this;
         }

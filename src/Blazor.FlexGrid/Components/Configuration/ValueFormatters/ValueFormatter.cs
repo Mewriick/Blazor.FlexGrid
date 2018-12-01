@@ -8,12 +8,15 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
     /// </summary>
     public abstract class ValueFormatter
     {
+        public ValueFormatterType FormatterType { get; }
+
         public abstract Func<object, string> FormatValue { get; }
 
-        public virtual LambdaExpression FormatValueExpression { get; }
+        protected virtual LambdaExpression FormatValueExpression { get; }
 
-        public ValueFormatter(LambdaExpression formatValueExpression)
+        public ValueFormatter(LambdaExpression formatValueExpression, ValueFormatterType valueFormatterType = ValueFormatterType.SingleProperty)
         {
+            FormatterType = valueFormatterType;
             FormatValueExpression = formatValueExpression ?? throw new ArgumentNullException(nameof(formatValueExpression));
         }
     }

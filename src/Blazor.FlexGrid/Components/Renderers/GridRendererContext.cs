@@ -82,11 +82,16 @@ namespace Blazor.FlexGrid.Components.Renderers
             => renderTreeBuilder.AddContent(++sequence, content);
 
         public void AddActualColumnValue()
-            => renderTreeBuilder.AddContent(++sequence, new MarkupString(
-                valueFormatters[ActualColumnName].FormatValue(
-                    propertyValueAccessor.GetValue(ActualItem, ActualColumnName))
-                )
-              );
+        {
+            var valueFormatter = valueFormatters[ActualColumnName];
+            var inputForColumnValueFormatter = valueFormatter.FormatterType == ValueFormatterType.SingleProperty
+                ? propertyValueAccessor.GetValue(ActualItem, ActualColumnName)
+                : ActualItem;
+
+            renderTreeBuilder.AddContent(++sequence, new MarkupString(
+               valueFormatter.FormatValue(inputForColumnValueFormatter))
+             );
+        }
 
         public void AddDisabled(bool disabled)
             => renderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Disabled, disabled);

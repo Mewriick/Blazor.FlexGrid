@@ -13,8 +13,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             Builder = internalEntityTypeBuilder ?? throw new ArgumentNullException(nameof(internalEntityTypeBuilder));
         }
 
-        public virtual PropertyBuilder<TProperty> Property<TProperty>(Expression<Func<TEntity, TProperty>> propertyExpression)
-            => new PropertyBuilder<TProperty>(
+        public virtual PropertyBuilder<TProperty, TEntity> Property<TProperty>(Expression<Func<TEntity, TProperty>> propertyExpression)
+            => new PropertyBuilder<TProperty, TEntity>(
                     Builder.Property(propertyExpression.GetPropertyAccess())
                 );
 
