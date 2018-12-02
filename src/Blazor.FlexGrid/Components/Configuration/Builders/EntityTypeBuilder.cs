@@ -36,6 +36,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public virtual EntityTypeBuilder<TEntity> AppendCssClasses(Action<GridCssClasses> configureCssClasses)
+        {
+            Builder.AppendCssClasses(configureCssClasses);
+
+            return this;
+        }
+
         public virtual EntityTypeBuilder<TEntity> IsMasterTable()
         {
             Builder.IsMasterTable();
