@@ -65,10 +65,8 @@ namespace Blazor.FlexGrid.DataSet
                 masterDetailRowArguments.SelectedItem);
         }
 
-        public async Task GoToPage(int index)
-        {
-            await tableDataSet.GoToPage(index);
-        }
+        public Task GoToPage(int index)
+            => tableDataSet.GoToPage(index);
 
         public Task SetSortExpression(string expression)
             => tableDataSet.SetSortExpression(expression);

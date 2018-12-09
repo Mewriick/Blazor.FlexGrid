@@ -40,25 +40,19 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions)
         {
-            try
-            {
-                var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams["CustomerId"]);
-                var customerOrders = orders.Where(o => o.CustomerId == customerId);
-                var pageableCustomerOrders = customerOrders
-                    .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
-                    .Take(pageableOptions.PageSize)
-                    .ToList();
 
-                return Task.FromResult(new LazyLoadingDataSetResult<Order>
-                {
-                    Items = pageableCustomerOrders,
-                    TotalCount = customerOrders.Count()
-                });
-            }
-            catch (Exception ex)
+            var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams["CustomerId"]);
+            var customerOrders = orders.Where(o => o.CustomerId == customerId);
+            var pageableCustomerOrders = customerOrders
+                .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
+                .Take(pageableOptions.PageSize)
+                .ToList();
+
+            return Task.FromResult(new LazyLoadingDataSetResult<Order>
             {
-                throw;
-            }
+                Items = pageableCustomerOrders,
+                TotalCount = customerOrders.Count()
+            });
         }
 
         public ICollection<Order> Orders() => orders;
