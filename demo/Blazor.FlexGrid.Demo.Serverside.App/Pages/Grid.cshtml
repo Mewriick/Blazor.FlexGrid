@@ -1,13 +1,23 @@
 ﻿@addTagHelper *, Blazor.FlexGrid
+@addTagHelper *, BlazorStrap
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.Demo.Serverside.App.Services
+@using Blazor.FlexGrid.Components.Configuration
 @inject WeatherForecastService WeatherService
+@inject BlazorComponentColumnCollection<WeatherForecast> Collection
 @page "/grid"
 
 <h1>Weather forecast</h1>
 
 <GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
+
+@{
+    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<BlazorButton>@weather.Summary</BlazorButton>;
+
+Collection.AddColumnValue(w => w.Summary, weatherTemp);
+}
+
 
 @functions{
     CollectionTableDataAdapter<WeatherForecast> dataAdapter;
@@ -16,5 +26,6 @@
     {
         var forecast = await WeatherService.GetForecastAsync(DateTime.Now);
         dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
+
     }
 }

@@ -38,6 +38,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
+            services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<GridRendererContextFactory>();
             services.AddSingleton<IMasterDetailTableDataSetFactory, MasterDetailTableDataSetFactory>();

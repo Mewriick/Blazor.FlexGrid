@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Renderers;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -16,5 +17,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         bool IsSortable { get; }
 
         ValueFormatter ValueFormatter { get; }
+
+        RenderFragmentAdapter SpecialColumnValue { get; }
     }
 }

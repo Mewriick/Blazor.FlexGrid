@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Renderers;
 using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
@@ -79,9 +80,21 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public RenderFragmentAdapter SpecialColumnValue
+        {
+            get
+            {
+                var specialColumnValue = Annotations[GridViewAnnotationNames.ColumnValueBlazorComponent];
+                if (specialColumnValue is NullAnotationValue)
+                {
+                    return null;
+                }
+
+                return specialColumnValue as RenderFragmentAdapter;
+            }
+        }
 
         protected IAnnotatable Annotations { get; }
-
 
         public GridColumnAnotations(IProperty property)
         {

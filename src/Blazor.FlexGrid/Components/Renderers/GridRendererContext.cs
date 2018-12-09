@@ -23,6 +23,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly IPropertyValueAccessor propertyValueAccessor;
         private readonly RenderTreeBuilder renderTreeBuilder;
         private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
+        private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
 
         public string ActualColumnName { get; set; } = string.Empty;
 
@@ -62,6 +63,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
+            this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
             this.renderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             this.firstColumnName = GridItemProperties.First().Name;
         }
@@ -83,6 +85,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddActualColumnValue()
         {
+            if (specialColumnValues.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
+            {
+                renderTreeBuilder.AddContent(++sequence, rendererFragmentAdapter.GetColumnFragment(ActualItem));
+                return;
+            }
+
             var valueFormatter = valueFormatters[ActualColumnName];
             var inputForColumnValueFormatter = valueFormatter.FormatterType == ValueFormatterType.SingleProperty
                 ? propertyValueAccessor.GetValue(ActualItem, ActualColumnName)

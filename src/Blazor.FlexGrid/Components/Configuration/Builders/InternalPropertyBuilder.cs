@@ -1,5 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Renderers;
+using Microsoft.AspNetCore.Blazor;
 using System;
 using System.Linq.Expressions;
 
@@ -32,5 +34,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasCompositeValueFormatter<TInputValue>(Expression<Func<TInputValue, string>> valueFormatterExpression)
             => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TInputValue>(valueFormatterExpression, ValueFormatterType.WholeRowObject));
+
+        public bool HasBlazorComponentValue<TInputValue>(RenderFragment<TInputValue> renderFragment)
+            => HasAnnotation(GridViewAnnotationNames.ColumnValueBlazorComponent, new RenderFragmentAdapter<TInputValue>(renderFragment));
     }
 }

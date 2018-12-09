@@ -11,6 +11,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class ImutableGridRendererContext
     {
         private Dictionary<string, ValueFormatter> valueFormatters;
+        private Dictionary<string, RenderFragmentAdapter> specialColumnValues;
         private List<PropertyInfo> gridItemCollectionProperties;
 
         public IEntityType GridEntityConfiguration { get; }
@@ -21,15 +22,17 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters => valueFormatters;
 
+        public IReadOnlyDictionary<string, RenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
+
         public GridCssClasses CssClasses { get; }
 
         public ImutableGridRendererContext(
             IEntityType gridEntityConfiguration,
             List<PropertyInfo> itemProperties,
-            IPropertyValueAccessor propertyValueAccessor
-            )
+            IPropertyValueAccessor propertyValueAccessor)
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();
+            specialColumnValues = new Dictionary<string, RenderFragmentAdapter>();
             gridItemCollectionProperties = new List<PropertyInfo>();
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
             GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
@@ -61,6 +64,11 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                 propertiesListWithOrder.Add((Order: columnOrder, Prop: property));
                 valueFormatters.Add(property.Name, columnValueFormatter);
+
+                if (columnConfig?.SpecialColumnValue != null)
+                {
+                    specialColumnValues.Add(property.Name, columnConfig.SpecialColumnValue);
+                }
             }
 
             GridItemProperties = propertiesListWithOrder.OrderBy(p => p.Order)

@@ -14,5 +14,6 @@
         public const string ColumnIsSortable = "GridColumnIsSortable";
         public const string ColumnOrder = "GridColumnOrder";
         public const string ColumnValueFormatter = "GridColumnValueFormatter";
+        public const string ColumnValueBlazorComponent = "GridColumnValueBlazorComponent";
     }
 }
