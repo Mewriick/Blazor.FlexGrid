@@ -15,7 +15,7 @@
 @{
     RenderFragment<WeatherForecast> weatherTemp = (weather) => @<BlazorButton>@weather.Summary</BlazorButton>;
 
-Collection.AddColumnValue(w => w.Summary, weatherTemp);
+Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
 }
 
 

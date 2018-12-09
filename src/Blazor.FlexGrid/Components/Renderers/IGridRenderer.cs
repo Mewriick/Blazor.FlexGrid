@@ -6,7 +6,9 @@
     /// </summary>
     public interface IGridRenderer
     {
-        void AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition);
+        bool CanRender(GridRendererContext rendererContext);
+
+        IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag);
 
         void Render(GridRendererContext rendererContext);
     }

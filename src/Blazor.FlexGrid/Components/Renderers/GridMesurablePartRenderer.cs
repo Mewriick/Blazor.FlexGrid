@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridMesurablePartRenderer : GridPartRenderer
+    public class GridMesurablePartRenderer : GridCompositeRenderer
     {
         private readonly IGridRenderer gridPartRenderer;
         private readonly ILogger<GridMesurablePartRenderer> logger;
@@ -18,13 +18,18 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.stopwatch = new Stopwatch();
         }
 
-        public override void Render(GridRendererContext rendererContext)
+        public override IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
+            => this.gridPartRenderer.AddRenderer(gridPartRenderer, rendererPosition);
+
+        public override bool CanRender(GridRendererContext rendererContext)
+            => gridPartRenderer.CanRender(rendererContext);
+
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
             stopwatch.Restart();
 
             gridPartRenderer.Render(rendererContext);
 
-            stopwatch.Stop();
             logger.LogInformation($"Rendering time [{gridPartRenderer.GetType().FullName}]: {stopwatch.ElapsedMilliseconds} ms");
         }
     }

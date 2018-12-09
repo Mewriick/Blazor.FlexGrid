@@ -17,14 +17,22 @@ namespace Blazor.FlexGrid
     public static class FlexGridServiceCollectionExtensions
     {
         public static IServiceCollection AddFlexGridServerSide(this IServiceCollection services, Action<IModelConfiguration> configureGridComponents = null)
-            => services.AddFlexGrid(configureGridComponents, true);
+            => services.AddFlexGrid(configureGridComponents, options =>
+            {
+                options.IsServerSideBlazorApp = true;
+            });
 
-        public static IServiceCollection AddFlexGrid(this IServiceCollection services, Action<IModelConfiguration> configureGridComponents = null, bool isServerSideBlazorApp = false)
+        public static IServiceCollection AddFlexGrid(
+            this IServiceCollection services,
+            Action<IModelConfiguration> configureGridComponents = null,
+            Action<FlexGridOptions> configureOptions = null)
         {
             var modelBuilder = new ModelBuilder();
+            var flexGridOptions = new FlexGridOptions();
             configureGridComponents?.Invoke(modelBuilder);
+            configureOptions?.Invoke(flexGridOptions);
 
-            if (isServerSideBlazorApp)
+            if (flexGridOptions.IsServerSideBlazorApp)
             {
                 services.AddLogging(builder => builder.AddConsole());
             }
@@ -38,9 +46,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
-            services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
-            services.AddSingleton<GridRendererContextFactory>();
             services.AddSingleton<IMasterDetailTableDataSetFactory, MasterDetailTableDataSetFactory>();
             services.AddSingleton<ConventionsSet>();
             services.AddSingleton<IPropertyValueAccessorCache, PropertyValueAccessorCache>();
@@ -54,25 +60,27 @@ namespace Blazor.FlexGrid
 
         private static void RegisterGridRendererTree(IServiceCollection services)
         {
+            services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
+            services.AddSingleton<GridRendererContextFactory>();
+
             services.AddSingleton(typeof(IGridRenderer), provider =>
             {
-                var gridRowRenderer = new GridRowRenderer();
-                gridRowRenderer.AddRenderer(new GridCellMasterActionRenderer());
-                gridRowRenderer.AddRenderer(new GridCellRenderer());
-                gridRowRenderer.AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag);
+                var measurableLogger = provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>();
 
-                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>());
-                gridBodyRenderer.AddRenderer(gridRowRenderer);
+                var gridRowRenderer = new GridRowRenderer()
+                    .AddRenderer(new GridCellMasterActionRenderer())
+                    .AddRenderer(new GridCellRenderer())
+                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag);
 
-                var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>());
-                gridRenderer.AddRenderer(new GridMesurablePartRenderer(
-                        new GridHeaderRenderer(provider.GetRequiredService<ILogger<GridHeaderRenderer>>()),
-                        provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>())
-                    );
+                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                    .AddRenderer(gridRowRenderer);
 
-                gridRenderer.AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag);
-                gridRenderer.AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>()));
-                gridRenderer.AddRenderer(new GridPaginationRenderer(), RendererType.AfterTag);
+                var gridRenderer = new GridMesurablePartRenderer(
+                        new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
+                    .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
+                    .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(), measurableLogger))
+                    .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
+                    .AddRenderer(new GridPaginationRenderer(), RendererType.AfterTag);
 
                 return gridRenderer;
             });

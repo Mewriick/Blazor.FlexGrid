@@ -7,13 +7,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridPaginationRenderer : GridPartRenderer
     {
-        public override void Render(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
-            if (!rendererContext.TableDataSet.HasItems())
-            {
-                return;
-            }
-
             var nextButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsLastPage;
             var previousButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsFirstPage;
 
@@ -35,6 +30,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
+
+        public override bool CanRender(GridRendererContext rendererContext)
+            => rendererContext.TableDataSet.HasItems();
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)
         {
@@ -61,7 +59,6 @@ namespace Blazor.FlexGrid.Components.Renderers
                    : paginationButtonType == PaginationButtonType.First
                        ? rendererContext.TableDataSet.GoToFirstPage()
                        : rendererContext.TableDataSet.GoToLastPage();
-
     }
 
     internal enum PaginationButtonType

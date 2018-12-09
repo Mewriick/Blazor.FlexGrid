@@ -15,7 +15,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.gridPartRenderersAfter = new List<IGridRenderer>();
         }
 
-        public void AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
+        public virtual IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
         {
             switch (rendererPosition)
             {
@@ -29,8 +29,22 @@ namespace Blazor.FlexGrid.Components.Renderers
                     gridPartRenderers.Add(gridPartRenderer);
                     break;
             }
+
+            return this;
         }
 
-        public abstract void Render(GridRendererContext rendererContext);
+        public void Render(GridRendererContext rendererContext)
+        {
+            if (!CanRender(rendererContext))
+            {
+                return;
+            }
+
+            RenderInternal(rendererContext);
+        }
+
+        public abstract bool CanRender(GridRendererContext rendererContext);
+
+        protected abstract void RenderInternal(GridRendererContext rendererContext);
     }
 }

@@ -17,7 +17,7 @@ namespace Blazor.FlexGrid.Components.Configuration
             this.internalModelBuilder = new InternalModelBuilder(gridConfigurationProvider.ConfigurationModel as Model);
         }
 
-        public void AddColumnValueRenderFunction<TColumn>(Expression<Func<TItem, TColumn>> columnExpression, RenderFragment<TItem> renderFragment)
+        public ISpecialColumnFragmentsCollection<TItem> AddColumnValueRenderFunction<TColumn>(Expression<Func<TItem, TColumn>> columnExpression, RenderFragment<TItem> renderFragment)
         {
             var entityType = gridConfigurationProvider.FindGridEntityConfigurationByType(typeof(TItem));
             if (entityType is NullEntityType)
@@ -27,7 +27,7 @@ namespace Blazor.FlexGrid.Components.Configuration
                     .Property(columnExpression.GetPropertyAccess())
                     .HasBlazorComponentValue(renderFragment);
 
-                return;
+                return this;
             }
 
             var columnName = columnExpression.GetPropertyAccess().Name;
@@ -37,6 +37,8 @@ namespace Blazor.FlexGrid.Components.Configuration
                 new InternalPropertyBuilder(property, internalModelBuilder)
                     .HasBlazorComponentValue(renderFragment);
             }
+
+            return this;
         }
     }
 }

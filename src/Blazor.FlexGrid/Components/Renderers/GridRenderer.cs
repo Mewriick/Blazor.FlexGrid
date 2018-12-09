@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -10,18 +9,17 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class GridRenderer : GridCompositeRenderer
     {
         private readonly ILogger<GridRenderer> logger;
-        private readonly Stopwatch stopwatch;
 
         public GridRenderer(ILogger<GridRenderer> logger)
         {
-            this.stopwatch = new Stopwatch();
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public override void Render(GridRendererContext rendererContext)
-        {
-            stopwatch.Restart();
+        public override bool CanRender(GridRendererContext rendererContext)
+            => true;
 
+        protected override void RenderInternal(GridRendererContext rendererContext)
+        {
             try
             {
                 gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
@@ -37,15 +35,10 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                 rendererContext.CloseElement(); // Close table wrapper
 
-                stopwatch.Stop();
             }
             catch (Exception ex)
             {
-                logger.LogError($"Error during rendering GridView component. Ex: {ex}");
-            }
-            finally
-            {
-                logger.LogInformation($"Rendering time: {stopwatch.ElapsedMilliseconds} ms");
+                logger.LogError($"Error raised during rendering GridView component. Ex: {ex}");
             }
         }
     }

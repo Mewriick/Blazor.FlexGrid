@@ -5,13 +5,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridCellMasterActionRenderer : GridPartRenderer
     {
-        public override void Render(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
-            if (!rendererContext.IsFirstColumn || !rendererContext.GridConfiguration.IsMasterTable)
-            {
-                return;
-            }
-
             var localActualItem = rendererContext.ActualItem;
             var localActualItemIsSelected = rendererContext.TableDataSet.ItemIsSelected(localActualItem);
 
@@ -28,5 +23,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
+
+        public override bool CanRender(GridRendererContext rendererContext)
+            => rendererContext.IsFirstColumn && rendererContext.GridConfiguration.IsMasterTable;
     }
 }

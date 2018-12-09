@@ -2,28 +2,14 @@
 using Blazor.FlexGrid.DataSet;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridHeaderRenderer : GridPartRenderer
     {
-        private readonly ILogger<GridHeaderRenderer> logger;
-
-        public GridHeaderRenderer(ILogger<GridHeaderRenderer> logger)
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        public override void Render(GridRendererContext rendererContext)
-        {
-            if (!rendererContext.TableDataSet.HasItems())
-            {
-                return;
-            }
-
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
 
@@ -41,6 +27,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
+
+        public override bool CanRender(GridRendererContext rendererContext)
+            => rendererContext.TableDataSet.HasItems();
 
         private void RenderColumnHeader(GridRendererContext rendererContext, PropertyInfo property)
         {

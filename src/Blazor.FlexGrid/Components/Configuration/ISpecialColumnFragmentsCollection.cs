@@ -6,6 +6,6 @@ namespace Blazor.FlexGrid.Components.Configuration
 {
     public interface ISpecialColumnFragmentsCollection<TItem>
     {
-        void AddColumnValueRenderFunction<TColumn>(Expression<Func<TItem, TColumn>> columnExpression, RenderFragment<TItem> renderFragment);
+        ISpecialColumnFragmentsCollection<TItem> AddColumnValueRenderFunction<TColumn>(Expression<Func<TItem, TColumn>> columnExpression, RenderFragment<TItem> renderFragment);
     }
 }

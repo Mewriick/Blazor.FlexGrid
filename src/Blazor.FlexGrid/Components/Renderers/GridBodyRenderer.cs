@@ -13,13 +13,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public override void Render(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
-            if (!rendererContext.TableDataSet.HasItems())
-            {
-                return;
-            }
-
             rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
             try
             {
@@ -37,5 +32,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.CloseElement();
         }
+
+        public override bool CanRender(GridRendererContext rendererContext)
+            => rendererContext.TableDataSet.HasItems();
     }
 }

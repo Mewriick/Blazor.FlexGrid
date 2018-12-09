@@ -116,19 +116,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             AddCssClass(className);
         }
 
-        public void AddGridViewComponent(ITableDataAdapter tableDataAdapter)
-        {
-            if (tableDataAdapter is null)
-            {
-                return;
-            }
-
-            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
-            renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), RuntimeHelpers.TypeCheck(TableDataSet.PageableOptions.PageSize));
-            renderTreeBuilder.CloseComponent();
-        }
-
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
             if (tableDataAdapter is null)

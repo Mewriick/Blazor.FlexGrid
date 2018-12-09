@@ -2,7 +2,10 @@
 {
     public class GridRowRenderer : GridCompositeRenderer
     {
-        public override void Render(GridRendererContext rendererContext)
+        public override bool CanRender(GridRendererContext rendererContext)
+            => true;
+
+        protected override void RenderInternal(GridRendererContext rendererContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableRow);
 

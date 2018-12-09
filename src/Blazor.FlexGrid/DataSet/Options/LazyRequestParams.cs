@@ -11,7 +11,7 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         public bool IsEmpty => requestParams.Count == 0;
 
-        public string this[string key] => requestParams[key];
+        public string this[string key] => requestParams[key.ToLower()];
 
         public LazyRequestParams()
         {
