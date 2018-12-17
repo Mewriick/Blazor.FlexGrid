@@ -1,5 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
+using Blazor.FlexGrid.Permission;
+using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -19,5 +21,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         ValueFormatter ValueFormatter { get; }
 
         RenderFragmentAdapter SpecialColumnValue { get; }
+
+        Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc { get; }
     }
 }

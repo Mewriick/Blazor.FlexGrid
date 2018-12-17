@@ -29,6 +29,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
+        public IRowEditOptions RowEditOptions => new RowEditOptions();
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader)
         {
@@ -71,5 +72,15 @@ namespace Blazor.FlexGrid.DataSet
 
         public bool ItemIsSelected(object item)
             => selectedItems.Contains(item);
+
+        public void EditItem(object item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SaveItem()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

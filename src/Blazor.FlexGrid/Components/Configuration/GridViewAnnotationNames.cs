@@ -8,6 +8,7 @@
         public const string DetailTabPageSize = "DetailTabPageSize";
         public const string DetailTabPageCaption = "DetailTabPageCaption";
         public const string DetailLazyLoadingUrl = "DetailLazyLoadingUrl";
+        public const string AllowInlineEdit = "AllowInlineEdit";
 
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";
@@ -15,5 +16,7 @@
         public const string ColumnOrder = "GridColumnOrder";
         public const string ColumnValueFormatter = "GridColumnValueFormatter";
         public const string ColumnValueBlazorComponent = "GridColumnValueBlazorComponent";
+        public const string ColumnReadPermission = "ColumnReadPermission";
+        public const string ColumnWrtiePermission = "ColumnWrtiePermission";
     }
 }

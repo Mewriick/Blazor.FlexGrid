@@ -5,10 +5,13 @@ using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
+using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataAdapters.Visitors;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -43,6 +46,7 @@ namespace Blazor.FlexGrid
                     .SetMinimumLevel(LogLevel.Debug));
             }
 
+            services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
@@ -62,6 +66,7 @@ namespace Blazor.FlexGrid
         {
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
             services.AddSingleton<GridRendererContextFactory>();
+            services.AddSingleton<EditInputRendererTree>();
 
             services.AddSingleton(typeof(IGridRenderer), provider =>
             {
@@ -69,8 +74,9 @@ namespace Blazor.FlexGrid
 
                 var gridRowRenderer = new GridRowRenderer()
                     .AddRenderer(new GridCellMasterActionRenderer())
-                    .AddRenderer(new GridCellRenderer())
-                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag);
+                    .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
+                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
+                    .AddRenderer(new GridActionButtonsRenderer());
 
                 var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
                     .AddRenderer(gridRowRenderer);

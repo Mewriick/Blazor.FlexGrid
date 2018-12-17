@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Permission;
+using System;
 using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.Builders
@@ -50,6 +51,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public PropertyBuilder<TProperty, TEntity> HasCompositeValueFormatter(Expression<Func<TEntity, string>> valueFormatterExpression)
         {
             Builder.HasCompositeValueFormatter(valueFormatterExpression);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty, TEntity> HasReadPermissionRestriction(Func<ICurrentUserPermission, bool> permissionRestrictionFunc)
+        {
+            Builder.HasReadPermissionRestriction(permissionRestrictionFunc);
 
             return this;
         }

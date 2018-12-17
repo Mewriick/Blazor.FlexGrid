@@ -7,11 +7,13 @@
 <button class="btn btn-primary" onclick="@IncrementCount">Click me</button>
 <button class="btn btn-primary" onclick="@DecrementCount">Click me</button>
 <button onclick=@((UIMouseEventArgs e) => Console.WriteLine("Inline:Button Clicked"))>Inline Event Binding</button>
+<input type="date" bind=date format-value="yyyy-MM-dd" />
 
  Enter your name: <input type="text" bind="@Name" /><br />
 
 @functions {
 int currentCount = 0;
+DateTime date = DateTime.Now;
 string Name = string.Empty;
 
 void IncrementCount()

@@ -1,5 +1,7 @@
 using Blazor.FlexGrid.Demo.Client.GridConfigurations;
+using Blazor.FlexGrid.Demo.Serverside.App.GridConfigurations;
 using Blazor.FlexGrid.Demo.Serverside.App.Services;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,12 +16,19 @@ namespace Blazor.FlexGrid.Demo.Serverside.App
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<CustomerService>();
             services.AddSingleton<OrderService>();
-            services.AddFlexGridServerSide(cfg =>
-            {
-                cfg.ApplyConfiguration(new WeatherForecastGridConfiguration());
-                cfg.ApplyConfiguration(new CustomerGridConfiguration());
-                cfg.ApplyConfiguration(new OrderGridConfiguration());
-            });
+            services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
+            services.AddFlexGrid(
+                cfg =>
+                {
+                    cfg.ApplyConfiguration(new WeatherForecastGridConfiguration());
+                    cfg.ApplyConfiguration(new CustomerGridConfiguration());
+                    cfg.ApplyConfiguration(new OrderGridConfiguration());
+                },
+                options =>
+                {
+                    options.IsServerSideBlazorApp = true;
+                }
+            );
         }
 
         public void Configure(IBlazorApplicationBuilder app)

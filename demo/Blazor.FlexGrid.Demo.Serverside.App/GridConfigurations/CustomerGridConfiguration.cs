@@ -18,6 +18,9 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.Property(c => c.Id)
                 .IsSortable();
+
+            builder.Property(c => c.Email)
+                .HasReadPermissionRestriction(perm => perm.IsInRole("TestRole1"));
         }
     }
 }

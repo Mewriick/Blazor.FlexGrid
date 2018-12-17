@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
+using Blazor.FlexGrid.Permission;
 using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
@@ -93,8 +94,22 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 return specialColumnValue as RenderFragmentAdapter;
             }
         }
+        public Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc
+        {
+            get
+            {
+                var hasPermissionFunc = Annotations[GridViewAnnotationNames.ColumnReadPermission];
+                if (hasPermissionFunc is NullAnotationValue)
+                {
+                    return p => true;
+                }
+
+                return hasPermissionFunc as Func<ICurrentUserPermission, bool>;
+            }
+        }
 
         protected IAnnotatable Annotations { get; }
+
 
         public GridColumnAnotations(IProperty property)
         {

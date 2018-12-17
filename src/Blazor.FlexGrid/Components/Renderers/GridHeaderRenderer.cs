@@ -24,6 +24,11 @@ namespace Blazor.FlexGrid.Components.Renderers
                 RenderColumnHeader(rendererContext, property);
             }
 
+            if (rendererContext.GridConfiguration.InlineEditIsAllowed)
+            {
+                RenderEmptyColumnHeader(rendererContext);
+            }
+
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }

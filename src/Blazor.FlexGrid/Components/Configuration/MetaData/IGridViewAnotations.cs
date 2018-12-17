@@ -6,6 +6,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         bool IsMasterTable { get; }
 
+        bool InlineEditIsAllowed { get; }
+
         GridCssClasses CssClasses { get; }
 
         IMasterDetailRelationship FindRelationshipConfiguration(Type detailType);

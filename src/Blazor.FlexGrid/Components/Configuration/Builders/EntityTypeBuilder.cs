@@ -49,5 +49,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public virtual EntityTypeBuilder<TEntity> AllowInlineEdit()
+        {
+            Builder.AllowInlineEdit();
+
+            return this;
+        }
     }
 }

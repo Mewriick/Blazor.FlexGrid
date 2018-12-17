@@ -18,16 +18,19 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private int sequence = 0;
         private string firstColumnName;
+        private string lastColumnName;
 
         private readonly IEntityType gridEntityConfiguration;
-        private readonly IPropertyValueAccessor propertyValueAccessor;
         private readonly RenderTreeBuilder renderTreeBuilder;
         private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
+        private readonly IReadOnlyDictionary<string, bool> columnPermissions;
 
         public string ActualColumnName { get; set; } = string.Empty;
 
         public bool IsFirstColumn => ActualColumnName.Equals(firstColumnName);
+
+        public bool IsLastColumn => ActualColumnName.Equals(lastColumnName);
 
         public bool SortingByActualColumnName => TableDataSet.SortingOptions.SortExpression.Equals(ActualColumnName);
 
@@ -45,6 +48,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public GridCssClasses CssClasses { get; }
 
+        public IPropertyValueAccessor PropertyValueAccessor { get; }
+
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
             RenderTreeBuilder renderTreeBuilder,
@@ -60,12 +65,14 @@ namespace Blazor.FlexGrid.Components.Renderers
             GridItemCollectionProperties = imutableGridRendererContext.GridEntityConfiguration.ClrTypeCollectionProperties;
             CssClasses = GridConfiguration.CssClasses;
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
+            PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
-            this.propertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
             this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
+            this.columnPermissions = imutableGridRendererContext.ColumnReadPermmisions;
             this.renderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             this.firstColumnName = GridItemProperties.First().Name;
+            this.lastColumnName = GridItemProperties.Last().Name;
         }
 
         public void OpenElement(string elementName)
@@ -85,6 +92,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddActualColumnValue()
         {
+            if (!columnPermissions[ActualColumnName])
+            {
+                renderTreeBuilder.AddContent(++sequence, "*****");
+                return;
+            }
+
             if (specialColumnValues.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
             {
                 renderTreeBuilder.AddContent(++sequence, rendererFragmentAdapter.GetColumnFragment(ActualItem));
@@ -93,7 +106,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             var valueFormatter = valueFormatters[ActualColumnName];
             var inputForColumnValueFormatter = valueFormatter.FormatterType == ValueFormatterType.SingleProperty
-                ? propertyValueAccessor.GetValue(ActualItem, ActualColumnName)
+                ? PropertyValueAccessor.GetValue(ActualItem, ActualColumnName)
                 : ActualItem;
 
             renderTreeBuilder.AddContent(++sequence, new MarkupString(
@@ -116,6 +129,12 @@ namespace Blazor.FlexGrid.Components.Renderers
             AddCssClass(className);
         }
 
+        public void AddAttribute(string name, object value)
+            => renderTreeBuilder.AddAttribute(++sequence, name, value);
+
+        public void AddAttribute(string name, Action<UIEventArgs> value)
+            => renderTreeBuilder.AddAttribute(++sequence, name, value);
+
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
             if (tableDataAdapter is null)
@@ -128,7 +147,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
+            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), RuntimeHelpers.TypeCheck(pageSize));
 
             var lazyLoadingUrl = masterDetailRelationship.DetailGridLazyLoadingUrl();
             if (!string.IsNullOrEmpty(lazyLoadingUrl))

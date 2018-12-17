@@ -36,6 +36,20 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public bool InlineEditIsAllowed
+        {
+            get
+            {
+                var inlineEditIsAllowed = annotations[GridViewAnnotationNames.AllowInlineEdit];
+                if (inlineEditIsAllowed is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)inlineEditIsAllowed;
+            }
+        }
+
         public GridAnotations(IEntityType entityType)
         {
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));

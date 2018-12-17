@@ -16,6 +16,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public ISortingOptions SortingOptions { get; set; } = new SortingOptions();
 
+        public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
         /// <summary>
         /// Gets or sets the items for the current page.
         /// </summary>
@@ -66,6 +67,21 @@ namespace Blazor.FlexGrid.DataSet
 
         public bool ItemIsSelected(object item)
             => selectedItems.Contains(item);
+
+        public void EditItem(object item)
+        {
+            if (item != null)
+            {
+                RowEditOptions.ItemInEditMode = item;
+            }
+        }
+
+        public bool SaveItem()
+        {
+            RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
+
+            return true;
+        }
 
         private void LoadFromQueryableSource()
         {

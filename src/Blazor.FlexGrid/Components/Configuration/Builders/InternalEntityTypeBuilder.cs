@@ -53,8 +53,10 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         }
 
         public bool IsMasterTable()
-        {
-            return HasAnnotation(GridViewAnnotationNames.IsMasterTable, true);
-        }
+            => HasAnnotation(GridViewAnnotationNames.IsMasterTable, true);
+
+
+        public bool AllowInlineEdit()
+            => HasAnnotation(GridViewAnnotationNames.AllowInlineEdit, true);
     }
 }
