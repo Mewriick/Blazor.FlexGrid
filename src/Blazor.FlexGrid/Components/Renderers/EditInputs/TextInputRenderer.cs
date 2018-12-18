@@ -6,7 +6,6 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
     {
         public override void RenderInput(GridRendererContext gridRendererContext)
         {
-            var localItem = gridRendererContext.ActualItem;
             var localColumnName = gridRendererContext.ActualColumnName;
             var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, gridRendererContext.ActualColumnName);
 
@@ -16,8 +15,8 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (string __value)
                 {
                     gridRendererContext
-                        .PropertyValueAccessor
-                        .SetValue(localItem, localColumnName, __value);
+                        .TableDataSet
+                        .EditItemProperty(localColumnName, __value);
                 }, value.ToString())
             );
 

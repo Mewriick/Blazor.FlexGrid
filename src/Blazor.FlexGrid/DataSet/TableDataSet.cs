@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
+﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace Blazor.FlexGrid.DataSet
         public bool ItemIsSelected(object item)
             => selectedItems.Contains(item);
 
-        public void EditItem(object item)
+        public void StartEditItem(object item)
         {
             if (item != null)
             {
@@ -76,12 +77,23 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        public bool SaveItem()
+        public void EditItemProperty(string propertyName, object propertyValue)
+            => RowEditOptions.AddNewValue(propertyName, propertyValue);
+
+        public Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor)
         {
+            foreach (var newValue in RowEditOptions.UpdatedValues)
+            {
+                propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
+            }
+
             RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
-            return true;
+            return Task.FromResult(true);
         }
+
+        public void CancelEditation()
+            => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
         private void LoadFromQueryableSource()
         {

@@ -7,7 +7,14 @@ namespace Blazor.FlexGrid.Demo.Server
 {
     public class StaticRepositoryCollections
     {
+        private static string[] Summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
         public List<Order> Orders { get; }
+
+        public List<WeatherForecast> Forecasts { get; }
 
         public StaticRepositoryCollections()
         {
@@ -30,6 +37,15 @@ namespace Blazor.FlexGrid.Demo.Server
                         }
                     }
                 }).ToList();
+
+            Forecasts = Enumerable.Range(1, 100).Select(index =>
+                        new WeatherForecast
+                        {
+                            Date = DateTime.Now.AddDays(index),
+                            TemperatureC = random.Next(-20, 55),
+                            Summary = Summaries[random.Next(Summaries.Length)]
+
+                        }).ToList();
         }
     }
 }

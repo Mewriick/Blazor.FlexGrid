@@ -19,7 +19,7 @@ LazyLoadedTableDataAdapter<WeatherForecast> lazyLoadedTableDataAdapter;
 protected override void OnInit()
 {
 
-    lazyLoadedTableDataAdapter = new LazyLoadedTableDataAdapter<WeatherForecast>(WeatherService);
+    lazyLoadedTableDataAdapter = new LazyLoadedTableDataAdapter<WeatherForecast>(WeatherService, WeatherService);
 }
 }
 

@@ -108,6 +108,20 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public Func<ICurrentUserPermission, bool> WritePermissionRestrictionFunc
+        {
+            get
+            {
+                var hasPermissionFunc = Annotations[GridViewAnnotationNames.ColumnWrtiePermission];
+                if (hasPermissionFunc is NullAnotationValue)
+                {
+                    return p => true;
+                }
+
+                return hasPermissionFunc as Func<ICurrentUserPermission, bool>;
+            }
+        }
+
         protected IAnnotatable Annotations { get; }
 
 

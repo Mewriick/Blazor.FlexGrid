@@ -1,4 +1,6 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
+﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.DataSet.Options;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
@@ -6,8 +8,12 @@ namespace Blazor.FlexGrid.DataSet
     {
         IRowEditOptions RowEditOptions { get; }
 
-        void EditItem(object item);
+        void StartEditItem(object item);
 
-        bool SaveItem();
+        void EditItemProperty(string propertyName, object propertyValue);
+
+        void CancelEditation();
+
+        Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor);
     }
 }

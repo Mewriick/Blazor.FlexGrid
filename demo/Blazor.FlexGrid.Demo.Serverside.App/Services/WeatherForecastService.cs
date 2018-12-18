@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 {
-    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>
+    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>, ILazyDataSetItemSaver<WeatherForecast>
     {
         private static string[] Summaries = new[]
         {
@@ -53,6 +53,11 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
                     Items = items.ToList(),
                     TotalCount = 100
                 });
+        }
+
+        public Task<bool> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
+        {
+            return Task.FromResult(true);
         }
     }
 }

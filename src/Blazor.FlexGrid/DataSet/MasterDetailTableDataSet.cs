@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
@@ -100,10 +101,16 @@ namespace Blazor.FlexGrid.DataSet
         public bool ItemIsSelected(object item)
             => tableDataSet.ItemIsSelected(item);
 
-        public void EditItem(object item)
-            => tableDataSet.EditItem(item);
+        public void StartEditItem(object item)
+            => tableDataSet.StartEditItem(item);
 
-        public bool SaveItem()
-            => tableDataSet.SaveItem();
+        public void CancelEditation()
+            => tableDataSet.CancelEditation();
+
+        public void EditItemProperty(string propertyName, object propertyValue)
+            => tableDataSet.EditItemProperty(propertyName, propertyValue);
+
+        public Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor)
+            => tableDataSet.SaveItem(propertyValueAccessor);
     }
 }

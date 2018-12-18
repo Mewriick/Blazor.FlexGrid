@@ -16,7 +16,6 @@ namespace Blazor.FlexGrid.Demo.Serverside.App
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<CustomerService>();
             services.AddSingleton<OrderService>();
-            services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
             services.AddFlexGrid(
                 cfg =>
                 {
@@ -29,6 +28,8 @@ namespace Blazor.FlexGrid.Demo.Serverside.App
                     options.IsServerSideBlazorApp = true;
                 }
             );
+
+            services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

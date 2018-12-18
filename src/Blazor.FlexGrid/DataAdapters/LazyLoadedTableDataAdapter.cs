@@ -11,14 +11,16 @@ namespace Blazor.FlexGrid.DataAdapters
     public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter, ILazyLoadedTableDataAdapter where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
+        private readonly ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver;
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
         public Action<LazyRequestParams> AddRequestParamsAction { get; set; }
 
-        public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader)
+        public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
+            this.lazyDataSetItemSaver = lazyDataSetItemSaver ?? throw new ArgumentNullException(nameof(lazyDataSetItemSaver));
         }
 
         public override ITableDataSet GetTableDataSet(Action<TableDataSetOptions> configureDataSet)
@@ -29,7 +31,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions;
             AddRequestParamsAction?.Invoke(lazyLoadingOptions.RequestParams);
 
-            var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader)
+            var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyDataSetItemSaver)
             {
                 LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
@@ -40,7 +42,7 @@ namespace Blazor.FlexGrid.DataAdapters
         }
 
         public override object Clone()
-            => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader);
+            => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader, lazyDataSetItemSaver);
     }
 
     /// <summary>

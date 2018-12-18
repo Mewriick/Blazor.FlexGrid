@@ -12,6 +12,8 @@
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
+                rendererContext.ActualColumnPropertyIsEditable = property.CanWrite;
+
                 gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
             }
 

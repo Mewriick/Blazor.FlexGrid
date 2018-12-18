@@ -22,7 +22,7 @@ protected override void OnInit()
     var customers = CustomerService.Customers();
     var customersAddresses = CustomerService.CustomersAddresses();
     customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
-    ordersDataAdapter = new LazyLoadedTableDataAdapter<Order>(OrderService);
+    ordersDataAdapter = new LazyLoadedTableDataAdapter<Order>(OrderService, NullLazyDataSetItemSaver<Order>.Instance);
     customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 
     customersMasterDataAdapter = MasterAdapterBuilder

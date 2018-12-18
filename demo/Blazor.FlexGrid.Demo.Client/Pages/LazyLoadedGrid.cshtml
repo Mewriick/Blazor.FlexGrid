@@ -15,7 +15,10 @@
 <p>This component demonstrates fetching data from the server.</p>
 
 
-<GridView DataAdapter="@forecastAdapter" LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts" })" PageSize="10"></GridView>
+<GridView DataAdapter="@forecastAdapter"
+          LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts", PutDataUri = "/api/SampleData/UpdateWeatherForecast" })"
+          PageSize="10">
+</GridView>
 
 
 

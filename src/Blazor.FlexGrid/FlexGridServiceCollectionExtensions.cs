@@ -48,6 +48,7 @@ namespace Blazor.FlexGrid
 
             services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
+            services.AddSingleton(typeof(ILazyDataSetItemSaver<>), typeof(HttpLazyDataSetItemSaver<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));

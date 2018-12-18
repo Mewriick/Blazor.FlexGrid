@@ -61,5 +61,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public PropertyBuilder<TProperty, TEntity> HasWritePermissionRestriction(Func<ICurrentUserPermission, bool> permissionRestrictionFunc)
+        {
+            Builder.HasWritePermissionRestriction(permissionRestrictionFunc);
+
+            return this;
+        }
     }
 }

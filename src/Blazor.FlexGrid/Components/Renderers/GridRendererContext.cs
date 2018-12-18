@@ -4,6 +4,7 @@ using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
@@ -24,13 +25,17 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly RenderTreeBuilder renderTreeBuilder;
         private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
-        private readonly IReadOnlyDictionary<string, bool> columnPermissions;
+        private readonly IReadOnlyDictionary<string, PermissionAccess> columnPermissions;
 
         public string ActualColumnName { get; set; } = string.Empty;
+
+        public bool ActualColumnPropertyIsEditable { get; set; }
 
         public bool IsFirstColumn => ActualColumnName.Equals(firstColumnName);
 
         public bool IsLastColumn => ActualColumnName.Equals(lastColumnName);
+
+        public bool IsActualItemEdited => TableDataSet.IsItemEdited(ActualItem);
 
         public bool SortingByActualColumnName => TableDataSet.SortingOptions.SortExpression.Equals(ActualColumnName);
 
@@ -92,7 +97,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddActualColumnValue()
         {
-            if (!columnPermissions[ActualColumnName])
+            if (!HasCurrentUserReadPermission(ActualColumnName))
             {
                 renderTreeBuilder.AddContent(++sequence, "*****");
                 return;
@@ -135,6 +140,12 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddAttribute(string name, Action<UIEventArgs> value)
             => renderTreeBuilder.AddAttribute(++sequence, name, value);
 
+        public bool HasCurrentUserReadPermission(string columnName)
+            => columnPermissions[columnName].HasFlag(PermissionAccess.Read);
+
+        public bool HasCurrentUserWritePermission(string columnName)
+            => columnPermissions[columnName].HasFlag(PermissionAccess.Write);
+
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
             if (tableDataAdapter is null)
@@ -147,7 +158,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), RuntimeHelpers.TypeCheck(pageSize));
+            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
 
             var lazyLoadingUrl = masterDetailRelationship.DetailGridLazyLoadingUrl();
             if (!string.IsNullOrEmpty(lazyLoadingUrl))

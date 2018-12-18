@@ -76,8 +76,7 @@ namespace Blazor.FlexGrid.Components
         {
             var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
             {
-                conf.LazyLoadingOptions.DataUri = LazyLoadingOptions.DataUri;
-                conf.LazyLoadingOptions.RequestParams.Merge(LazyLoadingOptions.RequestParams);
+                conf.LazyLoadingOptions = LazyLoadingOptions;
                 conf.PageableOptions.PageSize = PageSize;
             });
 

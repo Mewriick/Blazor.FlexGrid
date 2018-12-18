@@ -52,13 +52,13 @@ namespace Blazor.FlexGrid.Components.Configuration
                 throw new ArgumentNullException(nameof(tableDataAdapter));
             }
 
-            var pageSizeAnnotationValue = masterDetailRelationship[GridViewAnnotationNames.DetailTabPageCaption];
-            if (pageSizeAnnotationValue is NullAnotationValue)
+            var tabCaptionAnnotationValue = masterDetailRelationship[GridViewAnnotationNames.DetailTabPageCaption];
+            if (tabCaptionAnnotationValue is NullAnotationValue)
             {
                 return tableDataAdapter.DefaultTitle();
             }
 
-            return pageSizeAnnotationValue.ToString();
+            return tabCaptionAnnotationValue.ToString();
         }
 
         public static string DetailGridLazyLoadingUrl(this IMasterDetailRelationship masterDetailRelationship)

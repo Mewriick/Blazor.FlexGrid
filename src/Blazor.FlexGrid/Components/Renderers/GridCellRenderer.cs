@@ -17,9 +17,17 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         protected override void RenderInternal(GridRendererContext rendererContext)
         {
-            // TODO Draft of inline editing will be refactored
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
-            if (rendererContext.TableDataSet.RowEditOptions.ItemInEditMode == rendererContext.ActualItem)
+
+            if (!rendererContext.IsActualItemEdited)
+            {
+                rendererContext.AddActualColumnValue();
+                rendererContext.CloseElement();
+
+                return;
+            }
+
+            if (rendererContext.ActualColumnPropertyIsEditable && rendererContext.HasCurrentUserWritePermission(rendererContext.ActualColumnName))
             {
                 editInputRendererTree.RenderInput(rendererContext);
             }

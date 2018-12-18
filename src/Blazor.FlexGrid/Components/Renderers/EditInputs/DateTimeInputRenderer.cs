@@ -7,9 +7,8 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
     {
         public override void RenderInput(GridRendererContext gridRendererContext)
         {
-            var localItem = gridRendererContext.ActualItem;
             var localColumnName = gridRendererContext.ActualColumnName;
-            var value = gridRendererContext.PropertyValueAccessor.GetValue(localItem, localColumnName);
+            var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, localColumnName);
             if (value is DateTime dateTimeValue)
             {
                 gridRendererContext.OpenElement("input");
@@ -18,8 +17,8 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (DateTime __value)
                     {
                         gridRendererContext
-                            .PropertyValueAccessor
-                            .SetValue(localItem, localColumnName, __value);
+                            .TableDataSet
+                            .EditItemProperty(localColumnName, __value);
                     }, dateTimeValue, "yyyy-MM-dd")
                 );
 

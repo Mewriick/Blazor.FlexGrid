@@ -41,5 +41,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasReadPermissionRestriction(Func<ICurrentUserPermission, bool> permissionRestrictionFunc)
             => HasAnnotation(GridViewAnnotationNames.ColumnReadPermission, permissionRestrictionFunc);
+
+        public bool HasWritePermissionRestriction(Func<ICurrentUserPermission, bool> permissionRestrictionFunc)
+            => HasAnnotation(GridViewAnnotationNames.ColumnWrtiePermission, permissionRestrictionFunc);
     }
 }

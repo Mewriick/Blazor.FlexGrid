@@ -58,5 +58,8 @@ namespace Blazor.FlexGrid.DataSet
 
             return $"{from} - {to}";
         }
+
+        public static bool IsItemEdited(this ITableDataSet tableDataSet, object item)
+            => tableDataSet.RowEditOptions.ItemInEditMode == item;
     }
 }

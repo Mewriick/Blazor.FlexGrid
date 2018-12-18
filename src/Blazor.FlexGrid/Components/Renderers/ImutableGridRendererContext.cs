@@ -14,7 +14,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly ICurrentUserPermission currentUserPermission;
         private Dictionary<string, ValueFormatter> valueFormatters;
         private Dictionary<string, RenderFragmentAdapter> specialColumnValues;
-        private Dictionary<string, bool> columnPermissions;
+        private Dictionary<string, PermissionAccess> columnPermissions;
         private List<PropertyInfo> gridItemCollectionProperties;
 
         public IEntityType GridEntityConfiguration { get; }
@@ -27,34 +27,36 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyDictionary<string, RenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
 
-        public IReadOnlyDictionary<string, bool> ColumnReadPermmisions => columnPermissions;
+        public IReadOnlyDictionary<string, PermissionAccess> ColumnReadPermmisions => columnPermissions;
 
         public GridCssClasses CssClasses { get; }
 
         public ImutableGridRendererContext(
             IEntityType gridEntityConfiguration,
-            List<PropertyInfo> itemProperties,
             IPropertyValueAccessor propertyValueAccessor,
             ICurrentUserPermission currentUserPermission)
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();
             specialColumnValues = new Dictionary<string, RenderFragmentAdapter>();
-            columnPermissions = new Dictionary<string, bool>();
+            columnPermissions = new Dictionary<string, PermissionAccess>();
             gridItemCollectionProperties = new List<PropertyInfo>();
 
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
-            GridItemProperties = itemProperties ?? throw new ArgumentNullException(nameof(itemProperties));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
             this.currentUserPermission = currentUserPermission ?? throw new ArgumentNullException(nameof(currentUserPermission));
-            InitializeGridProperties();
         }
 
-        private void InitializeGridProperties()
+        public void InitializeGridProperties(List<PropertyInfo> itemProperties)
         {
+            if (itemProperties is null)
+            {
+                throw new ArgumentNullException(nameof(itemProperties));
+            }
+
             var collectionProperties = GridEntityConfiguration.ClrTypeCollectionProperties;
             var propertiesListWithOrder = new List<(int Order, PropertyInfo Prop)>();
 
-            foreach (var property in GridItemProperties)
+            foreach (var property in itemProperties)
             {
                 if (collectionProperties.Contains(property))
                 {
@@ -62,6 +64,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                 }
 
                 var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);
+                ResolveColumnPermission(columnConfig, property.Name);
+
                 var columnVisibility = columnConfig?.IsVisible;
                 if (columnVisibility.HasValue && !columnVisibility.Value)
                 {
@@ -78,13 +82,32 @@ namespace Blazor.FlexGrid.Components.Renderers
                 {
                     specialColumnValues.Add(property.Name, columnConfig.SpecialColumnValue);
                 }
-
-                columnPermissions.Add(property.Name, columnConfig?.ReadPermissionRestrictionFunc(currentUserPermission) ?? true);
             }
 
             GridItemProperties = propertiesListWithOrder.OrderBy(p => p.Order)
                 .Select(p => p.Prop)
                 .ToList();
+        }
+
+        private void ResolveColumnPermission(IGridViewColumnAnotations columnConfig, string columnName)
+        {
+            var permissionAccess = PermissionAccess.None;
+            if (columnConfig is null)
+            {
+                permissionAccess |= PermissionAccess.Read | PermissionAccess.Write;
+            }
+            else
+            {
+                permissionAccess |= columnConfig.ReadPermissionRestrictionFunc(currentUserPermission)
+                   ? PermissionAccess.Read
+                   : PermissionAccess.None;
+
+                permissionAccess |= columnConfig.WritePermissionRestrictionFunc(currentUserPermission)
+                   ? PermissionAccess.Write
+                   : PermissionAccess.None;
+            }
+
+            columnPermissions.Add(columnName, permissionAccess);
         }
     }
 }

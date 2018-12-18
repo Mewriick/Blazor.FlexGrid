@@ -57,8 +57,11 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             foreach (var collectionProperty in rendererContext.GridItemCollectionProperties)
             {
-                var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.ActualItem, collectionProperty);
-                RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);
+                if (rendererContext.HasCurrentUserReadPermission(collectionProperty.Name))
+                {
+                    var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.ActualItem, collectionProperty);
+                    RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);
+                }
             }
         }
 

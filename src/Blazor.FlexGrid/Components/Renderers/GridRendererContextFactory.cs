@@ -45,11 +45,11 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             imutableGridRendererContext = new ImutableGridRendererContext(
                     gridConfiguration,
-                    dataSetItemType.GetProperties().ToList(),
                     propertyValueAccessorCache.GetPropertyAccesor(dataSetItemType),
                     currentUserPermission
                 );
 
+            imutableGridRendererContext.InitializeGridProperties(dataSetItemType.GetProperties().ToList());
             imutableRendererContextCache.Add(dataSetItemType, imutableGridRendererContext);
 
             return imutableGridRendererContext;
