@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Blazor.FlexGrid.Demo.Shared
 {
@@ -10,5 +8,10 @@ namespace Blazor.FlexGrid.Demo.Shared
         public int TemperatureC { get; set; }
         public string Summary { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public override string ToString()
+        {
+            return $"Temp: {TemperatureC}, {TemperatureF}";
+        }
     }
 }

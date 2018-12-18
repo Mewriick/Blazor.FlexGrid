@@ -45,6 +45,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpPut("[action]")]
         public WeatherForecast UpdateWeatherForecast([FromBody] WeatherForecast weatherForecast)
         {
+            weatherForecast.TemperatureC = weatherForecast.TemperatureC + 1;
+
             return weatherForecast;
         }
     }

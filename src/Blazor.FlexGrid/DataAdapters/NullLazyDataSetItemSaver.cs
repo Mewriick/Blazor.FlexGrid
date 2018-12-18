@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.DataAdapters
     {
         public static NullLazyDataSetItemSaver<TItem> Instance = new NullLazyDataSetItemSaver<TItem>();
 
-        public Task<bool> SaveItem(TItem item, ILazyLoadingOptions lazyLoadingOptions)
-            => Task.FromResult(true);
+        public Task<TItem> SaveItem(TItem item, ILazyLoadingOptions lazyLoadingOptions)
+            => Task.FromResult(item);
     }
 }

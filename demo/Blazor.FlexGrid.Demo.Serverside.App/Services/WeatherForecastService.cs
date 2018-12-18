@@ -55,9 +55,11 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
                 });
         }
 
-        public Task<bool> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
+        public Task<WeatherForecast> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
         {
-            return Task.FromResult(true);
+            item.TemperatureC = item.TemperatureC + 1;
+
+            return Task.FromResult(item);
         }
     }
 }

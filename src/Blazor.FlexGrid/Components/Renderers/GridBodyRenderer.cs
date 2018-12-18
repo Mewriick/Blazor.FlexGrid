@@ -27,7 +27,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
             catch (Exception ex)
             {
-                logger.LogError($"Error raised during rendering grid view body. Ex: {ex}");
+                logger.LogError($"Error occured during rendering grid view body. Ex: {ex}");
             }
 
             rendererContext.CloseElement();

@@ -94,11 +94,20 @@ namespace Blazor.FlexGrid.DataSet
                 propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
             }
 
-            var saveResult = await lazyDataSetItemSaver.SaveItem((TItem)RowEditOptions.ItemInEditMode, LazyLoadingOptions);
+            var typedItem = (TItem)RowEditOptions.ItemInEditMode;
+            var saveResult = await lazyDataSetItemSaver.SaveItem(typedItem, LazyLoadingOptions);
+            if (saveResult != null)
+            {
+                var itemIndex = Items.IndexOf(typedItem);
+                if (itemIndex > -1)
+                {
+                    Items[itemIndex] = saveResult;
+                }
+            }
 
             RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
-            return saveResult;
+            return saveResult != null ? true : false;
         }
 
         public void CancelEditation()

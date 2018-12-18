@@ -1,8 +1,8 @@
 ﻿using Blazor.FlexGrid.DataSet.Options;
+using Microsoft.AspNetCore.Blazor;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -18,7 +18,7 @@ namespace Blazor.FlexGrid.DataSet
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<bool> SaveItem(TItem item, ILazyLoadingOptions lazyLoadingOptions)
+        public async Task<TItem> SaveItem(TItem item, ILazyLoadingOptions lazyLoadingOptions)
         {
             if (string.IsNullOrWhiteSpace(lazyLoadingOptions.PutDataUri))
             {
@@ -27,17 +27,15 @@ namespace Blazor.FlexGrid.DataSet
 
             try
             {
-                var json = Microsoft.JSInterop.Json.Serialize(item);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await httpClient.PutAsync(lazyLoadingOptions.PutDataUri, content);
+                var response = await httpClient.PutJsonAsync<TItem>(lazyLoadingOptions.PutDataUri, item);
 
-                return true;
+                return response;
             }
             catch (Exception ex)
             {
                 logger.LogError($"Error during saving data for [{lazyLoadingOptions.PutDataUri}]. Ex: {ex}");
 
-                return false;
+                return null;
             }
         }
     }
