@@ -91,6 +91,11 @@ namespace Blazor.FlexGrid.DataSet
                 {
                     propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
                 }
+
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true, Item = RowEditOptions.ItemInEditMode });
+
+                return Task.FromResult(true);
+
             }
             catch (Exception)
             {
@@ -101,10 +106,6 @@ namespace Blazor.FlexGrid.DataSet
             {
                 RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
             }
-
-            GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true });
-
-            return Task.FromResult(true);
         }
 
         public void CancelEditation()

@@ -119,7 +119,7 @@ namespace Blazor.FlexGrid.DataSet
                     Items[itemIndex] = saveResult;
                 }
 
-                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true });
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true, Item = saveResult });
             }
 
             RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;

@@ -22,7 +22,8 @@ namespace Blazor.FlexGrid.DataSet
         {
             if (string.IsNullOrWhiteSpace(lazyLoadingOptions.PutDataUri))
             {
-                throw new ArgumentNullException($"When you are using {nameof(LazyTableDataSet<TItem>)} you must specify url for saving updated item data");
+                throw new ArgumentNullException($"When you are using {nameof(LazyTableDataSet<TItem>)} you must specify url for saving updated item data. " +
+                    $"If you are using {nameof(LazyTableDataSet<TItem>)} as detail GridView you must configure url by calling method HasUpdateUrl");
             }
 
             try

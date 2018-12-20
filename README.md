@@ -9,7 +9,7 @@ GridView component for Blazor
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.3.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.4.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
@@ -31,6 +31,13 @@ After nuget instalation you must create in Blazor.Client app Linker.xml file bec
   <!-- Name of the entry point assembly -->
   <assembly fullname="Blazor.FlexGrid.Demo.Client" />
 </linker>
+```
+
+And Add this into csproj of client project
+```cs
+<ItemGroup>
+	<BlazorLinkerDescriptor Include="Linker.xml" />
+</ItemGroup>
 ```
 
 # Setup
@@ -174,6 +181,36 @@ public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParam
 ```
 After that you have fully pageable and sortable table with lazy loaded data after you select new page
 
+# Permission restriction
+You can configure permission restricion of showing/editing values for each column in table for current logged user. You only have to do 3 things.
+First create class which implements interface **ICurrentUserPermission**. Second provide configuration for permission restriction for exmaple:
+
+```cs
+public void Configure(EntityTypeBuilder<Customer> builder)
+{
+	builder.Property(c => c.Email)
+		.HasReadPermissionRestriction(perm => perm.IsInRole("Read"))
+		.HasWritePermissionRestriction(perm => perm.IsInRole("Write"));
+}
+```
+
+And last thing is register **ICurrentUserPermission** into DI container as **Singleton**.
+
+# Blazor components in column
+You can configure column value for rendering **Blazor** component this way:
+Fisrt add using **Blazor.FlexGrid.Components.Configuration**.
+Second inject required service **BlazorComponentColumnCollection<T>** into HTML of component where you use **FlexGrid**
+And the last thing you have to provide **RenderFragment** for columns
+
+```cs
+@inject BlazorComponentColumnCollection<WeatherForecast> Collection
+
+@{
+    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<BlazorButton>@weather.Summary</BlazorButton>;
+	Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
+}
+```
+
 # Master / Detail 
 You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is collection
 **FlexGrid** component automatically find out this and will render this kind of object as Master / Detail grid.
@@ -185,6 +222,7 @@ public void Configure(EntityTypeBuilder<Customer> builder)
     builder.IsMasterTable();
     builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
         .HasLazyLoadingUrl("/api/Order/Orders")
+        .HasUpdateUrl("/api/Order/Update")
         .HasCaption("Orders")
         .HasPageSize(10);
 
@@ -242,6 +280,43 @@ Example page with Master/Detail grid
 For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is register in DI container. 
 Master / Detail usage you can find in ServerSide Blazor demo project
 
+# Inline editing
+You can use inline editing feature by configuring grid
+```cs
+public void Configure(EntityTypeBuilder<Order> builder)
+{
+	builder.AllowInlineEdit();
+}
+```
+You can also configure which columns will be editable for current logger user, see **Permission restriction** section. If you are using 
+**CollectionTableDataAdapter** chagnes are saved only into local object in list. For saving to the server you have to write your own functionallity.
+If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must provide url for updating of item.
+
+```cs
+<GridView DataAdapter="@forecastAdapter"
+          LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts", PutDataUri = "/api/SampleData/UpdateWeatherForecast" })"
+          PageSize="10"
+          SaveOperationFinished="@ItemSavedOperationFinished">
+</GridView>
+```
+And the Http request will be send to the server
+
+Or if the Grid is used as detail 
+
+```cs
+builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
+    .HasLazyLoadingUrl("/api/Order/Orders")
+    .HasUpdateUrl("/api/Order/UpdateOrder")
+    .HasCaption("Orders")
+    .HasPageSize(10);
+```
+
+# Events
+You can subscribe some events which **FlexGrid** provides only things which you must do are add using
+**@using Blazor.FlexGrid.Components.Events** and register **EventHandler** in HTML of Grid component.
+Suppoerted events:
+``SaveOperationFinished``
+
 # Design
 You can override some default CssClasses by your own CssClasses by using fluent api configuration
 ```cs
@@ -264,8 +339,8 @@ public void Configure(EntityTypeBuilder<WeatherForecast> builder)
 Please feel free to use the component, open issues, fix bugs or provide feedback.
 
 ## RoadMap
+``Create proper Docs``
 ``Add UnitTests``
 ``More fluent API configuration``
 ``Filtration support``
-``Inline editing``
-``Show detatil of item support``
+
