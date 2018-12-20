@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.DataSet
+﻿using Blazor.FlexGrid.Components.Events;
+
+namespace Blazor.FlexGrid.DataSet
 {
 
     /// <summary>
@@ -6,5 +8,6 @@
     /// </summary>
     public interface ITableDataSet : IPageableTableDataSet, ISortableTableDataSet, ISelectableDataSet, IRowEditableDataSet
     {
+        GridViewEvents GridViewEvents { get; }
     }
 }

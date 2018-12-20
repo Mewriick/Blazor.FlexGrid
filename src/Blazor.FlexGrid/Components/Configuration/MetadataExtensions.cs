@@ -71,5 +71,16 @@ namespace Blazor.FlexGrid.Components.Configuration
 
             return lazyLoadingUrl.ToString();
         }
+
+        public static string DetailGridUpdateUrl(this IMasterDetailRelationship masterDetailRelationship)
+        {
+            var updateUrl = masterDetailRelationship[GridViewAnnotationNames.DetailUpdateUrl];
+            if (updateUrl is NullAnotationValue)
+            {
+                return string.Empty;
+            }
+
+            return updateUrl.ToString();
+        }
     }
 }

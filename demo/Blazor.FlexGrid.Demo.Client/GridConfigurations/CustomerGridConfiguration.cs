@@ -11,6 +11,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             builder.IsMasterTable();
             builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
                .HasLazyLoadingUrl("/api/Order/Orders")
+               .HasUpdateUrl("/api/Order/UpdateOrder")
                .HasCaption("Orders")
                .HasPageSize(10);
 

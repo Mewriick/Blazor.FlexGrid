@@ -1,6 +1,7 @@
 ﻿@addTagHelper *, Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
+@using Blazor.FlexGrid.Components.Events
 @inject HttpClient Http
 @inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
 @inject LazyLoadedTableDataAdapter<Order> ordersAdapter
@@ -8,7 +9,10 @@
 
 <h1>Customers</h1>
 
-<GridView DataAdapter="@customersMasterDataAdapter" PageSize="5"></GridView>
+<GridView DataAdapter="@customersMasterDataAdapter"
+          PageSize="5"
+          SaveOperationFinished="@ItemSavedOperationFinished">
+</GridView>
 
 @functions{
     CollectionTableDataAdapter<Customer> customerDataAdapter;
@@ -27,5 +31,10 @@
             .WithDetailTableDataAdapter(ordersAdapter)
             .WithDetailTableDataAdapter(customerAddressesDataAdapter)
             .Build();
+    }
+
+    public void ItemSavedOperationFinished(SaveResultArgs saveResultArgs)
+    {
+        Console.WriteLine($"Item saved result: {saveResultArgs.SaveResult}");
     }
 }

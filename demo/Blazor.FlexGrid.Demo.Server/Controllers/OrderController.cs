@@ -29,5 +29,11 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
                 TotalCount = customerOrders.Count()
             });
         }
+
+        [HttpPut("[action]")]
+        public ActionResult<Order> UpdateOrder(Order order)
+        {
+            return order;
+        }
     }
 }

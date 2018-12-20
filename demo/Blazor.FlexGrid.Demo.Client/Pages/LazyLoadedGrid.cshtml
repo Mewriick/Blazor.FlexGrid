@@ -1,10 +1,9 @@
 ﻿@addTagHelper *, Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
-@using Blazor.FlexGrid.DataSet
 @using Blazor.FlexGrid.DataSet.Options
-@using Blazor.FlexGrid.Components.Configuration
-@using Blazor.FlexGrid.Components
+@using Blazor.FlexGrid.Components.Events
+
 @page "/lazyloadedgrid"
 @inject HttpClient Http
 @inject LazyLoadedTableDataAdapter<WeatherForecast> forecastAdapter
@@ -17,8 +16,17 @@
 
 <GridView DataAdapter="@forecastAdapter"
           LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts", PutDataUri = "/api/SampleData/UpdateWeatherForecast" })"
-          PageSize="10">
+          PageSize="10"
+          SaveOperationFinished="@ItemSavedOperationFinished">
 </GridView>
+
+
+@functions{
+    public void ItemSavedOperationFinished(SaveResultArgs saveResultArgs)
+    {
+        Console.WriteLine($"Item saved result: {saveResultArgs.SaveResult}");
+    }
+}
 
 
 

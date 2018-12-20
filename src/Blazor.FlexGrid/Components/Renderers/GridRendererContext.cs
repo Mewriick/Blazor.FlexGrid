@@ -161,13 +161,26 @@ namespace Blazor.FlexGrid.Components.Renderers
             renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
             renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
 
-            var lazyLoadingUrl = masterDetailRelationship.DetailGridLazyLoadingUrl();
-            if (!string.IsNullOrEmpty(lazyLoadingUrl))
-            {
-                renderTreeBuilder.AddAttribute(++sequence, nameof(ILazyTableDataSet.LazyLoadingOptions), new LazyLoadingOptions { DataUri = lazyLoadingUrl });
-            }
+            renderTreeBuilder.AddAttribute(++sequence,
+                nameof(ILazyTableDataSet.LazyLoadingOptions),
+                new LazyLoadingOptions
+                {
+                    DataUri = masterDetailRelationship.DetailGridLazyLoadingUrl(),
+                    PutDataUri = masterDetailRelationship.DetailGridUpdateUrl()
+                });
 
+            AddEventAttributes();
             renderTreeBuilder.CloseComponent();
+        }
+
+        private void AddEventAttributes()
+        {
+            if (TableDataSet.GridViewEvents.SaveOperationFinished != null)
+            {
+                renderTreeBuilder.AddAttribute(++sequence,
+                    nameof(ITableDataSet.GridViewEvents.SaveOperationFinished),
+                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.SaveOperationFinished));
+            }
         }
     }
 }

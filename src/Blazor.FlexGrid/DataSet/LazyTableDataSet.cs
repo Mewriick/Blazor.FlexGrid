@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Collections;
@@ -22,6 +23,12 @@ namespace Blazor.FlexGrid.DataSet
 
         public ISortingOptions SortingOptions { get; set; } = new SortingOptions();
 
+        public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+
+        public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
+
+        public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
+
         /// <summary>
         /// Gets or sets the items for the current page.
         /// </summary>
@@ -29,9 +36,7 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
-        public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver)
         {
@@ -98,7 +103,9 @@ namespace Blazor.FlexGrid.DataSet
             }
             catch (Exception)
             {
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = false });
                 RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
+
                 return false;
             }
 
@@ -111,6 +118,8 @@ namespace Blazor.FlexGrid.DataSet
                 {
                     Items[itemIndex] = saveResult;
                 }
+
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true });
             }
 
             RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;

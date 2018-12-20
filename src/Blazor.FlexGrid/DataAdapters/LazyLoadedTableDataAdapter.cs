@@ -35,7 +35,8 @@ namespace Blazor.FlexGrid.DataAdapters
             {
                 LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
-                SortingOptions = tableDataSetOptions.SortingOptions
+                SortingOptions = tableDataSetOptions.SortingOptions,
+                GridViewEvents = tableDataSetOptions.GridViewEvents
             };
 
             return tableDataSet;

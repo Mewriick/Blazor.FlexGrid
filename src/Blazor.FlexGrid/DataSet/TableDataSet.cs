@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Collections;
@@ -18,6 +19,8 @@ namespace Blazor.FlexGrid.DataSet
         public ISortingOptions SortingOptions { get; set; } = new SortingOptions();
 
         public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
+
+        public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
         /// <summary>
         /// Gets or sets the items for the current page.
         /// </summary>
@@ -91,12 +94,15 @@ namespace Blazor.FlexGrid.DataSet
             }
             catch (Exception)
             {
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = false });
                 return Task.FromResult(false);
             }
             finally
             {
                 RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
             }
+
+            GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true });
 
             return Task.FromResult(true);
         }

@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
@@ -24,12 +25,15 @@ namespace Blazor.FlexGrid.DataSet
         public IPagingOptions PageableOptions => tableDataSet.PageableOptions;
 
         public ISortingOptions SortingOptions => tableDataSet.SortingOptions;
+        public IRowEditOptions RowEditOptions => tableDataSet.RowEditOptions;
+
+        public GridViewEvents GridViewEvents => tableDataSet.GridViewEvents;
 
         public IList<TItem> Items => tableDataSet.Items as List<TItem>;
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public IRowEditOptions RowEditOptions => tableDataSet.RowEditOptions;
+
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,

@@ -1,10 +1,12 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
+using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.AspNetCore.Blazor.RenderTree;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,6 +38,9 @@ namespace Blazor.FlexGrid.Components
 
         [Parameter]
         private int PageSize { get; set; }
+
+        [Parameter]
+        private Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -78,6 +83,10 @@ namespace Blazor.FlexGrid.Components
             {
                 conf.LazyLoadingOptions = LazyLoadingOptions;
                 conf.PageableOptions.PageSize = PageSize;
+                conf.GridViewEvents = new GridViewEvents
+                {
+                    SaveOperationFinished = this.SaveOperationFinished
+                };
             });
 
             if (tableDataSet is null)

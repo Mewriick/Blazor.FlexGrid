@@ -21,5 +21,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasLazyLoadingUrl(string url)
             => HasAnnotation(GridViewAnnotationNames.DetailLazyLoadingUrl, url);
+
+        public bool HasUpdateUrl(string url)
+            => HasAnnotation(GridViewAnnotationNames.DetailUpdateUrl, url);
     }
 }

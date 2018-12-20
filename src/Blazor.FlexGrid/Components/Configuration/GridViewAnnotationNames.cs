@@ -8,6 +8,7 @@
         public const string DetailTabPageSize = "DetailTabPageSize";
         public const string DetailTabPageCaption = "DetailTabPageCaption";
         public const string DetailLazyLoadingUrl = "DetailLazyLoadingUrl";
+        public const string DetailUpdateUrl = "DetailUpdateUrl";
         public const string AllowInlineEdit = "AllowInlineEdit";
 
         public const string ColumnCaption = "GridColumnCaption";

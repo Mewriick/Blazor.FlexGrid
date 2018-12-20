@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.DataSet.Options
+﻿using Blazor.FlexGrid.Components.Events;
+
+namespace Blazor.FlexGrid.DataSet.Options
 {
     public class TableDataSetOptions
     {
@@ -7,5 +9,7 @@
         public PageableOptions PageableOptions { get; set; } = new PageableOptions();
 
         public SortingOptions SortingOptions { get; set; } = new SortingOptions();
+
+        public GridViewEvents GridViewEvents { get; set; }
     }
 }
