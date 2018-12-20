@@ -40,11 +40,11 @@ namespace Blazor.FlexGrid.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            base.BuildRenderTree(builder);
+
             GridRenderer.Render(
                 RendererContextFactory.CreateRendererContext(tableDataSet, builder)
                 );
-
-            base.BuildRenderTree(builder);
         }
 
         protected override Task OnInitAsync()

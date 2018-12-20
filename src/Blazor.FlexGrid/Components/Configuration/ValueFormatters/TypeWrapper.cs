@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -13,7 +14,9 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
         private readonly Dictionary<string, Action<object, object>> setters
             = new Dictionary<string, Action<object, object>>();
 
-        public TypeWrapper(Type clrType)
+        private readonly ILogger logger;
+
+        public TypeWrapper(Type clrType, ILogger logger)
         {
             foreach (var property in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
@@ -42,18 +45,39 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
                     this.setters.Add(property.Name, setExpression.Compile());
                 }
             }
+
+            this.logger = logger;
         }
 
         public object GetValue(object @object, string name)
         {
-            var get = getters[name];
-            return get(@object);
+            try
+            {
+                var get = getters[name];
+                return get(@object);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"TypeWrapper:GetValue. Ex: {ex}");
+
+                throw;
+            }
         }
 
         public void SetValue(object instance, string propertyName, object value)
         {
-            var set = setters[propertyName];
-            set(instance, value);
+            try
+            {
+                var set = setters[propertyName];
+                set(instance, value);
+            }
+
+            catch (Exception ex)
+            {
+                logger.LogError($"TypeWrapper:SetValue. Ex: {ex}");
+
+                throw;
+            }
         }
     }
 }

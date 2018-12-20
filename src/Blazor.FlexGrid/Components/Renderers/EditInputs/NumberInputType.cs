@@ -10,10 +10,12 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, localColumnName);
             if (IsSupportedNumberType(value))
             {
-                gridRendererContext.OpenElement("input");
-                gridRendererContext.AddAttribute("type", "number");
-                gridRendererContext.AddAttribute("value", BindMethods.GetValue(value));
+                gridRendererContext.OpenElement(HtmlTagNames.Div, "edit-field-wrapper");
+                gridRendererContext.OpenElement(HtmlTagNames.Input, "edit-text-field");
+                gridRendererContext.AddAttribute(HtmlAttributes.Type, "number");
+                gridRendererContext.AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value));
                 TryAddOnChangeHandler(gridRendererContext, localColumnName, value);
+                gridRendererContext.CloseElement();
                 gridRendererContext.CloseElement();
             }
             else
@@ -29,7 +31,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is int intValue)
             {
-                gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (int __value)
+                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
                     {
                         gridRendererContext
                             .TableDataSet
@@ -48,7 +50,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is long longValue)
             {
-                gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (long __value)
+                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (long __value)
                     {
                         gridRendererContext
                             .TableDataSet
@@ -66,7 +68,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is decimal decimalValue)
             {
-                gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (decimal __value)
+                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (decimal __value)
                     {
                         gridRendererContext
                             .TableDataSet
@@ -85,7 +87,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is double doubleValue)
             {
-                gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (double __value)
+                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (double __value)
                     {
                         gridRendererContext
                             .TableDataSet

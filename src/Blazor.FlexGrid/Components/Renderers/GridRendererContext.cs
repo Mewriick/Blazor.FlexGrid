@@ -29,7 +29,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public string ActualColumnName { get; set; } = string.Empty;
 
-        public bool ActualColumnPropertyIsEditable { get; set; }
+        public bool ActualColumnPropertyCanBeEdited { get; set; }
 
         public bool IsFirstColumn => ActualColumnName.Equals(firstColumnName);
 
@@ -105,7 +105,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             if (specialColumnValues.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
             {
-                renderTreeBuilder.AddContent(++sequence, rendererFragmentAdapter.GetColumnFragment(ActualItem));
+                var fragment = rendererFragmentAdapter.GetColumnFragment(ActualItem);
+                renderTreeBuilder.AddContent(++sequence, fragment);
                 return;
             }
 

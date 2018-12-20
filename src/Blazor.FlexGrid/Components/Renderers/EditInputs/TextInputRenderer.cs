@@ -9,10 +9,11 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             var localColumnName = gridRendererContext.ActualColumnName;
             var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, gridRendererContext.ActualColumnName);
 
-            gridRendererContext.OpenElement("input");
-            gridRendererContext.AddAttribute("type", GetInputType(value.ToString()));
-            gridRendererContext.AddAttribute("value", BindMethods.GetValue(value));
-            gridRendererContext.AddAttribute("onchange", BindMethods.SetValueHandler(delegate (string __value)
+            gridRendererContext.OpenElement(HtmlTagNames.Div, "edit-field-wrapper");
+            gridRendererContext.OpenElement(HtmlTagNames.Input, "edit-text-field");
+            gridRendererContext.AddAttribute(HtmlAttributes.Type, GetInputType(value.ToString()));
+            gridRendererContext.AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value));
+            gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
                 {
                     gridRendererContext
                         .TableDataSet
@@ -20,6 +21,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 }, value.ToString())
             );
 
+            gridRendererContext.CloseElement();
             gridRendererContext.CloseElement();
         }
 

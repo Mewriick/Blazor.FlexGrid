@@ -89,9 +89,17 @@ namespace Blazor.FlexGrid.DataSet
 
         public async Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor)
         {
-            foreach (var newValue in RowEditOptions.UpdatedValues)
+            try
             {
-                propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
+                foreach (var newValue in RowEditOptions.UpdatedValues)
+                {
+                    propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
+                }
+            }
+            catch (Exception)
+            {
+                RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
+                return false;
             }
 
             var typedItem = (TItem)RowEditOptions.ItemInEditMode;

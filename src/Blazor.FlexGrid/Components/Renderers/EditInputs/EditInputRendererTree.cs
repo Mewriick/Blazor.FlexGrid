@@ -9,9 +9,11 @@
             var dateTimeInputRenderer = new DateTimeInputRenderer();
             var textInputRenderer = new TextInputRenderer();
             var numberInputRenderer = new NumberInputType();
+            var selectInputRenderer = new SelectInputRenderer();
 
             numberInputRenderer.SetSuccessor(dateTimeInputRenderer);
-            dateTimeInputRenderer.SetSuccessor(textInputRenderer);
+            dateTimeInputRenderer.SetSuccessor(selectInputRenderer);
+            selectInputRenderer.SetSuccessor(textInputRenderer);
 
             rendererTree = numberInputRenderer;
         }

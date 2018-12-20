@@ -8,6 +8,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
+            builder.AllowInlineEdit();
+
             builder.IsMasterTable();
             builder.HasDetailRelationship(o => o.OrderItems)
                 .HasCaption("Order products");

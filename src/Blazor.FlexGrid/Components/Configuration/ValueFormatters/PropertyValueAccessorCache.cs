@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
@@ -6,9 +7,11 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
     public class PropertyValueAccessorCache : IPropertyValueAccessorCache
     {
         private readonly Dictionary<Type, IPropertyValueAccessor> propertyAccessors;
+        private readonly ILogger<PropertyValueAccessorCache> logger;
 
-        public PropertyValueAccessorCache()
+        public PropertyValueAccessorCache(ILogger<PropertyValueAccessorCache> logger)
         {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.propertyAccessors = new Dictionary<Type, IPropertyValueAccessor>();
         }
 
@@ -44,7 +47,7 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
                 return propertyValueAccessor;
             }
 
-            propertyValueAccessor = new TypeWrapper(type);
+            propertyValueAccessor = new TypeWrapper(type, logger);
             propertyAccessors.Add(type, propertyValueAccessor);
 
             return propertyValueAccessor;

@@ -335,3 +335,44 @@
     color: rgba(0, 0, 0, 0.54);
     flex-shrink: 0;    
 }
+
+.edit-field-wrapper {
+    color: rgba(0, 0, 0, 0.87);
+    cursor: text;
+    display: inline-flex;
+    font-size: 1rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 1.1875em;
+    align-items: center;
+    position: relative;
+}
+
+    .edit-field-wrapper::before {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: "\00a0";
+        position: absolute;
+        transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;        
+        pointer-events: none;
+    }
+
+
+.edit-text-field {
+    font: inherit;
+    width: 100%;
+    border: 0;
+    margin: 0;
+    padding: 6px 0 7px;
+    display: block;
+    min-width: 0;
+    box-sizing: content-box;
+    background: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .edit-text-field:focus {
+        outline: none;
+        border-bottom: solid #1976d2;
+    }

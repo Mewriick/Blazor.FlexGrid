@@ -25,7 +25,7 @@ namespace Blazor.FlexGrid.Demo.Server
                     Id = index,
                     CustomerId = random.Next(1, 20),
                     OrderDate = DateTimeOffset.Now,
-                    Status = "New",
+                    Status = OrderState.New,
                     OrderItems = new System.Collections.Generic.List<OrderItem>
                     {
                         new OrderItem

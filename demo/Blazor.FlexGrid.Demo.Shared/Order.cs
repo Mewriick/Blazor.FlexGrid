@@ -9,10 +9,17 @@ namespace Blazor.FlexGrid.Demo.Shared
 
         public DateTimeOffset OrderDate { get; set; }
 
-        public string Status { get; set; }
+        public OrderState Status { get; set; }
 
         public int CustomerId { get; set; }
 
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    }
+
+    public enum OrderState
+    {
+        None = 0,
+        New = 1,
+        Cancelled = 2
     }
 }

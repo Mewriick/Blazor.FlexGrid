@@ -12,7 +12,7 @@
             foreach (var property in rendererContext.GridItemProperties)
             {
                 rendererContext.ActualColumnName = property.Name;
-                rendererContext.ActualColumnPropertyIsEditable = property.CanWrite;
+                rendererContext.ActualColumnPropertyCanBeEdited = property.CanWrite;
 
                 gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
             }

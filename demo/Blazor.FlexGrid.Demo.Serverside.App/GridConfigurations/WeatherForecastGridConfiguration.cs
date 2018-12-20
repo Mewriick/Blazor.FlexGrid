@@ -12,7 +12,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.Property(e => e.Date)
                 .HasCaption("Date")
-                .HasWritePermissionRestriction(perm => perm.IsInRole("TestRole1"))
+                //.HasWritePermissionRestriction(perm => perm.IsInRole("TestRole1"))
                 .HasValueFormatter(d => d.ToShortDateString());
 
             builder.Property(e => e.Summary)
