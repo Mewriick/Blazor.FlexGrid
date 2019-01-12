@@ -2,7 +2,6 @@
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
-using System.Collections;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.DataAdapters
@@ -35,7 +34,7 @@ namespace Blazor.FlexGrid.DataAdapters
         {
             var propertyType = propertyInfo.PropertyType.GenericTypeArguments[0];
             var propertyValueGetter = propertyValueAccessorCache.GetPropertyAccesor(selectedItem.GetType());
-            var collectionValue = propertyValueGetter.GetValue(selectedItem, propertyInfo.Name) as ICollection;
+            var collectionValue = propertyValueGetter.GetValue(selectedItem, propertyInfo.Name);
 
             var dataAdapterType = typeof(CollectionTableDataAdapter<>).MakeGenericType(propertyType);
             var dataAdapter = Activator.CreateInstance(dataAdapterType,

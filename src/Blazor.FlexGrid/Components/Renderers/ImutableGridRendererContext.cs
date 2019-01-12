@@ -58,13 +58,13 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             foreach (var property in itemProperties)
             {
+                var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);
+                ResolveColumnPermission(columnConfig, property.Name);
+
                 if (collectionProperties.Contains(property))
                 {
                     continue;
                 }
-
-                var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);
-                ResolveColumnPermission(columnConfig, property.Name);
 
                 var columnVisibility = columnConfig?.IsVisible;
                 if (columnVisibility.HasValue && !columnVisibility.Value)

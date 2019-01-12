@@ -142,10 +142,24 @@ namespace Blazor.FlexGrid.Components.Renderers
             => renderTreeBuilder.AddAttribute(++sequence, name, value);
 
         public bool HasCurrentUserReadPermission(string columnName)
-            => columnPermissions[columnName].HasFlag(PermissionAccess.Read);
+        {
+            if (columnPermissions.TryGetValue(columnName, out var permission))
+            {
+                permission.HasFlag(PermissionAccess.Read);
+            }
+
+            return true;
+        }
 
         public bool HasCurrentUserWritePermission(string columnName)
-            => columnPermissions[columnName].HasFlag(PermissionAccess.Write);
+        {
+            if (columnPermissions.TryGetValue(columnName, out var permission))
+            {
+                permission.HasFlag(PermissionAccess.Write);
+            }
+
+            return true;
+        }
 
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
