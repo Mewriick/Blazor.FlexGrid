@@ -314,7 +314,8 @@ builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
 # Events
 You can subscribe some events which **FlexGrid** provides only things which you must do are add using
 **@using Blazor.FlexGrid.Components.Events** and register **EventHandler** in HTML of Grid component.
-Suppoerted events:
+
+Suppoerted events:\
 ``SaveOperationFinished``
 
 # Design
