@@ -48,6 +48,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public PropertyBuilder<TProperty, TEntity> HasValueFormatter(Expression<Func<TProperty, string>> valueFormatterExpression, bool allowNull)
+        {
+            Builder.HasValueFormatter(valueFormatterExpression, allowNull);
+
+            return this;
+        }
+
         public PropertyBuilder<TProperty, TEntity> HasCompositeValueFormatter(Expression<Func<TEntity, string>> valueFormatterExpression)
         {
             Builder.HasCompositeValueFormatter(valueFormatterExpression);
