@@ -30,8 +30,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public bool HasOrder(int order)
             => HasAnnotation(GridViewAnnotationNames.ColumnOrder, order);
 
-        public bool HasValueFormatter<TProperty>(Expression<Func<TProperty, string>> valueFormatterExpression, bool allowNull = false)
-            => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TProperty>(valueFormatterExpression, allowNull: allowNull));
+        public bool HasValueFormatter<TProperty>(Expression<Func<TProperty, string>> valueFormatterExpression, string defaultValue = default)
+            => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TProperty>(valueFormatterExpression, defaultValue: defaultValue));
 
         public bool HasCompositeValueFormatter<TInputValue>(Expression<Func<TInputValue, string>> valueFormatterExpression)
             => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TInputValue>(valueFormatterExpression, ValueFormatterType.WholeRowObject));
