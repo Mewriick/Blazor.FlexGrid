@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Blazor;
+﻿using Blazor.FlexGrid.Permission;
+using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -6,9 +7,9 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class GridActionButtonsRenderer : GridPartRenderer
     {
         public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.IsLastColumn && rendererContext.GridConfiguration.InlineEditIsAllowed;
+            => rendererContext.IsLastColumn && rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed;
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
             rendererContext.OpenElement(HtmlTagNames.Div, "action-buttons-wrapper");
@@ -22,6 +23,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             else
             {
                 RenderEditButton(rendererContext);
+                RenderDeleteButton(rendererContext, permissionContext);
             }
 
             rendererContext.CloseElement();
@@ -56,6 +58,29 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
             rendererContext.OpenElement(HtmlTagNames.I, "fas fa-save");
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+        }
+
+        private void RenderDeleteButton(GridRendererContext rendererContext, PermissionContext permissionContext)
+        {
+            if (!permissionContext.HasDeleteItemPermission ||
+                !rendererContext.GridConfiguration.InlineEditOptions.AllowDeleting)
+            {
+                return;
+            }
+
+            var localActualItem = rendererContext.ActualItem;
+
+            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.AddOnClickEvent(() =>
+                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    rendererContext.TableDataSet.DeleteItem(localActualItem))
+            );
+
+            rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
+            rendererContext.OpenElement(HtmlTagNames.I, "fas fa-trash-alt");
             rendererContext.CloseElement();
             rendererContext.CloseElement();
             rendererContext.CloseElement();

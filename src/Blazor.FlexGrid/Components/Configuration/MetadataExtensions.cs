@@ -82,5 +82,16 @@ namespace Blazor.FlexGrid.Components.Configuration
 
             return updateUrl.ToString();
         }
+
+        public static string DetailGridDeleteUrl(this IMasterDetailRelationship masterDetailRelationship)
+        {
+            var deleteUrl = masterDetailRelationship[GridViewAnnotationNames.DetailDeleteUrl];
+            if (deleteUrl is NullAnotationValue)
+            {
+                return string.Empty;
+            }
+
+            return deleteUrl.ToString();
+        }
     }
 }

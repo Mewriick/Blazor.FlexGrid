@@ -56,7 +56,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             => HasAnnotation(GridViewAnnotationNames.IsMasterTable, true);
 
 
-        public bool AllowInlineEdit()
-            => HasAnnotation(GridViewAnnotationNames.AllowInlineEdit, true);
+        public bool AllowInlineEdit(InlineEditOptions inlineEditOptions)
+            => HasAnnotation(GridViewAnnotationNames.InlineEditOptions, inlineEditOptions);
     }
 }

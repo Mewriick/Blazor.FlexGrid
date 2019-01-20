@@ -6,6 +6,8 @@
 
         public string PutDataUri { get; set; }
 
+        public string DeleteUri { get; set; }
+
         public LazyRequestParams RequestParams { get; } = new LazyRequestParams();
     }
 }

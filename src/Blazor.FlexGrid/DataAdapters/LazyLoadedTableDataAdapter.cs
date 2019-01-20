@@ -11,13 +11,13 @@ namespace Blazor.FlexGrid.DataAdapters
     public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter, ILazyLoadedTableDataAdapter where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
-        private readonly ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver;
+        private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
         public Action<LazyRequestParams> AddRequestParamsAction { get; set; }
 
-        public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver)
+        public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
             this.lazyDataSetItemSaver = lazyDataSetItemSaver ?? throw new ArgumentNullException(nameof(lazyDataSetItemSaver));

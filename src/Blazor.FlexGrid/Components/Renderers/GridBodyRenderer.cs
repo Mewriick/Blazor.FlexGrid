@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -13,7 +14,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
             try
@@ -22,7 +23,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 {
                     rendererContext.ActualItem = item;
                     foreach (var renderer in gridPartRenderers)
-                        renderer.Render(rendererContext);
+                        renderer.Render(rendererContext, permissionContext);
                 }
             }
             catch (Exception ex)

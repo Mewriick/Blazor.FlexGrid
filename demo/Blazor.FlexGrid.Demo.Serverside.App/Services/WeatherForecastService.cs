@@ -8,12 +8,23 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 {
-    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>, ILazyDataSetItemSaver<WeatherForecast>
+    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>, ILazyDataSetItemManipulator<WeatherForecast>
     {
         private static string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        private readonly StaticRepositoryCollections staticRepositoryCollections;
+
+        public WeatherForecastService(StaticRepositoryCollections staticRepositoryCollections)
+        {
+            this.staticRepositoryCollections = staticRepositoryCollections;
+        }
+
+        public Task<WeatherForecast> DeleteItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
+        {
+            return Task.FromResult(item);
+        }
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
@@ -33,15 +44,9 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
         {
             var startDate = DateTime.Now;
             var rng = new Random();
-            var items = Enumerable.Range(1, 20)
+            var items = staticRepositoryCollections.Forecasts
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
-                .Take(pageableOptions.PageSize)
-                .Select(index => new WeatherForecast
-                {
-                    Date = startDate.AddDays(index),
-                    TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
-                });
+                .Take(pageableOptions.PageSize);
 
             items = string.IsNullOrEmpty(sortingOptions.SortExpression)
                  ? items

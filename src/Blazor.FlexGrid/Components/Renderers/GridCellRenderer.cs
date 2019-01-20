@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+using Blazor.FlexGrid.Permission;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -15,25 +16,25 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => true;
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
 
             if (!rendererContext.IsActualItemEdited)
             {
-                rendererContext.AddActualColumnValue();
+                rendererContext.AddActualColumnValue(permissionContext);
                 rendererContext.CloseElement();
 
                 return;
             }
 
-            if (rendererContext.ActualColumnPropertyCanBeEdited && rendererContext.HasCurrentUserWritePermission(rendererContext.ActualColumnName))
+            if (rendererContext.ActualColumnPropertyCanBeEdited && permissionContext.HasCurrentUserWritePermission(rendererContext.ActualColumnName))
             {
                 editInputRendererTree.RenderInput(rendererContext);
             }
             else
             {
-                rendererContext.AddActualColumnValue();
+                rendererContext.AddActualColumnValue(permissionContext);
             }
 
             rendererContext.CloseElement();

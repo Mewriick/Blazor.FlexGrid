@@ -8,7 +8,14 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
-            builder.AllowInlineEdit();
+            builder.AllowInlineEdit(conf =>
+            {
+                conf.AllowDeleting = true;
+                conf.DeletePermissionRestriction = perm => perm.IsInRole("TestRole");
+            });
+
+            builder.Property(e => e.Id)
+                .IsVisible(false);
 
             builder.Property(e => e.Date)
                 .HasCaption("Date")

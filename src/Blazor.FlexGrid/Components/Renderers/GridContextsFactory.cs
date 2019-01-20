@@ -10,19 +10,19 @@ using System.Linq;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridRendererContextFactory
+    public class GridContextsFactory
     {
         private readonly Dictionary<Type, ImutableGridRendererContext> imutableRendererContextCache;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
         private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
         private readonly ICurrentUserPermission currentUserPermission;
-        private readonly ILogger<GridRendererContextFactory> logger;
+        private readonly ILogger<GridContextsFactory> logger;
 
-        public GridRendererContextFactory(
+        public GridContextsFactory(
             IGridConfigurationProvider gridConfigurationProvider,
             IPropertyValueAccessorCache propertyValueAccessorCache,
             ICurrentUserPermission currentUserPermission,
-            ILogger<GridRendererContextFactory> logger)
+            ILogger<GridContextsFactory> logger)
         {
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
             this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
@@ -31,11 +31,14 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.imutableRendererContextCache = new Dictionary<Type, ImutableGridRendererContext>();
         }
 
-        public GridRendererContext CreateRendererContext(ITableDataSet tableDataSet, RenderTreeBuilder renderTreeBuilder)
-            => new GridRendererContext(
-                GetImutableGridRendererContext(tableDataSet.UnderlyingTypeOfItem()),
-                renderTreeBuilder,
-                tableDataSet);
+        public (GridRendererContext RendererContext, PermissionContext PermissionContext)
+            CreateContexts(ITableDataSet tableDataSet, RenderTreeBuilder renderTreeBuilder)
+        {
+            var imutableRendererContext = GetImutableGridRendererContext(tableDataSet.UnderlyingTypeOfItem());
+
+            return (new GridRendererContext(imutableRendererContext, renderTreeBuilder, tableDataSet),
+                    imutableRendererContext.PermissionContext);
+        }
 
         private ImutableGridRendererContext GetImutableGridRendererContext(Type dataSetItemType)
         {

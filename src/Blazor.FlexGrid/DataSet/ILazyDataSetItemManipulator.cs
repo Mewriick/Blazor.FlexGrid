@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
 {
-    public interface ILazyDataSetItemSaver<TItem> where TItem : class
+    public interface ILazyDataSetItemManipulator<TItem> where TItem : class
     {
         Task<TItem> SaveItem(TItem item, ILazyLoadingOptions lazyLoadingOptions);
+
+        Task<TItem> DeleteItem(TItem item, ILazyLoadingOptions lazyLoadingOptions);
     }
 }

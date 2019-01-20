@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.Components.Renderers
+﻿using Blazor.FlexGrid.Permission;
+
+namespace Blazor.FlexGrid.Components.Renderers
 {
 
     /// <summary>
@@ -10,6 +12,6 @@
 
         IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag);
 
-        void Render(GridRendererContext rendererContext);
+        void Render(GridRendererContext rendererContext, PermissionContext permissionContext);
     }
 }

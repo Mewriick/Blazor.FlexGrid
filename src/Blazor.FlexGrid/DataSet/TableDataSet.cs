@@ -13,6 +13,7 @@ namespace Blazor.FlexGrid.DataSet
     {
         private IQueryable<TItem> source;
         private HashSet<object> selectedItems;
+        private HashSet<object> deletedItems;
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
 
@@ -33,6 +34,7 @@ namespace Blazor.FlexGrid.DataSet
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
             this.selectedItems = new HashSet<object>();
+            this.deletedItems = new HashSet<object>();
         }
 
         public Task GoToPage(int index)
@@ -92,14 +94,14 @@ namespace Blazor.FlexGrid.DataSet
                     propertyValueAccessor.SetValue(RowEditOptions.ItemInEditMode, newValue.Key, newValue.Value);
                 }
 
-                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true, Item = RowEditOptions.ItemInEditMode });
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { ItemSucessfullySaved = true, Item = RowEditOptions.ItemInEditMode });
 
                 return Task.FromResult(true);
 
             }
             catch (Exception)
             {
-                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = false });
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { ItemSucessfullySaved = false });
                 return Task.FromResult(false);
             }
             finally
@@ -108,17 +110,34 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
+        public async Task<bool> DeleteItem(object item)
+        {
+            var removeResult = Items.Remove((TItem)item);
+            if (removeResult)
+            {
+                PageableOptions.TotalItemsCount--;
+                deletedItems.Add(item);
+                GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = true, Item = item });
+                await GoToPage(PageableOptions.CurrentPage);
+            }
+
+            GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = false, Item = item });
+
+            return removeResult;
+        }
+
         public void CancelEditation()
             => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
         private void LoadFromQueryableSource()
         {
-            PageableOptions.TotalItemsCount = source.Count();
+            PageableOptions.TotalItemsCount = ApplyDeletedConditionToQueryable(source).Count();
             Items = ApplyFiltersToQueryable(source).ToList();
         }
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
         {
+            queryable = ApplyDeletedConditionToQueryable(queryable);
             queryable = ApplySortingToQueryable(queryable);
             queryable = ApplyPagingToQueryable(queryable);
 
@@ -132,6 +151,12 @@ namespace Blazor.FlexGrid.DataSet
                     .Take(PageableOptions.PageSize)
                 : queryable;
         }
+
+        private IQueryable<TItem> ApplyDeletedConditionToQueryable(IQueryable<TItem> queryable)
+            => !deletedItems.Any()
+                ? queryable
+                : queryable.Where(i => !deletedItems.Contains(i));
+
 
         private IQueryable<TItem> ApplySortingToQueryable(IQueryable<TItem> queryable)
         {

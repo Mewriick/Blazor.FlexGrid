@@ -48,7 +48,7 @@ namespace Blazor.FlexGrid
 
             services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
             services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
-            services.AddSingleton(typeof(ILazyDataSetItemSaver<>), typeof(HttpLazyDataSetItemSaver<>));
+            services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
@@ -66,7 +66,7 @@ namespace Blazor.FlexGrid
         private static void RegisterGridRendererTree(IServiceCollection services)
         {
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
-            services.AddSingleton<GridRendererContextFactory>();
+            services.AddSingleton<GridContextsFactory>();
             services.AddSingleton<EditInputRendererTree>();
 
             services.AddSingleton(typeof(IGridRenderer), provider =>

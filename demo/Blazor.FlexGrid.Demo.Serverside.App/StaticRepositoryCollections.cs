@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Blazor.FlexGrid.Demo.Server
+namespace Blazor.FlexGrid.Demo.Serverside.App
 {
     public class StaticRepositoryCollections
     {
@@ -41,7 +41,6 @@ namespace Blazor.FlexGrid.Demo.Server
             Forecasts = Enumerable.Range(1, 100).Select(index =>
                         new WeatherForecast
                         {
-                            Id = index,
                             Date = DateTime.Now.AddDays(index),
                             TemperatureC = random.Next(-20, 55),
                             Summary = Summaries[random.Next(Summaries.Length)]

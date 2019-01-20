@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blazor.FlexGrid.Permission;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 
@@ -24,11 +25,11 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => gridPartRenderer.CanRender(rendererContext);
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             stopwatch.Restart();
 
-            gridPartRenderer.Render(rendererContext);
+            gridPartRenderer.Render(rendererContext, permissionContext);
 
             logger.LogInformation($"Rendering time [{gridPartRenderer.GetType().FullName}]: {stopwatch.ElapsedMilliseconds} ms");
         }

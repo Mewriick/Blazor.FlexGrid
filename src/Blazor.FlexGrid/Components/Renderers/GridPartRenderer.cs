@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Permission;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -12,18 +13,18 @@ namespace Blazor.FlexGrid.Components.Renderers
             throw new NotImplementedException();
         }
 
-        public void Render(GridRendererContext rendererContext)
+        public void Render(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             if (!CanRender(rendererContext))
             {
                 return;
             }
 
-            RenderInternal(rendererContext);
+            RenderInternal(rendererContext, permissionContext);
         }
 
         public abstract bool CanRender(GridRendererContext rendererContext);
 
-        protected abstract void RenderInternal(GridRendererContext rendererContext);
+        protected abstract void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext);
     }
 }

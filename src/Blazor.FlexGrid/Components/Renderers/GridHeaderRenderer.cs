@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using System.Reflection;
@@ -8,7 +9,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridHeaderRenderer : GridPartRenderer
     {
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
@@ -24,7 +25,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 RenderColumnHeader(rendererContext, property);
             }
 
-            if (rendererContext.GridConfiguration.InlineEditIsAllowed)
+            if (rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed)
             {
                 RenderEmptyColumnHeader(rendererContext);
             }

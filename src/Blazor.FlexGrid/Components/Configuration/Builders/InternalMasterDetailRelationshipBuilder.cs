@@ -24,5 +24,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasUpdateUrl(string url)
             => HasAnnotation(GridViewAnnotationNames.DetailUpdateUrl, url);
+
+        public bool HasDeleteUrl(string url)
+            => HasAnnotation(GridViewAnnotationNames.DetailDeleteUrl, url);
     }
 }

@@ -21,7 +21,7 @@ namespace Blazor.FlexGrid.Components
         private IGridRenderer GridRenderer { get; set; }
 
         [Inject]
-        private GridRendererContextFactory RendererContextFactory { get; set; }
+        private GridContextsFactory RendererContextFactory { get; set; }
 
         [Inject]
         private IMasterDetailTableDataSetFactory MasterDetailTableDataSetFactory { get; set; }
@@ -42,14 +42,15 @@ namespace Blazor.FlexGrid.Components
         [Parameter]
         private Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
+        [Parameter]
+        private Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
+
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-
-            GridRenderer.Render(
-                RendererContextFactory.CreateRendererContext(tableDataSet, builder)
-                );
+            var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
+            GridRenderer.Render(gridContexts.RendererContext, gridContexts.PermissionContext);
         }
 
         protected override Task OnInitAsync()
@@ -85,7 +86,8 @@ namespace Blazor.FlexGrid.Components
                 conf.PageableOptions.PageSize = PageSize;
                 conf.GridViewEvents = new GridViewEvents
                 {
-                    SaveOperationFinished = this.SaveOperationFinished
+                    SaveOperationFinished = this.SaveOperationFinished,
+                    DeleteOperationFinished = this.DeleteOperationFinished
                 };
             });
 

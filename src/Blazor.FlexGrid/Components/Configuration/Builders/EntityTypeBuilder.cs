@@ -52,7 +52,17 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public virtual EntityTypeBuilder<TEntity> AllowInlineEdit()
         {
-            Builder.AllowInlineEdit();
+            Builder.AllowInlineEdit(new InlineEditOptions());
+
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> AllowInlineEdit(Action<InlineEditOptions> configureInlineEdit)
+        {
+            var inlineEditOptions = new InlineEditOptions();
+            configureInlineEdit?.Invoke(inlineEditOptions);
+
+            Builder.AllowInlineEdit(inlineEditOptions);
 
             return this;
         }

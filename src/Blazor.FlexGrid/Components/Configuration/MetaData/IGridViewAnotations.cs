@@ -6,7 +6,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         bool IsMasterTable { get; }
 
-        bool InlineEditIsAllowed { get; }
+        InlineEditOptions InlineEditOptions { get; }
 
         GridCssClasses CssClasses { get; }
 

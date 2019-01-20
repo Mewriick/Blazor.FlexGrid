@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Blazor.FlexGrid.Permission;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -18,23 +19,22 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => true;
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             try
             {
-                gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext));
+                gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
 
                 rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
                 rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
 
-                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext));
+                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
 
                 rendererContext.CloseElement(); // Close table
 
-                gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext));
+                gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
 
                 rendererContext.CloseElement(); // Close table wrapper
-
             }
             catch (Exception ex)
             {

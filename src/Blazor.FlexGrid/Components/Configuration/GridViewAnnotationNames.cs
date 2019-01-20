@@ -9,7 +9,8 @@
         public const string DetailTabPageCaption = "DetailTabPageCaption";
         public const string DetailLazyLoadingUrl = "DetailLazyLoadingUrl";
         public const string DetailUpdateUrl = "DetailUpdateUrl";
-        public const string AllowInlineEdit = "AllowInlineEdit";
+        public const string DetailDeleteUrl = "DetailDeleteUrl";
+        public const string InlineEditOptions = "InlineEditOptions";
 
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";

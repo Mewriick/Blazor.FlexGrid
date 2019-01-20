@@ -36,17 +36,17 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        public bool InlineEditIsAllowed
+        public InlineEditOptions InlineEditOptions
         {
             get
             {
-                var inlineEditIsAllowed = annotations[GridViewAnnotationNames.AllowInlineEdit];
-                if (inlineEditIsAllowed is NullAnotationValue)
+                var inlineEditOptions = annotations[GridViewAnnotationNames.InlineEditOptions];
+                if (inlineEditOptions is NullAnotationValue)
                 {
-                    return false;
+                    return NullInlineEditOptions.Instance;
                 }
 
-                return (bool)inlineEditIsAllowed;
+                return (InlineEditOptions)inlineEditOptions;
             }
         }
 

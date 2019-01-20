@@ -49,6 +49,12 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
 
             return weatherForecast;
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromQuery]int id)
+        {
+            return NoContent();
+        }
     }
 }
 

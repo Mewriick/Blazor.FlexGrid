@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -7,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => !rendererContext.TableDataSet.HasItems();
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.AddContent("    ");
             rendererContext.OpenElement("p");

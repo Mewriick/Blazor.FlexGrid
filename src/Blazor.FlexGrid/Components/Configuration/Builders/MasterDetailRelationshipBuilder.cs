@@ -53,5 +53,17 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public MasterDetailRelationshipBuilder HasDeleteUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
+            Builder.HasDeleteUrl(url);
+
+            return this;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Blazor.FlexGrid.DataSet
     public class LazyTableDataSet<TItem> : ILazyTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
-        private readonly ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver;
+        private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
         private HashSet<object> selectedItems;
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
@@ -38,7 +38,7 @@ namespace Blazor.FlexGrid.DataSet
 
 
 
-        public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemSaver<TItem> lazyDataSetItemSaver)
+        public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
             this.lazyDataSetItemSaver = lazyDataSetItemSaver ?? throw new ArgumentNullException(nameof(lazyDataSetItemSaver));
@@ -103,7 +103,7 @@ namespace Blazor.FlexGrid.DataSet
             }
             catch (Exception)
             {
-                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = false });
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { ItemSucessfullySaved = false });
                 RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
                 return false;
@@ -119,7 +119,7 @@ namespace Blazor.FlexGrid.DataSet
                     Items[itemIndex] = saveResult;
                 }
 
-                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { SaveResult = true, Item = saveResult });
+                GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { ItemSucessfullySaved = true, Item = saveResult });
             }
 
             RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
@@ -129,5 +129,22 @@ namespace Blazor.FlexGrid.DataSet
 
         public void CancelEditation()
             => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
+
+        public async Task<bool> DeleteItem(object item)
+        {
+            var typedItem = (TItem)item;
+            var removedItem = await lazyDataSetItemSaver.DeleteItem(typedItem, LazyLoadingOptions);
+            if (removedItem != null)
+            {
+                GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = true, Item = removedItem ?? item });
+                await GoToPage(PageableOptions.CurrentPage);
+            }
+            else
+            {
+                GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = false, Item = item });
+            }
+
+            return removedItem != null ? true : false;
+        }
     }
 }

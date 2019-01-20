@@ -31,24 +31,20 @@ namespace Blazor.FlexGrid.DataSet
             return Task.FromResult(0);
         }
 
-        public static Task GoToFirstPage(this ITableDataSet tableDataSet)
+        public static async Task GoToFirstPage(this ITableDataSet tableDataSet)
         {
             if (!tableDataSet.PageableOptions.IsFirstPage)
             {
-                tableDataSet.GoToPage(0);
+                await tableDataSet.GoToPage(0);
             }
-
-            return Task.FromResult(0);
         }
 
-        public static Task GoToLastPage(this ITableDataSet tableDataSet)
+        public static async Task GoToLastPage(this ITableDataSet tableDataSet)
         {
             if (!tableDataSet.PageableOptions.IsLastPage)
             {
-                tableDataSet.GoToPage(tableDataSet.PageableOptions.PagesCount - 1);
+                await tableDataSet.GoToPage(tableDataSet.PageableOptions.PagesCount - 1);
             }
-
-            return Task.FromResult(0);
         }
 
         public static string PageInfoText(this ITableDataSet tableDataSet)

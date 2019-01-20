@@ -15,16 +15,25 @@
 
 
 <GridView DataAdapter="@forecastAdapter"
-          LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts", PutDataUri = "/api/SampleData/UpdateWeatherForecast" })"
+          LazyLoadingOptions="@(new LazyLoadingOptions() {
+                                    DataUri = "/api/SampleData/WeatherForecasts",
+                                    PutDataUri = "/api/SampleData/UpdateWeatherForecast",
+                                    DeleteUri = "/api/SampleData/Delete/{Id}" })"
           PageSize="10"
-          SaveOperationFinished="@ItemSavedOperationFinished">
+          SaveOperationFinished="@ItemSavedOperationFinished"
+          DeleteOperationFinished="@ItemDeletedOperationFinished">
 </GridView>
 
 
 @functions{
     public void ItemSavedOperationFinished(SaveResultArgs saveResultArgs)
     {
-        Console.WriteLine($"Item saved result: {saveResultArgs.SaveResult}");
+        Console.WriteLine($"Item saved result: {saveResultArgs.ItemSucessfullySaved}");
+    }
+
+    public void ItemDeletedOperationFinished(DeleteResultArgs deleteResultArgs)
+    {
+        Console.WriteLine($"Item deleted result: {deleteResultArgs.ItemSuccesfullyDeleted}");
     }
 }
 

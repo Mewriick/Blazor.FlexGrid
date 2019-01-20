@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridPaginationRenderer : GridPartRenderer
     {
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             var nextButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsLastPage;
             var previousButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsFirstPage;

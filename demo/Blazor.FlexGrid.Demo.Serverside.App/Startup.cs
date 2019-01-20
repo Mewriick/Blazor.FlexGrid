@@ -30,6 +30,8 @@ namespace Blazor.FlexGrid.Demo.Serverside.App
             );
 
             services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
+            services.AddSingleton<StaticRepositoryCollections>();
+
         }
 
         public void Configure(IBlazorApplicationBuilder app)

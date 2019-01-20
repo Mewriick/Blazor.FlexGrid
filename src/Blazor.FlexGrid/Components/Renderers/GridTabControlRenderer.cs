@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.AspNetCore.Blazor.Components;
 using System;
@@ -21,7 +22,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             => rendererContext.GridConfiguration.IsMasterTable &&
                rendererContext.TableDataSet.ItemIsSelected(rendererContext.ActualItem);
 
-        protected override void RenderInternal(GridRendererContext rendererContext)
+        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             if (rendererContext.TableDataSet is IMasterTableDataSet masterTableDataSet)
             {
@@ -35,7 +36,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.OpenElement(HtmlTagNames.Div, "tabs-header");
                 rendererContext.OpenElement(HtmlTagNames.Div, "tabs-header-buttons");
 
-                RenderTabs(rendererContext, masterTableDataSet, selectedDataAdapter);
+                RenderTabs(rendererContext, permissionContext, masterTableDataSet, selectedDataAdapter);
 
                 rendererContext.CloseElement();
                 rendererContext.CloseElement();
@@ -48,7 +49,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
         }
 
-        private void RenderTabs(GridRendererContext rendererContext, IMasterTableDataSet masterTableDataSet, ITableDataAdapter selectedDataAdapter)
+        private void RenderTabs(
+            GridRendererContext rendererContext,
+            PermissionContext permissionContext,
+            IMasterTableDataSet masterTableDataSet,
+            ITableDataAdapter selectedDataAdapter)
         {
             foreach (var dataAdapter in masterTableDataSet.DetailDataAdapters)
             {
@@ -57,7 +62,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             foreach (var collectionProperty in rendererContext.GridItemCollectionProperties)
             {
-                if (rendererContext.HasCurrentUserReadPermission(collectionProperty.Name))
+                if (permissionContext.HasCurrentUserReadPermission(collectionProperty.Name))
                 {
                     var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.ActualItem, collectionProperty);
                     RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);

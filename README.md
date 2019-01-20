@@ -286,6 +286,12 @@ You can use inline editing feature by configuring grid
 public void Configure(EntityTypeBuilder<Order> builder)
 {
 	builder.AllowInlineEdit();
+	// Or
+    builder.AllowInlineEdit(conf =>
+    {
+        conf.AllowDeleting = true;
+        conf.DeletePermissionRestriction = perm => perm.IsInRole("TestRole");
+    });
 }
 ```
 You can also configure which columns will be editable for current logger user, see **Permission restriction** section. If you are using 
@@ -294,12 +300,17 @@ If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must 
 
 ```cs
 <GridView DataAdapter="@forecastAdapter"
-          LazyLoadingOptions="@(new LazyLoadingOptions() { DataUri = "/api/SampleData/WeatherForecasts", PutDataUri = "/api/SampleData/UpdateWeatherForecast" })"
+          LazyLoadingOptions="@(new LazyLoadingOptions() {
+                                    DataUri = "/api/SampleData/WeatherForecasts",
+                                    PutDataUri = "/api/SampleData/UpdateWeatherForecast",
+                                    DeleteUri = "/api/SampleData/Delete/{Id}" })"
           PageSize="10"
-          SaveOperationFinished="@ItemSavedOperationFinished">
+          SaveOperationFinished="@ItemSavedOperationFinished"
+          DeleteOperationFinished="@ItemDeletedOperationFinished">
 </GridView>
 ```
-And the Http request will be send to the server
+And the Http request will be send to the server. For fully working delete feature you have to set properly **DeleteUri** of **LazyLoadingOptions**. 
+In url at the end you must specify by template in {} the name of object property which is key and this key is send to the action method on server side.
 
 Or if the Grid is used as detail 
 
@@ -317,6 +328,7 @@ You can subscribe some events which **FlexGrid** provides only things which you 
 
 Suppoerted events:\
 ``SaveOperationFinished``
+``DeleteOperationFinished``
 
 # Design
 You can override some default CssClasses by your own CssClasses by using fluent api configuration

@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Demo.Client.GridConfigurations;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,9 @@ namespace Blazor.FlexGrid.Demo.Client
                 cfg.ApplyConfiguration(new CustomerGridConfiguration());
                 cfg.ApplyConfiguration(new OrderGridConfiguration());
             });
+
+            services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
+
         }
 
         public void Configure(IBlazorApplicationBuilder app)
