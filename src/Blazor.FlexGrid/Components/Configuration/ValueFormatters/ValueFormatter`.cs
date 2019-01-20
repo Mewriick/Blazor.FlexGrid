@@ -11,18 +11,18 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
             => (Expression<Func<TInputValue, string>>)base.FormatValueExpression;
 
 
-        public ValueFormatter(Expression<Func<TInputValue, string>> formatValueExpression, ValueFormatterType valueFormatterType = ValueFormatterType.SingleProperty)
+        public ValueFormatter(Expression<Func<TInputValue, string>> formatValueExpression, ValueFormatterType valueFormatterType = ValueFormatterType.SingleProperty, string defaultValue = default)
             : base(formatValueExpression, valueFormatterType)
         {
-            FormatValue = SanitizeConverter(formatValueExpression);
+            FormatValue = SanitizeConverter(formatValueExpression, defaultValue);
         }
 
-        private Func<object, string> SanitizeConverter(Expression<Func<TInputValue, string>> formatValueExpression)
+        private Func<object, string> SanitizeConverter(Expression<Func<TInputValue, string>> formatValueExpression, string defaultValue)
         {
             var compiled = formatValueExpression.Compile();
 
             return v => v == null
-                ? string.Empty
+                ? defaultValue ?? string.Empty
                 : compiled((TInputValue)v);
         }
     }

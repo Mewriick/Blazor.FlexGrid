@@ -61,7 +61,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 var columnConfig = GridEntityConfiguration.FindColumnConfiguration(property.Name);
                 PermissionContext.ResolveColumnPermission(columnConfig, property.Name);
 
-                if (collectionProperties.Contains(property))
+                if (columnConfig?.ValueFormatter == null && collectionProperties.Contains(property))
                 {
                     continue;
                 }
