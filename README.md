@@ -310,7 +310,7 @@ If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must 
 </GridView>
 ```
 And the Http request will be send to the server. For fully working delete feature you have to set properly **DeleteUri** of **LazyLoadingOptions**. 
-In url at the end you must specify by template in {} the name of object property which is key and this key is send to the action method on server side.
+In url is a template where at end you must specify the name of object property in { } (for example {Id}) which is key and this key is send to the action method on server side.
 
 Or if the Grid is used as detail 
 
