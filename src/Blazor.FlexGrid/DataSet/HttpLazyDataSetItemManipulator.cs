@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.Extensions.Logging;
@@ -17,9 +18,12 @@ namespace Blazor.FlexGrid.DataSet
         private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
         private readonly ILogger<HttpLazyDataSetItemManipulator<TItem>> logger;
 
-        public HttpLazyDataSetItemManipulator(HttpClient httpClient, IPropertyValueAccessorCache propertyValueAccessorCache, ILogger<HttpLazyDataSetItemManipulator<TItem>> logger)
+        public HttpLazyDataSetItemManipulator(
+            IHttpClientFactory httpClientFactory,
+            IPropertyValueAccessorCache propertyValueAccessorCache,
+            ILogger<HttpLazyDataSetItemManipulator<TItem>> logger)
         {
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClient = httpClientFactory?.Create() ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

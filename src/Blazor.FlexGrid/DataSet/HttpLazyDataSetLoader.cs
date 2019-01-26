@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.Extensions.Logging;
@@ -14,9 +15,9 @@ namespace Blazor.FlexGrid.DataSet
         private readonly HttpClient httpClient;
         private readonly ILogger<HttpLazyDataSetLoader<TItem>> logger;
 
-        public HttpLazyDataSetLoader(HttpClient httpClient, ILogger<HttpLazyDataSetLoader<TItem>> logger)
+        public HttpLazyDataSetLoader(IHttpClientFactory httpClientFactory, ILogger<HttpLazyDataSetLoader<TItem>> logger)
         {
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClient = httpClientFactory?.Create() ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

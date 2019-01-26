@@ -9,6 +9,7 @@ using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataAdapters.Visitors;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.Permission;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -38,17 +39,30 @@ namespace Blazor.FlexGrid
             if (flexGridOptions.IsServerSideBlazorApp)
             {
                 services.AddLogging(builder => builder.AddConsole());
+                services.AddScoped(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
+                services.AddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
             }
             else
             {
                 services.AddLogging(builder => builder
                     .AddBrowserConsole()
                     .SetMinimumLevel(LogLevel.Debug));
+
+                services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
+                services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
             }
 
+            if (flexGridOptions.UseAuthorizationForHttpRequests)
+            {
+                services.AddSingleton<IHttpClientFactory, AuthorizationHttpClientFactory>();
+            }
+            else
+            {
+                services.AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>();
+            }
+
+            services.TryAddSingleton<IAuthorizationService, NullAuthorizationService>();
             services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
-            services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
-            services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
             services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
