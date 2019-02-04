@@ -40,8 +40,7 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions)
         {
-
-            var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams["CustomerId"]);
+            var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams.First(e => e.Key == "CustomerId").Value);
             var customerOrders = orders.Where(o => o.CustomerId == customerId);
             var pageableCustomerOrders = customerOrders
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)

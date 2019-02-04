@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
@@ -15,7 +16,7 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
-        public Action<LazyRequestParams> AddRequestParamsAction { get; set; }
+        public Action<QueryBuilder> AddRequestParamsAction { get; set; }
 
         public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
@@ -51,6 +52,6 @@ namespace Blazor.FlexGrid.DataAdapters
     /// </summary>
     internal interface ILazyLoadedTableDataAdapter
     {
-        Action<LazyRequestParams> AddRequestParamsAction { set; }
+        Action<QueryBuilder> AddRequestParamsAction { set; }
     }
 }

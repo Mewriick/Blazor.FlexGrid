@@ -34,7 +34,7 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
                     .GetValue(masterDetailRowArguments.SelectedItem, masterDetailRelationship.MasterDetailConnection.MasterPropertyName);
 
                 lazyLoadedTableDataAdapter.AddRequestParamsAction = reqParams => reqParams
-                    .AddParam(masterDetailRelationship.MasterDetailConnection.ForeignPropertyName, constantValue.ToString());
+                    .Add(masterDetailRelationship.MasterDetailConnection.ForeignPropertyName, constantValue.ToString());
             }
         }
     }

@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -30,7 +31,11 @@ namespace Blazor.FlexGrid.DataSet
                     $"{nameof(LazyLoadingOptions.DataUri)} for lazy data retrieving. If you do not want use lazy loading feature use {nameof(CollectionTableDataAdapter<TItem>)} instead.");
             }
 
-            var dataUri = $"{lazyLoadingOptions.DataUri.TrimEnd('/')}?{lazyLoadingOptions.RequestParams}{PagingParams(pageableOptions)}{SortingParams(sortingOptions)}";
+            var query = new QueryBuilder(lazyLoadingOptions.RequestParams);
+            PagingParams(query, pageableOptions);
+            SortingParams(query, sortingOptions);
+
+            var dataUri = lazyLoadingOptions.DataUri + query.ToString();
             try
             {
                 return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);
@@ -48,12 +53,19 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        private string PagingParams(IPagingOptions pagingOptions)
-            => $"pagenumber={pagingOptions.CurrentPage}&pagesize={pagingOptions.PageSize}";
+        private void PagingParams(QueryBuilder builder, IPagingOptions pagingOptions)
+        {
+            builder.Add("pagenumber", pagingOptions.CurrentPage.ToString());
+            builder.Add("pagesize", pagingOptions.PageSize.ToString());
+        }
 
-        private string SortingParams(ISortingOptions sortingOptions)
-            => string.IsNullOrWhiteSpace(sortingOptions.SortExpression)
-                ? string.Empty
-                : $"&sortExpression={sortingOptions.SortExpression}&sortDescending={sortingOptions.SortDescending}";
+        private void SortingParams(QueryBuilder builder, ISortingOptions sortingOptions)
+        {
+            if (!string.IsNullOrWhiteSpace(sortingOptions.SortExpression))
+            {
+                builder.Add("sortExpression", sortingOptions.SortExpression);
+                builder.Add("sortDescending", sortingOptions.SortDescending.ToString());
+            }
+        }
     }
 }
