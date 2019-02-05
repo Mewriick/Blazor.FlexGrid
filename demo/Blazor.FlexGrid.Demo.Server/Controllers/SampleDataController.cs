@@ -20,20 +20,22 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet("[action]")]
         public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParams sortingParams)
         {
-            var items = staticRepositoryCollections.Forecasts
-                .Skip(pageSize * pageNumber)
-                .Take(pageSize);
+            var items = staticRepositoryCollections.Forecasts.AsQueryable();
 
-            items = string.IsNullOrEmpty(sortingParams.SortExpression)
-                 ? items
-                 : items.AsQueryable().OrderBy(sortingParams.SortExpression).ToList();
-
-            return Ok(
-                new
+            var sortExp = sortingParams?.SortExpression;
+            if (!string.IsNullOrEmpty(sortExp))
+            {
+                if (sortingParams.SortDescending)
                 {
-                    Items = items,
-                    TotalCount = 100
-                });
+                    sortExp += " descending";
+                }
+                items = items.OrderBy(sortExp);
+            }
+
+            return Ok(new {
+                Items = items.Skip(pageSize * pageNumber).Take(pageSize),
+                TotalCount = staticRepositoryCollections.Forecasts.Count
+            });
         }
 
         [HttpGet("[action]")]
