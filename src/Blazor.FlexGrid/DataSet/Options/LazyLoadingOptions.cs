@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.DataSet.Options
+﻿using Microsoft.AspNetCore.Http.Extensions;
+
+namespace Blazor.FlexGrid.DataSet.Options
 {
     public class LazyLoadingOptions : ILazyLoadingOptions
     {
@@ -8,6 +10,6 @@
 
         public string DeleteUri { get; set; }
 
-        public LazyRequestParams RequestParams { get; } = new LazyRequestParams();
+        public QueryBuilder RequestParams { get; } = new QueryBuilder();
     }
 }
