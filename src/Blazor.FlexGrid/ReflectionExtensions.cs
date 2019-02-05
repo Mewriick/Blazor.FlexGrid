@@ -29,33 +29,40 @@ namespace Blazor.FlexGrid
 
             return propInfo;
         }
+    }
 
-        public static IOrderedQueryable<T> ApplyOrder<T>(this IQueryable<T> source, string property, string methodName)
+    internal static class QueryableExtensions
+    {
+        private static LambdaExpression GetPropertyExpression(Type type, string property)
         {
-            var props = property.Split('.');
-            var type = typeof(T);
-            ParameterExpression arg = Expression.Parameter(type, "x");
-            Expression expr = arg;
-
-            foreach (string prop in props)
-            {
-                // use reflection (not ComponentModel) to mirror LINQ
-                var pi = type.GetProperty(prop);
-                expr = Expression.Property(expr, pi);
-                type = pi.PropertyType;
-            }
-
-            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
-            LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
-
-            object result = typeof(Queryable).GetMethods().Single(
-                    method => method.Name == methodName
-                            && method.IsGenericMethodDefinition
-                            && method.GetGenericArguments().Length == 2
-                            && method.GetParameters().Length == 2)
-                    .MakeGenericMethod(typeof(T), type)
-                    .Invoke(null, new object[] { source, lambda });
-            return (IOrderedQueryable<T>)result;
+            var arg = Expression.Parameter(type);
+            var expr = property.Split('.')
+                .Aggregate((Expression)arg, Expression.Property);
+            return Expression.Lambda(expr, arg);
         }
+
+        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string keyProperty)
+            => OrderBy(nameof(_OrderBy), source, GetPropertyExpression(typeof(T), keyProperty));
+
+        private static IOrderedQueryable<T> _OrderBy<T, TKey>(IQueryable<T> source, LambdaExpression keySelector)
+            => source.OrderBy((Expression<Func<T, TKey>>)keySelector);
+
+        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string keyProperty)
+            => OrderBy(nameof(_OrderByDescending), source, GetPropertyExpression(typeof(T), keyProperty));
+        
+        private static IOrderedQueryable<T> _OrderByDescending<T, TKey>(IQueryable<T> source, LambdaExpression keySelector)
+            => source.OrderByDescending((Expression<Func<T, TKey>>)keySelector);
+
+        private static IOrderedQueryable<T> OrderBy<T>(string funcName, IQueryable<T> source, LambdaExpression keySelector)
+            => typeof(QueryableExtensions).GetMethod(funcName, BindingFlags.NonPublic | BindingFlags.Static)
+                .MakeGenericMethod(typeof(T), keySelector.Body.Type)
+                .CreateDelegate<Func<IQueryable<T>, LambdaExpression, IOrderedQueryable<T>>>()
+                .Invoke(source, keySelector);
+    }
+
+    internal static class DelegateExtensions
+    {
+        public static T CreateDelegate<T>(this MethodInfo method) where T : Delegate
+            => (T)method.CreateDelegate(typeof(T));
     }
 }
