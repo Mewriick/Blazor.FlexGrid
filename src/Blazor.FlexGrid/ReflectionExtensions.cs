@@ -36,7 +36,7 @@ namespace Blazor.FlexGrid
         private static LambdaExpression GetPropertyExpression(Type type, string property)
         {
             var arg = Expression.Parameter(type);
-            var expr = (MemberExpression)property.Split('.')
+            var expr = property.Split('.')
                 .Aggregate((Expression)arg, Expression.Property);
             return Expression.Lambda(expr, arg);
         }
