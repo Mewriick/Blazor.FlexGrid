@@ -3,6 +3,7 @@ using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Blazor;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http.Extensions;
 using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -12,7 +13,7 @@ namespace Blazor.FlexGrid.DataSet
 {
     public class HttpLazyDataSetItemManipulator<TItem> : ILazyDataSetItemManipulator<TItem> where TItem : class
     {
-        private const string DeleteUrlPattern = @"\/{(.*)}";
+        private const string DeleteUrlPattern = @"\/{\s*(?<prop>\w+)\s*(,\s*(?<prop>\w+)\s*)*}";
 
         private readonly HttpClient httpClient;
         private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
@@ -68,10 +69,15 @@ namespace Blazor.FlexGrid.DataSet
 
             try
             {
-                var keyPropertyName = match.Groups[1].Value;
+                var keyPropertyNames = match.Groups["prop"].Captures;
                 var propertyValueAccessor = propertyValueAccessorCache.GetPropertyAccesor(typeof(TItem));
-                var keyValue = propertyValueAccessor.GetValue(item, keyPropertyName);
-                realDeleteUri = Regex.Replace(lazyLoadingOptions.DeleteUri, DeleteUrlPattern, $"?{keyPropertyName}={keyValue.ToString()}");
+                var query = new QueryBuilder();
+                foreach (Capture keyPropertyName in keyPropertyNames)
+                {
+                    var keyValue = propertyValueAccessor.GetValue(item, keyPropertyName.Value);
+                    query.Add(keyPropertyName.Value, keyValue.ToString());
+                }
+                realDeleteUri = Regex.Replace(lazyLoadingOptions.DeleteUri, DeleteUrlPattern, query.ToString());
 
                 var response = await httpClient.DeleteAsync(realDeleteUri);
                 if (response.IsSuccessStatusCode)
