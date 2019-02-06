@@ -9,11 +9,11 @@ GridView component for Blazor
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
 ** Known issues after support Blazor 0.8.0**
-> ServerSide demo application does not render FlexGrid styles
-> Blazor.Extensions.Logging cannot be used for now
+> ServerSide demo application does not render FlexGrid styles  
+> Blazor.Extensions.Logging cannot be used for now  
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.4.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.5.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
