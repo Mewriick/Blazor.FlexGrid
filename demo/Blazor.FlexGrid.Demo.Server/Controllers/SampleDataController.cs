@@ -63,11 +63,23 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPut("[action]")]
-        public WeatherForecast UpdateWeatherForecast([FromBody] WeatherForecast weatherForecast)
-        {
-            weatherForecast.TemperatureC = weatherForecast.TemperatureC + 1;
+        public IActionResult UpdateWeatherForecast(
+            [FromBody] WeatherForecast weatherForecast
+        ) {
+            var id = weatherForecast.Id;
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                if (staticRepositoryCollections.Forecasts.TryUpdate(id, weatherForecast, value))
+                {
+                    return NoContent();
+                }
+            }
+            else if (staticRepositoryCollections.Forecasts.TryAdd(id, weatherForecast))
+            {
+                return Created(GetWeatherForecastUri(id), weatherForecast);
+            }
 
-            return weatherForecast;
+            return Conflict();
         }
 
         [HttpDelete("[action]")]

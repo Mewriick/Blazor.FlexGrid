@@ -71,9 +71,23 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 
         public Task<WeatherForecast> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
         {
-            item.TemperatureC = item.TemperatureC + 1;
+            var id = item.Id;
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                if (staticRepositoryCollections.Forecasts.TryUpdate(id, item, value))
+                {
+                    // Update Success
+                    return Task.FromResult(item);
+                }
+            }
+            else if (staticRepositoryCollections.Forecasts.TryAdd(id, item))
+            {
+                // Create Success
+                return Task.FromResult(item);
+            }
 
-            return Task.FromResult(item);
+            // Conflict
+            return Task.FromResult(default(WeatherForecast));
         }
     }
 }
