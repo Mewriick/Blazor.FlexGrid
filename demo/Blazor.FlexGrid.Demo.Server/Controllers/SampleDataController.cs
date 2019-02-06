@@ -62,6 +62,23 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             return staticRepositoryCollections.Forecasts.Values.Take(20);
         }
 
+        [HttpPost(nameof(WeatherForecast))]
+        public IActionResult CreateWeatherForecast(
+            [FromBody] WeatherForecast weatherForecast
+        ) {
+            var id = staticRepositoryCollections.Forecasts.ContainsKey(weatherForecast.Id)
+                ? staticRepositoryCollections.Forecasts.Keys.Max() + 1
+                : weatherForecast.Id;
+
+            weatherForecast.Id = id;
+            if (staticRepositoryCollections.Forecasts.TryAdd(id, weatherForecast))
+            {
+                return Created(GetWeatherForecastUri(id), weatherForecast);
+            }
+
+            return Conflict();
+        }
+
         [HttpPut("[action]")]
         public IActionResult UpdateWeatherForecast(
             [FromBody] WeatherForecast weatherForecast
