@@ -1,7 +1,8 @@
-﻿using Blazor.FlexGrid.Demo.Shared;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Blazor.FlexGrid.Demo.Shared;
 
 namespace Blazor.FlexGrid.Demo.Server
 {
@@ -14,7 +15,7 @@ namespace Blazor.FlexGrid.Demo.Server
 
         public List<Order> Orders { get; }
 
-        public List<WeatherForecast> Forecasts { get; }
+        public ConcurrentDictionary<int, WeatherForecast> Forecasts { get; }
 
         public StaticRepositoryCollections()
         {
@@ -38,15 +39,19 @@ namespace Blazor.FlexGrid.Demo.Server
                     }
                 }).ToList();
 
-            Forecasts = Enumerable.Range(1, 100).Select(index =>
-                        new WeatherForecast
-                        {
-                            Id = index,
-                            Date = DateTime.Now.AddDays(index),
-                            TemperatureC = random.Next(-20, 55),
-                            Summary = Summaries[random.Next(Summaries.Length)]
-
-                        }).ToList();
+            Forecasts = Enumerable.Range(1, 100)
+                .Select(index => new WeatherForecast {
+                    Id = index,
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = random.Next(-20, 55),
+                    Summary = Summaries[random.Next(Summaries.Length)]
+                }).ToConcurrentDictionary(e => e.Id);
         }
+    }
+
+    internal static class EnumerableExtensions
+    {
+        public static ConcurrentDictionary<TKey, TValue> ToConcurrentDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+            => new ConcurrentDictionary<TKey, TValue>(source.Select(e => KeyValuePair.Create(keySelector(e), e)));
     }
 }

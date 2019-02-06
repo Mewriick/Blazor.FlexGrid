@@ -44,7 +44,7 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
         {
             var startDate = DateTime.Now;
             var rng = new Random();
-            var items = staticRepositoryCollections.Forecasts
+            var items = staticRepositoryCollections.Forecasts.Values
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
                 .Take(pageableOptions.PageSize);
 

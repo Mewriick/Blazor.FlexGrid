@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet("[action]")]
         public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParams sortingParams)
         {
-            var items = staticRepositoryCollections.Forecasts.AsQueryable();
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
             var sortExp = sortingParams?.SortExpression;
             if (!string.IsNullOrEmpty(sortExp))
@@ -41,7 +41,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecastsSimple()
         {
-            return staticRepositoryCollections.Forecasts.Take(20);
+            return staticRepositoryCollections.Forecasts.Values.Take(20);
         }
 
         [HttpPut("[action]")]
