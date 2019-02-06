@@ -17,6 +17,21 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             this.staticRepositoryCollections = staticRepositoryCollections;
         }
 
+        private static string GetWeatherForecastUri(int id)
+            => $"/api/SampleData/{nameof(WeatherForecast)}?{nameof(WeatherForecast.Id)}={id}";
+
+        [HttpGet(nameof(WeatherForecast))]
+        public IActionResult GetWeatherForecast(
+            [FromQuery(Name = nameof(WeatherForecast.Id))] int id
+        ) {
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                return Ok(value);
+            }
+
+            return NotFound();
+        }
+
         [HttpGet("[action]")]
         public IActionResult WeatherForecasts(
             [FromQuery] int pageNumber,
