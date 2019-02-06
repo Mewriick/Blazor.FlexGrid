@@ -42,22 +42,26 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions)
         {
-            var startDate = DateTime.Now;
-            var rng = new Random();
-            var items = staticRepositoryCollections.Forecasts.Values
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
+
+            var sortExp = sortingOptions?.SortExpression;
+            if (!string.IsNullOrEmpty(sortExp))
+            {
+                if (sortingOptions.SortDescending)
+                {
+                    sortExp += " descending";
+                }
+                items = items.OrderBy(sortExp);
+            }
+
+            items = items
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
                 .Take(pageableOptions.PageSize);
 
-            items = string.IsNullOrEmpty(sortingOptions.SortExpression)
-                 ? items
-                 : items.AsQueryable().OrderBy(sortingOptions.SortExpression).ToList();
-
-            return Task.FromResult(
-                new LazyLoadingDataSetResult<WeatherForecast>
-                {
-                    Items = items.ToList(),
-                    TotalCount = 100
-                });
+            return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast> {
+                Items = items.ToList(),
+                TotalCount = staticRepositoryCollections.Forecasts.Count
+            });
         }
 
         public Task<WeatherForecast> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
