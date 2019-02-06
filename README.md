@@ -8,7 +8,7 @@ GridView component for Blazor
 ## IMPORTANT!
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
-** Known issues after support Blazor 0.8.0**
+**Known issues after support Blazor 0.8.0**
 > ServerSide demo application does not render FlexGrid styles  
 > Blazor.Extensions.Logging cannot be used for now  
 
