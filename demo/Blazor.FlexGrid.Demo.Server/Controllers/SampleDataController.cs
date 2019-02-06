@@ -18,8 +18,11 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParams sortingParams)
-        {
+        public IActionResult WeatherForecasts(
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
+            [FromQuery] SortingParams sortingParams
+        ) {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
             var sortExp = sortingParams?.SortExpression;
