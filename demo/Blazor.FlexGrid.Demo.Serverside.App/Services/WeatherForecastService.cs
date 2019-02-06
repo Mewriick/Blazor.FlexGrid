@@ -23,7 +23,12 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 
         public Task<WeatherForecast> DeleteItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
         {
-            return Task.FromResult(item);
+            if (staticRepositoryCollections.Forecasts.TryRemove(item.Id, out var value))
+            {
+                return Task.FromResult(value);
+            }
+
+            return Task.FromResult(default(WeatherForecast));
         }
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
@@ -42,29 +47,47 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions)
         {
-            var startDate = DateTime.Now;
-            var rng = new Random();
-            var items = staticRepositoryCollections.Forecasts
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
+
+            var sortExp = sortingOptions?.SortExpression;
+            if (!string.IsNullOrEmpty(sortExp))
+            {
+                if (sortingOptions.SortDescending)
+                {
+                    sortExp += " descending";
+                }
+                items = items.OrderBy(sortExp);
+            }
+
+            items = items
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
                 .Take(pageableOptions.PageSize);
 
-            items = string.IsNullOrEmpty(sortingOptions.SortExpression)
-                 ? items
-                 : items.AsQueryable().OrderBy(sortingOptions.SortExpression).ToList();
-
-            return Task.FromResult(
-                new LazyLoadingDataSetResult<WeatherForecast>
-                {
-                    Items = items.ToList(),
-                    TotalCount = 100
-                });
+            return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast> {
+                Items = items.ToList(),
+                TotalCount = staticRepositoryCollections.Forecasts.Count
+            });
         }
 
         public Task<WeatherForecast> SaveItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
         {
-            item.TemperatureC = item.TemperatureC + 1;
+            var id = item.Id;
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                if (staticRepositoryCollections.Forecasts.TryUpdate(id, item, value))
+                {
+                    // Update Success
+                    return Task.FromResult(item);
+                }
+            }
+            else if (staticRepositoryCollections.Forecasts.TryAdd(id, item))
+            {
+                // Create Success
+                return Task.FromResult(item);
+            }
 
-            return Task.FromResult(item);
+            // Conflict
+            return Task.FromResult(default(WeatherForecast));
         }
     }
 }

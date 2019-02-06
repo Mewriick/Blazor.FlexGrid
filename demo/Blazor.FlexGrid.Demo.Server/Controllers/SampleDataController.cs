@@ -17,10 +17,28 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             this.staticRepositoryCollections = staticRepositoryCollections;
         }
 
+        private static string GetWeatherForecastUri(int id)
+            => $"/api/SampleData/{nameof(WeatherForecast)}?{nameof(WeatherForecast.Id)}={id}";
+
+        [HttpGet(nameof(WeatherForecast))]
+        public IActionResult GetWeatherForecast(
+            [FromQuery(Name = nameof(WeatherForecast.Id))] int id
+        ) {
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                return Ok(value);
+            }
+
+            return NotFound();
+        }
+
         [HttpGet("[action]")]
-        public IActionResult WeatherForecasts(int pageNumber, int pageSize, SortingParams sortingParams)
-        {
-            var items = staticRepositoryCollections.Forecasts.AsQueryable();
+        public IActionResult WeatherForecasts(
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
+            [FromQuery] SortingParams sortingParams
+        ) {
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
             var sortExp = sortingParams?.SortExpression;
             if (!string.IsNullOrEmpty(sortExp))
@@ -41,20 +59,55 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecastsSimple()
         {
-            return staticRepositoryCollections.Forecasts.Take(20);
+            return staticRepositoryCollections.Forecasts.Values.Take(20);
+        }
+
+        [HttpPost(nameof(WeatherForecast))]
+        public IActionResult CreateWeatherForecast(
+            [FromBody] WeatherForecast weatherForecast
+        ) {
+            var id = staticRepositoryCollections.Forecasts.ContainsKey(weatherForecast.Id)
+                ? staticRepositoryCollections.Forecasts.Keys.Max() + 1
+                : weatherForecast.Id;
+
+            weatherForecast.Id = id;
+            if (staticRepositoryCollections.Forecasts.TryAdd(id, weatherForecast))
+            {
+                return Created(GetWeatherForecastUri(id), weatherForecast);
+            }
+
+            return Conflict();
         }
 
         [HttpPut("[action]")]
-        public WeatherForecast UpdateWeatherForecast([FromBody] WeatherForecast weatherForecast)
-        {
-            weatherForecast.TemperatureC = weatherForecast.TemperatureC + 1;
+        public IActionResult UpdateWeatherForecast(
+            [FromBody] WeatherForecast weatherForecast
+        ) {
+            var id = weatherForecast.Id;
+            if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
+            {
+                if (staticRepositoryCollections.Forecasts.TryUpdate(id, weatherForecast, value))
+                {
+                    return NoContent();
+                }
+            }
+            else if (staticRepositoryCollections.Forecasts.TryAdd(id, weatherForecast))
+            {
+                return Created(GetWeatherForecastUri(id), weatherForecast);
+            }
 
-            return weatherForecast;
+            return Conflict();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete([FromQuery]int id)
-        {
+        [HttpDelete("[action]")]
+        public IActionResult Delete(
+            [FromQuery(Name = nameof(WeatherForecast.Id))] int id
+        ) {
+            if (!staticRepositoryCollections.Forecasts.TryRemove(id, out var value))
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     }
