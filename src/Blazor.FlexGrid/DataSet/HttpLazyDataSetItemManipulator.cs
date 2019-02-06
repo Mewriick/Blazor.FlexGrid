@@ -1,9 +1,9 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
-using Microsoft.AspNetCore.Blazor;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;

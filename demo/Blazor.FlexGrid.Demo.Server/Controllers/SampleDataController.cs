@@ -23,7 +23,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         [HttpGet(nameof(WeatherForecast))]
         public IActionResult GetWeatherForecast(
             [FromQuery(Name = nameof(WeatherForecast.Id))] int id
-        ) {
+        )
+        {
             if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
             {
                 return Ok(value);
@@ -36,8 +37,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         public IActionResult WeatherForecasts(
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize,
-            [FromQuery] SortingParams sortingParams
-        ) {
+            [FromQuery] SortingParams sortingParams)
+        {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
             var sortExp = sortingParams?.SortExpression;
@@ -50,7 +51,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
                 items = items.OrderBy(sortExp);
             }
 
-            return Ok(new {
+            return Ok(new
+            {
                 Items = items.Skip(pageSize * pageNumber).Take(pageSize),
                 TotalCount = staticRepositoryCollections.Forecasts.Count
             });
@@ -63,9 +65,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPost(nameof(WeatherForecast))]
-        public IActionResult CreateWeatherForecast(
-            [FromBody] WeatherForecast weatherForecast
-        ) {
+        public IActionResult CreateWeatherForecast([FromBody] WeatherForecast weatherForecast)
+        {
             var id = staticRepositoryCollections.Forecasts.ContainsKey(weatherForecast.Id)
                 ? staticRepositoryCollections.Forecasts.Keys.Max() + 1
                 : weatherForecast.Id;
@@ -80,9 +81,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPut("[action]")]
-        public IActionResult UpdateWeatherForecast(
-            [FromBody] WeatherForecast weatherForecast
-        ) {
+        public IActionResult UpdateWeatherForecast([FromBody] WeatherForecast weatherForecast)
+        {
             var id = weatherForecast.Id;
             if (staticRepositoryCollections.Forecasts.TryGetValue(id, out var value))
             {
@@ -100,9 +100,8 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpDelete("[action]")]
-        public IActionResult Delete(
-            [FromQuery(Name = nameof(WeatherForecast.Id))] int id
-        ) {
+        public IActionResult Delete([FromQuery(Name = nameof(WeatherForecast.Id))] int id)
+        {
             if (!staticRepositoryCollections.Forecasts.TryRemove(id, out var value))
             {
                 return NotFound();

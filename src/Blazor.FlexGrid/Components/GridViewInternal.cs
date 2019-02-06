@@ -4,15 +4,15 @@ using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
-using Microsoft.AspNetCore.Blazor.Components;
-using Microsoft.AspNetCore.Blazor.RenderTree;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components
 {
-    public class GridViewInternal : BlazorComponent
+    public class GridViewInternal : ComponentBase
     {
         private ITableDataSet tableDataSet;
         private bool dataAdapterWasEmptyInOnInit;

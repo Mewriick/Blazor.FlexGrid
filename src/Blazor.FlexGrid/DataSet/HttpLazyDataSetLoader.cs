@@ -1,7 +1,7 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
-using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,7 +35,7 @@ namespace Blazor.FlexGrid.DataSet
             PagingParams(query, pageableOptions);
             SortingParams(query, sortingOptions);
 
-            var dataUri = lazyLoadingOptions.DataUri + query.ToString();
+            var dataUri = $"{lazyLoadingOptions.DataUri}{query.ToString()}";
             try
             {
                 return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);

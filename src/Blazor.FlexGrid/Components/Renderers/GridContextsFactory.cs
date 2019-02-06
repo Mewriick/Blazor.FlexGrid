@@ -2,7 +2,7 @@
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor.RenderTree;
+using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

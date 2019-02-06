@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Blazor;
+﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq.Expressions;
 

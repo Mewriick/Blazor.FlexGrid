@@ -1,6 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
-using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq.Expressions;
 

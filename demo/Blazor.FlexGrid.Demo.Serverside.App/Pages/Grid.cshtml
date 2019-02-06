@@ -1,6 +1,6 @@
 ﻿@addTagHelper *, Blazor.FlexGrid
-@addTagHelper *, BlazorStrap
-@addTagHelper *,MatBlazor
+@*@addTagHelper *, BlazorStrap
+    @addTagHelper *,MatBlazor*@
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.Demo.Serverside.App.Services
@@ -11,14 +11,14 @@
 
 <h1>Weather forecast</h1>
 
-<BlazorButton>Test</BlazorButton>
+@*<BlazorButton>Test</BlazorButton>*@
 <GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
 
-@{
-    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<MatButton Raised="true" Icon="favorite">@weather.Summary</MatButton>;
+@*@{
+        RenderFragment<WeatherForecast> weatherTemp = (weather) => @<MatButton Raised="true" Icon="favorite">@weather.Summary</MatButton>;
 
-Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
-}
+    Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
+    }*@
 
 
 @functions{

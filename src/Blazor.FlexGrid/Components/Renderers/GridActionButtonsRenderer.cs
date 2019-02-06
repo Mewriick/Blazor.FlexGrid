@@ -1,6 +1,5 @@
 ﻿using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor;
-using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Components;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {

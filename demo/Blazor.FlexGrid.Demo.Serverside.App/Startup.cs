@@ -2,7 +2,7 @@ using Blazor.FlexGrid.Demo.Client.GridConfigurations;
 using Blazor.FlexGrid.Demo.Serverside.App.GridConfigurations;
 using Blazor.FlexGrid.Demo.Serverside.App.Services;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor.Builder;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazor.FlexGrid.Demo.Serverside.App
@@ -34,7 +34,7 @@ namespace Blazor.FlexGrid.Demo.Serverside.App
 
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }

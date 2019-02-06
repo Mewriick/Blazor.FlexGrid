@@ -63,7 +63,8 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
                 .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
                 .Take(pageableOptions.PageSize);
 
-            return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast> {
+            return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast>
+            {
                 Items = items.ToList(),
                 TotalCount = staticRepositoryCollections.Forecasts.Count
             });

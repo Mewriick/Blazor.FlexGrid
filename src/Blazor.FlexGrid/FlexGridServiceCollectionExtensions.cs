@@ -1,5 +1,4 @@
-﻿using Blazor.Extensions.Logging;
-using Blazor.FlexGrid.Components;
+﻿using Blazor.FlexGrid.Components;
 using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
@@ -14,6 +13,7 @@ using Blazor.FlexGrid.Permission;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 
 namespace Blazor.FlexGrid
@@ -44,10 +44,11 @@ namespace Blazor.FlexGrid
             }
             else
             {
-                services.AddLogging(builder => builder
+                /*services.AddLogging(builder => builder
                     .AddBrowserConsole()
-                    .SetMinimumLevel(LogLevel.Debug));
+                    .SetMinimumLevel(LogLevel.Debug));*/
 
+                services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
                 services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
             }

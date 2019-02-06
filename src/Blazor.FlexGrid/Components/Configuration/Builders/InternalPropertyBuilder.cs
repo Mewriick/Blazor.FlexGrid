@@ -2,7 +2,7 @@
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq.Expressions;
 

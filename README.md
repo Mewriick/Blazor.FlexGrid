@@ -8,6 +8,10 @@ GridView component for Blazor
 ## IMPORTANT!
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
+** Known issues after support Blazor 0.8.0**
+> ServerSide demo application does not render FlexGrid styles
+> Blazor.Extensions.Logging cannot be used for now
+
 # Instalation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.4.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 

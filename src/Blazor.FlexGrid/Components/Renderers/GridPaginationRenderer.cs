@@ -1,7 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor;
-using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers

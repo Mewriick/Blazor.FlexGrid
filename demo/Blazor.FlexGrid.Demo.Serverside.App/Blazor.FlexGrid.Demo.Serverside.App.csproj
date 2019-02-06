@@ -9,13 +9,11 @@
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BlazorStrap" Version="0.7.1" />
-    <PackageReference Include="MatBlazor" Version="0.4.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.7.0" />
+  <ItemGroup>  
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.8.0-preview-19104-04" />    
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.8.0-preview-19104-04" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.13" />
-    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.7.0" />
+    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.8.0-preview-19104-04" />
   </ItemGroup>
 
   <ItemGroup>
