@@ -23,7 +23,12 @@ namespace Blazor.FlexGrid.Demo.Serverside.App.Services
 
         public Task<WeatherForecast> DeleteItem(WeatherForecast item, ILazyLoadingOptions lazyLoadingOptions)
         {
-            return Task.FromResult(item);
+            if (staticRepositoryCollections.Forecasts.TryRemove(item.Id, out var value))
+            {
+                return Task.FromResult(value);
+            }
+
+            return Task.FromResult(default(WeatherForecast));
         }
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
