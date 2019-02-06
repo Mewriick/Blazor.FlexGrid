@@ -12,6 +12,7 @@ namespace Blazor.FlexGrid.Demo.Serverside
         {
             // Adds the Server-Side Blazor services, and those registered by the app project's startup.
             services.AddRazorComponents<App.Startup>();
+            services.AddMvc();
 
             services.AddResponseCompression();
         }
@@ -26,6 +27,7 @@ namespace Blazor.FlexGrid.Demo.Serverside
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMvc();
             app.UseStaticFiles();
 
             // Use component registrations and static files from the app project.
