@@ -14,6 +14,9 @@ namespace Blazor.FlexGrid.Demo.Shared
         public int CustomerId { get; set; }
 
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+        public override string ToString()
+            => $"{Id}, {OrderDate}, {Status}, {CustomerId}";
     }
 
     public enum OrderState

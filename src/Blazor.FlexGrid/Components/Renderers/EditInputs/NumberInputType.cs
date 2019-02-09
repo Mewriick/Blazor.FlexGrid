@@ -1,97 +1,94 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class NumberInputType : AbstractEditInputRenderer
     {
-        public override void RenderInput(GridRendererContext gridRendererContext)
+        public override void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
         {
-            var localColumnName = gridRendererContext.ActualColumnName;
-            var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, localColumnName);
+            var localColumnName = actualItemContext.ActualColumnName;
+            var value = actualItemContext.GetActualItemColumnValue(localColumnName);
             if (IsSupportedNumberType(value))
             {
-                gridRendererContext.OpenElement(HtmlTagNames.Div, "edit-field-wrapper");
-                gridRendererContext.OpenElement(HtmlTagNames.Input, "edit-text-field");
-                gridRendererContext.AddAttribute(HtmlAttributes.Type, "number");
-                gridRendererContext.AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value));
-                TryAddOnChangeHandler(gridRendererContext, localColumnName, value);
-                gridRendererContext.CloseElement();
-                gridRendererContext.CloseElement();
+                rendererTreeBuilder
+                    .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
+                    .OpenElement(HtmlTagNames.Input, "edit-text-field")
+                    .AddAttribute(HtmlAttributes.Type, "number")
+                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value));
+
+                TryAddOnChangeHandler(rendererTreeBuilder, onChangeAction, localColumnName, value);
+
+                rendererTreeBuilder
+                    .CloseElement()
+                    .CloseElement();
             }
             else
             {
-                successor.RenderInput(gridRendererContext);
+                successor.RenderInput(rendererTreeBuilder, actualItemContext, onChangeAction);
             }
         }
 
         private bool IsSupportedNumberType(object value)
             => value is int || value is long || value is decimal || value is double;
 
-        private void TryAddOnChangeHandler(GridRendererContext gridRendererContext, string localColumnName, object value)
+        private void TryAddOnChangeHandler(IRendererTreeBuilder rendererTreeBuilder, Action<string, object> onChangeAction, string localColumnName, object value)
         {
             if (value is int intValue)
             {
-                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
                     {
-                        gridRendererContext
-                            .TableDataSet
-                            .EditItemProperty(localColumnName, __value);
+                        onChangeAction?.Invoke(localColumnName, __value);
                     }, intValue)
                 );
 
             }
             else
             {
-                AddLongValueHandlerIfValueIsLong(gridRendererContext, localColumnName, value);
+                AddLongValueHandlerIfValueIsLong(rendererTreeBuilder, onChangeAction, localColumnName, value);
             }
         }
 
-        private void AddLongValueHandlerIfValueIsLong(GridRendererContext gridRendererContext, string localColumnName, object value)
+        private void AddLongValueHandlerIfValueIsLong(IRendererTreeBuilder rendererTreeBuilder, Action<string, object> onChangeAction, string localColumnName, object value)
         {
             if (value is long longValue)
             {
-                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (long __value)
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (long __value)
                     {
-                        gridRendererContext
-                            .TableDataSet
-                            .EditItemProperty(localColumnName, __value);
+                        onChangeAction?.Invoke(localColumnName, __value);
                     }, longValue)
                 );
             }
             else
             {
-                AddDecimalValueHandlerIfValueIsDecimal(gridRendererContext, localColumnName, value);
+                AddDecimalValueHandlerIfValueIsDecimal(rendererTreeBuilder, onChangeAction, localColumnName, value);
             }
         }
 
-        private void AddDecimalValueHandlerIfValueIsDecimal(GridRendererContext gridRendererContext, string localColumnName, object value)
+        private void AddDecimalValueHandlerIfValueIsDecimal(IRendererTreeBuilder rendererTreeBuilder, Action<string, object> onChangeAction, string localColumnName, object value)
         {
             if (value is decimal decimalValue)
             {
-                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (decimal __value)
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (decimal __value)
                     {
-                        gridRendererContext
-                            .TableDataSet
-                            .EditItemProperty(localColumnName, __value);
+                        onChangeAction?.Invoke(localColumnName, __value);
                     }, decimalValue)
                 );
 
             }
             else
             {
-                AddDoubleValueHandlerIfValueIsDouble(gridRendererContext, localColumnName, value);
+                AddDoubleValueHandlerIfValueIsDouble(rendererTreeBuilder, onChangeAction, localColumnName, value);
             }
         }
 
-        private void AddDoubleValueHandlerIfValueIsDouble(GridRendererContext gridRendererContext, string localColumnName, object value)
+        private void AddDoubleValueHandlerIfValueIsDouble(IRendererTreeBuilder rendererTreeBuilder, Action<string, object> onChangeAction, string localColumnName, object value)
         {
             if (value is double doubleValue)
             {
-                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (double __value)
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (double __value)
                     {
-                        gridRendererContext
-                            .TableDataSet
-                            .EditItemProperty(localColumnName, __value);
+                        onChangeAction?.Invoke(localColumnName, __value);
                     }, doubleValue)
                 );
             }

@@ -30,7 +30,10 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             if (rendererContext.ActualColumnPropertyCanBeEdited && permissionContext.HasCurrentUserWritePermission(rendererContext.ActualColumnName))
             {
-                editInputRendererTree.RenderInput(rendererContext);
+                editInputRendererTree.RenderInput(
+                    rendererContext.RendererTreeBuilder,
+                    rendererContext,
+                    rendererContext.TableDataSet.EditItemProperty);
             }
             else
             {

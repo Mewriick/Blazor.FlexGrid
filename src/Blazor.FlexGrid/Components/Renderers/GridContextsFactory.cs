@@ -36,7 +36,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             var imutableRendererContext = GetImutableGridRendererContext(tableDataSet.UnderlyingTypeOfItem());
 
-            return (new GridRendererContext(imutableRendererContext, renderTreeBuilder, tableDataSet),
+            return (new GridRendererContext(imutableRendererContext, new BlazorRendererTreeBuilder(renderTreeBuilder), tableDataSet),
                     imutableRendererContext.PermissionContext);
         }
 

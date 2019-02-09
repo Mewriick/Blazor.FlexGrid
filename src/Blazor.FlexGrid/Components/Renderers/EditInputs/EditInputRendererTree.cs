@@ -1,4 +1,6 @@
-﻿namespace Blazor.FlexGrid.Components.Renderers.EditInputs
+﻿using System;
+
+namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class EditInputRendererTree : AbstractEditInputRenderer
     {
@@ -18,7 +20,7 @@
             rendererTree = numberInputRenderer;
         }
 
-        public override void RenderInput(GridRendererContext gridRendererContext)
-            => rendererTree.RenderInput(gridRendererContext);
+        public override void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
+            => rendererTree.RenderInput(rendererTreeBuilder, actualItemContext, onChangeAction);
     }
 }

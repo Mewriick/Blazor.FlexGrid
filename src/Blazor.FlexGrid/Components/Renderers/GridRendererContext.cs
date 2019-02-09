@@ -6,7 +6,6 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +13,12 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridRendererContext
+    public class GridRendererContext : IActualItemContext
     {
-        private int sequence = 0;
         private string firstColumnName;
         private string lastColumnName;
 
         private readonly IEntityType gridEntityConfiguration;
-        private readonly RenderTreeBuilder renderTreeBuilder;
         private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
 
@@ -53,9 +50,11 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IPropertyValueAccessor PropertyValueAccessor { get; }
 
+        public IRendererTreeBuilder RendererTreeBuilder { get; }
+
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
-            RenderTreeBuilder renderTreeBuilder,
+            IRendererTreeBuilder rendererTreeBuilder,
             ITableDataSet tableDataSet)
         {
             if (imutableGridRendererContext is null)
@@ -69,41 +68,42 @@ namespace Blazor.FlexGrid.Components.Renderers
             CssClasses = GridConfiguration.CssClasses;
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
+            RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
+
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
             this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
-            this.renderTreeBuilder = renderTreeBuilder ?? throw new ArgumentNullException(nameof(renderTreeBuilder));
             this.firstColumnName = GridItemProperties.First().Name;
             this.lastColumnName = GridItemProperties.Last().Name;
         }
 
         public void OpenElement(string elementName)
-            => renderTreeBuilder.OpenElement(++sequence, elementName);
+            => RendererTreeBuilder.OpenElement(elementName);
 
         public void CloseElement()
-            => renderTreeBuilder.CloseElement();
+            => RendererTreeBuilder.CloseElement();
 
         public void AddCssClass(string className)
-            => renderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Class, className);
+            => RendererTreeBuilder.AddAttribute(HtmlAttributes.Class, className);
 
         public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
-            => renderTreeBuilder.AddAttribute(++sequence, HtmlJSEvents.OnClick, onClickBindMethod());
+            => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
 
         public void AddContent(string content)
-            => renderTreeBuilder.AddContent(++sequence, content);
+            => RendererTreeBuilder.AddContent(content);
 
         public void AddActualColumnValue(PermissionContext permissionContext)
         {
             if (!permissionContext.HasCurrentUserReadPermission(ActualColumnName))
             {
-                renderTreeBuilder.AddContent(++sequence, "*****");
+                RendererTreeBuilder.AddContent("*****");
                 return;
             }
 
             if (specialColumnValues.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
             {
                 var fragment = rendererFragmentAdapter.GetColumnFragment(ActualItem);
-                renderTreeBuilder.AddContent(++sequence, fragment);
+                RendererTreeBuilder.AddContent(fragment);
                 return;
             }
 
@@ -112,18 +112,18 @@ namespace Blazor.FlexGrid.Components.Renderers
                 ? PropertyValueAccessor.GetValue(ActualItem, ActualColumnName)
                 : ActualItem;
 
-            renderTreeBuilder.AddContent(++sequence, new MarkupString(
+            RendererTreeBuilder.AddContent(new MarkupString(
                valueFormatter.FormatValue(inputForColumnValueFormatter))
              );
         }
 
         public void AddDisabled(bool disabled)
-            => renderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Disabled, disabled);
+            => RendererTreeBuilder.AddAttribute(HtmlAttributes.Disabled, disabled);
 
         public void AddColspan()
         {
-            renderTreeBuilder.AddAttribute(++sequence, HtmlAttributes.Colspan, GridItemProperties.Count + 1);
-            renderTreeBuilder.AddContent(++sequence, string.Empty);
+            RendererTreeBuilder.AddAttribute(HtmlAttributes.Colspan, GridItemProperties.Count + 1);
+            RendererTreeBuilder.AddContent(string.Empty);
         }
 
         public void OpenElement(string elementName, string className)
@@ -133,11 +133,10 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public void AddAttribute(string name, object value)
-            => renderTreeBuilder.AddAttribute(++sequence, name, value);
+            => RendererTreeBuilder.AddAttribute(name, value);
 
         public void AddAttribute(string name, Action<UIEventArgs> value)
-            => renderTreeBuilder.AddAttribute(++sequence, name, value);
-
+            => RendererTreeBuilder.AddAttribute(name, value);
 
 
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
@@ -150,11 +149,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             var masterDetailRelationship = GridConfiguration.FindRelationshipConfiguration(tableDataAdapter.UnderlyingTypeOfItem);
             var pageSize = RuntimeHelpers.TypeCheck(masterDetailRelationship.DetailGridViewPageSize(TableDataSet));
 
-            renderTreeBuilder.OpenComponent(++sequence, typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
-            renderTreeBuilder.AddAttribute(++sequence, "DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            renderTreeBuilder.AddAttribute(++sequence, nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
+            RendererTreeBuilder.OpenComponent(typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
+            RendererTreeBuilder.AddAttribute("DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
 
-            renderTreeBuilder.AddAttribute(++sequence,
+            RendererTreeBuilder.AddAttribute(
                 nameof(ILazyTableDataSet.LazyLoadingOptions),
                 new LazyLoadingOptions
                 {
@@ -164,17 +163,20 @@ namespace Blazor.FlexGrid.Components.Renderers
                 });
 
             AddEventAttributes();
-            renderTreeBuilder.CloseComponent();
+            RendererTreeBuilder.CloseComponent();
         }
 
         private void AddEventAttributes()
         {
             if (TableDataSet.GridViewEvents.SaveOperationFinished != null)
             {
-                renderTreeBuilder.AddAttribute(++sequence,
+                RendererTreeBuilder.AddAttribute(
                     nameof(ITableDataSet.GridViewEvents.SaveOperationFinished),
                     RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.SaveOperationFinished));
             }
         }
+
+        public object GetActualItemColumnValue(string columnName)
+            => PropertyValueAccessor.GetValue(ActualItem, columnName);
     }
 }

@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPut("[action]")]
-        public ActionResult<Order> UpdateOrder(Order order)
+        public ActionResult<Order> UpdateOrder([FromBody] Order order)
         {
             return order;
         }

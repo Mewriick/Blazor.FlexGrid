@@ -5,34 +5,31 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class DateTimeInputRenderer : AbstractEditInputRenderer
     {
-        public override void RenderInput(GridRendererContext gridRendererContext)
+        public override void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
         {
-            var localColumnName = gridRendererContext.ActualColumnName;
-            var value = gridRendererContext.PropertyValueAccessor.GetValue(gridRendererContext.ActualItem, localColumnName);
+            var localColumnName = actualItemContext.ActualColumnName;
+            var value = actualItemContext.GetActualItemColumnValue(localColumnName);
             if (IsSupportedDateType(value))
             {
                 var dateTimeValue = ConvertToDateTime(value);
                 var dateValueContatinsTime = dateTimeValue.TimeOfDay.TotalSeconds != 0;
                 var dateFormat = dateValueContatinsTime ? "yyyy-MM-dd'T'HH:mm:ss" : "yyyy-MM-dd";
 
-                gridRendererContext.OpenElement(HtmlTagNames.Div, "edit-field-wrapper");
-                gridRendererContext.OpenElement(HtmlTagNames.Input, "edit-text-field");
-                gridRendererContext.AddAttribute(HtmlAttributes.Type, dateValueContatinsTime ? "datetime-local" : "date");
-                gridRendererContext.AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(dateTimeValue, dateFormat));
-                gridRendererContext.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (DateTime __value)
-                    {
-                        gridRendererContext
-                            .TableDataSet
-                            .EditItemProperty(localColumnName, __value);
-                    }, dateTimeValue, dateFormat)
-                );
-
-                gridRendererContext.CloseElement();
-                gridRendererContext.CloseElement();
+                rendererTreeBuilder
+                    .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
+                    .OpenElement(HtmlTagNames.Input, "edit-text-field")
+                    .AddAttribute(HtmlAttributes.Type, dateValueContatinsTime ? "datetime-local" : "date")
+                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(dateTimeValue, dateFormat))
+                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (DateTime __value)
+                        {
+                            onChangeAction?.Invoke(localColumnName, __value);
+                        }, dateTimeValue, dateFormat))
+                    .CloseElement()
+                    .CloseElement();
             }
             else
             {
-                successor.RenderInput(gridRendererContext);
+                successor.RenderInput(rendererTreeBuilder, actualItemContext, onChangeAction);
             }
         }
 

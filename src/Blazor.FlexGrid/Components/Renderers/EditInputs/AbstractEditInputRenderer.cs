@@ -9,6 +9,6 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         public void SetSuccessor(AbstractEditInputRenderer editInputRenderer)
             => successor = editInputRenderer ?? throw new ArgumentNullException(nameof(editInputRenderer));
 
-        abstract public void RenderInput(GridRendererContext gridRendererContext);
+        abstract public void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction);
     }
 }
