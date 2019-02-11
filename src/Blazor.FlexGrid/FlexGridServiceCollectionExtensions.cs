@@ -84,7 +84,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton<GridContextsFactory>();
             services.AddSingleton<EditInputRendererTree>();
 
-            services.AddSingleton(typeof(IGridRenderer), provider =>
+            services.AddSingleton(typeof(IGridRendererTreeBuilder), provider =>
             {
                 var measurableLogger = provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>();
 

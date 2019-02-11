@@ -5,7 +5,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class SelectInputRenderer : AbstractEditInputRenderer
     {
-        public override void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
+        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
@@ -45,7 +45,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             }
             else
             {
-                successor.RenderInput(rendererTreeBuilder, actualItemContext, onChangeAction);
+                successor.BuildInputRendererTree(rendererTreeBuilder, actualItemContext, onChangeAction);
             }
         }
     }

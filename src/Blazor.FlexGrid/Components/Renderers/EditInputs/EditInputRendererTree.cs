@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             rendererTree = numberInputRenderer;
         }
 
-        public override void RenderInput(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
-            => rendererTree.RenderInput(rendererTreeBuilder, actualItemContext, onChangeAction);
+        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
+            => rendererTree.BuildInputRendererTree(rendererTreeBuilder, actualItemContext, onChangeAction);
     }
 }

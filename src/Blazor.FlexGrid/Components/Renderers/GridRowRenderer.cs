@@ -7,7 +7,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => true;
 
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableRow);
 
@@ -16,12 +16,12 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.ActualColumnName = property.Name;
                 rendererContext.ActualColumnPropertyCanBeEdited = property.CanWrite;
 
-                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
+                gridPartRenderers.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
             }
 
             rendererContext.CloseElement();
 
-            gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
+            gridPartRenderersAfter.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
         }
     }
 }

@@ -19,20 +19,20 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => true;
 
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             try
             {
-                gridPartRenderersBefore.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
+                gridPartRenderersBefore.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
                 rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
                 rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
 
-                gridPartRenderers.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
+                gridPartRenderers.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
                 rendererContext.CloseElement(); // Close table
 
-                gridPartRenderersAfter.ForEach(renderer => renderer.Render(rendererContext, permissionContext));
+                gridPartRenderersAfter.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
                 rendererContext.CloseElement(); // Close table wrapper
             }

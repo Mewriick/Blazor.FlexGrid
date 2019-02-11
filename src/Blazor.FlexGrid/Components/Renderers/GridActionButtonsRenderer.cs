@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.IsLastColumn && rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed;
 
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
             rendererContext.OpenElement(HtmlTagNames.Div, "action-buttons-wrapper");

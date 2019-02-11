@@ -18,7 +18,7 @@ namespace Blazor.FlexGrid.Components
         private bool dataAdapterWasEmptyInOnInit;
 
         [Inject]
-        private IGridRenderer GridRenderer { get; set; }
+        private IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
 
         [Inject]
         private GridContextsFactory RendererContextFactory { get; set; }
@@ -50,7 +50,7 @@ namespace Blazor.FlexGrid.Components
         {
             base.BuildRenderTree(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
-            GridRenderer.Render(gridContexts.RendererContext, gridContexts.PermissionContext);
+            GridRendererTreeBuilder.BuildRendererTree(gridContexts.RendererContext, gridContexts.PermissionContext);
         }
 
         protected override Task OnInitAsync()

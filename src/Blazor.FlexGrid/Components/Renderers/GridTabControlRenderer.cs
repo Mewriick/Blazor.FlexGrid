@@ -21,7 +21,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             => rendererContext.GridConfiguration.IsMasterTable &&
                rendererContext.TableDataSet.ItemIsSelected(rendererContext.ActualItem);
 
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             if (rendererContext.TableDataSet is IMasterTableDataSet masterTableDataSet)
             {

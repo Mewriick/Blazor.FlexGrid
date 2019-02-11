@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridHeaderRenderer : GridPartRenderer
     {
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);

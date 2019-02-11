@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public abstract class GridCompositeRenderer : IGridRenderer
+    public abstract class GridCompositeRenderer : IGridRendererTreeBuilder
     {
-        protected readonly List<IGridRenderer> gridPartRenderers;
-        protected readonly List<IGridRenderer> gridPartRenderersBefore;
-        protected readonly List<IGridRenderer> gridPartRenderersAfter;
+        protected readonly List<IGridRendererTreeBuilder> gridPartRenderers;
+        protected readonly List<IGridRendererTreeBuilder> gridPartRenderersBefore;
+        protected readonly List<IGridRendererTreeBuilder> gridPartRenderersAfter;
 
         public GridCompositeRenderer()
         {
-            this.gridPartRenderers = new List<IGridRenderer>();
-            this.gridPartRenderersBefore = new List<IGridRenderer>();
-            this.gridPartRenderersAfter = new List<IGridRenderer>();
+            this.gridPartRenderers = new List<IGridRendererTreeBuilder>();
+            this.gridPartRenderersBefore = new List<IGridRendererTreeBuilder>();
+            this.gridPartRenderersAfter = new List<IGridRendererTreeBuilder>();
         }
 
-        public virtual IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
+        public virtual IGridRendererTreeBuilder AddRenderer(IGridRendererTreeBuilder gridPartRenderer, RendererType rendererPosition = RendererType.InsideTag)
         {
             switch (rendererPosition)
             {
@@ -34,18 +34,18 @@ namespace Blazor.FlexGrid.Components.Renderers
             return this;
         }
 
-        public void Render(GridRendererContext rendererContext, PermissionContext permissionContext)
+        public void BuildRendererTree(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             if (!CanRender(rendererContext))
             {
                 return;
             }
 
-            RenderInternal(rendererContext, permissionContext);
+            BuildRenderTreeInternal(rendererContext, permissionContext);
         }
 
         public abstract bool CanRender(GridRendererContext rendererContext);
 
-        protected abstract void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext);
+        protected abstract void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext);
     }
 }

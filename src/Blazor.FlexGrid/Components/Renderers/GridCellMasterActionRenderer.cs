@@ -5,7 +5,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridCellMasterActionRenderer : GridPartRenderer
     {
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             var localActualItem = rendererContext.ActualItem;
             var localActualItemIsSelected = rendererContext.TableDataSet.ItemIsSelected(localActualItem);

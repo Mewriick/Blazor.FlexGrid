@@ -6,25 +6,25 @@ namespace Blazor.FlexGrid.Components.Renderers
     /// <summary>
     /// The 'Leaf Renderer'
     /// </summary>
-    public abstract class GridPartRenderer : IGridRenderer
+    public abstract class GridPartRenderer : IGridRendererTreeBuilder
     {
-        public IGridRenderer AddRenderer(IGridRenderer gridPartRenderer, RendererType rendererPosition)
+        public IGridRendererTreeBuilder AddRenderer(IGridRendererTreeBuilder gridPartRenderer, RendererType rendererPosition)
         {
             throw new NotImplementedException();
         }
 
-        public void Render(GridRendererContext rendererContext, PermissionContext permissionContext)
+        public void BuildRendererTree(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             if (!CanRender(rendererContext))
             {
                 return;
             }
 
-            RenderInternal(rendererContext, permissionContext);
+            BuildRendererTreeInternal(rendererContext, permissionContext);
         }
 
         public abstract bool CanRender(GridRendererContext rendererContext);
 
-        protected abstract void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext);
+        protected abstract void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext);
     }
 }

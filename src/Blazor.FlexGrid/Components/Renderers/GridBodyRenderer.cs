@@ -14,7 +14,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected override void RenderInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
             try
@@ -23,7 +23,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 {
                     rendererContext.ActualItem = item;
                     foreach (var renderer in gridPartRenderers)
-                        renderer.Render(rendererContext, permissionContext);
+                        renderer.BuildRendererTree(rendererContext, permissionContext);
                 }
             }
             catch (Exception ex)
