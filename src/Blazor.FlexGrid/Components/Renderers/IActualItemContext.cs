@@ -8,4 +8,9 @@
 
         object GetActualItemColumnValue(string columnName);
     }
+
+    public interface IActualItemContext<TItem> : IActualItemContext where TItem : class
+    {
+        new TItem ActualItem { get; }
+    }
 }
