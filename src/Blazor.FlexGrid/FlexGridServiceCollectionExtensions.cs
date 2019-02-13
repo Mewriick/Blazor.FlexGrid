@@ -4,6 +4,7 @@ using Blazor.FlexGrid.Components.Configuration.Builders;
 using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
+using Blazor.FlexGrid.Components.Renderers.CreateItemForm;
 using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataAdapters.Visitors;
@@ -80,6 +81,7 @@ namespace Blazor.FlexGrid
 
         private static void RegisterGridRendererTree(IServiceCollection services)
         {
+            services.AddSingleton(typeof(CreateItemFormRenderer<>));
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
             services.AddSingleton<GridContextsFactory>();
             services.AddSingleton<EditInputRendererTree>();

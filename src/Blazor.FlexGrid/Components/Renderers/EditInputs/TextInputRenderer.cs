@@ -5,6 +5,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class TextInputRenderer : AbstractEditInputRenderer
     {
+        private const string InputTypeText = "text";
+        private const string InputTypeEmail = "email";
+
         public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
         {
             var localColumnName = actualItemContext.ActualColumnName;
@@ -13,13 +16,13 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             rendererTreeBuilder
                 .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                 .OpenElement(HtmlTagNames.Input, "edit-text-field")
-                .AddAttribute(HtmlAttributes.Type, GetInputType(value.ToString()))
+                .AddAttribute(HtmlAttributes.Type, GetInputType(value?.ToString() ?? InputTypeText))
                 .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value))
                 .AddAttribute(HtmlJSEvents.OnChange,
                     BindMethods.SetValueHandler(delegate (string __value)
                     {
                         onChangeAction?.Invoke(localColumnName, __value);
-                    }, value.ToString())
+                    }, value?.ToString() ?? string.Empty)
                 )
                 .CloseElement()
                 .CloseElement();
@@ -29,10 +32,10 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value.Contains("@"))
             {
-                return "email";
+                return InputTypeEmail;
             }
 
-            return "text";
+            return InputTypeText;
         }
     }
 }

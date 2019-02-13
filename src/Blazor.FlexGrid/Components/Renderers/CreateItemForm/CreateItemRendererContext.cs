@@ -6,23 +6,26 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
     public class CreateItemRendererContext<TItem> : IActualItemContext<TItem> where TItem : class
     {
         private readonly IPropertyValueAccessor propertyValueAccessor;
-        private TItem model;
+        private readonly ICreateItemFormViewModel<TItem> createItemForm;
 
-        public string ActualColumnName => throw new NotImplementedException();
+        public string ActualColumnName { get; set; }
 
-        public object ActualItem => throw new NotImplementedException();
+        public object ActualItem => createItemForm.Model;
 
-        TItem IActualItemContext<TItem>.ActualItem => throw new NotImplementedException();
+        TItem IActualItemContext<TItem>.ActualItem => createItemForm.Model;
 
-        public CreateItemRendererContext(IPropertyValueAccessorCache propertyValueAccessorCache)
+        public CreateItemRendererContext(ICreateItemFormViewModel<TItem> createItemForm, IPropertyValueAccessorCache propertyValueAccessorCache)
         {
             this.propertyValueAccessor = propertyValueAccessorCache?.GetPropertyAccesor(typeof(TItem))
                 ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
 
-            model = Activator.CreateInstance(typeof(TItem)) as TItem;
+            this.createItemForm = createItemForm ?? throw new ArgumentNullException(nameof(createItemForm));
         }
 
         public object GetActualItemColumnValue(string columnName)
-            => propertyValueAccessor.GetValue(model, columnName);
+            => propertyValueAccessor.GetValue(createItemForm.Model, columnName);
+
+        public void SetActulItemColumnValue(string columnName, object value)
+            => propertyValueAccessor.SetValue(createItemForm.Model, columnName, value);
     }
 }

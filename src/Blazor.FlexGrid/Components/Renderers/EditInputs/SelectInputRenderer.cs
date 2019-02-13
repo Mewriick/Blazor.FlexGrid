@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                         {
                             var parsedValue = Enum.Parse(value.GetType(), __value);
                             onChangeAction?.Invoke(localColumnName, parsedValue);
-                        }, value.ToString())
+                        }, value?.ToString() ?? string.Empty)
                     );
 
                 foreach (var enumValue in Enum.GetValues(enumTypeValue.GetType()))
