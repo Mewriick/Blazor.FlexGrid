@@ -14,7 +14,7 @@ namespace Blazor.FlexGrid.DataSet
 
         void CancelEditation();
 
-        Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor);
+        Task<bool> SaveItem(ITypePropertyAccessor propertyValueAccessor);
 
         Task<bool> DeleteItem(object item);
     }

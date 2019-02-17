@@ -1,31 +1,37 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
     public class CreateItemRendererContext<TItem> : IActualItemContext<TItem> where TItem : class
     {
-        private readonly IPropertyValueAccessor propertyValueAccessor;
-        private readonly ICreateItemFormViewModel<TItem> createItemForm;
+        private readonly ITypePropertyAccessor typePropertyAccessor;
 
         public string ActualColumnName { get; set; }
 
-        public object ActualItem => createItemForm.Model;
+        public object ActualItem => ViewModel.Model;
 
-        TItem IActualItemContext<TItem>.ActualItem => createItemForm.Model;
+        TItem IActualItemContext<TItem>.ActualItem => ViewModel.Model;
 
-        public CreateItemRendererContext(ICreateItemFormViewModel<TItem> createItemForm, IPropertyValueAccessorCache propertyValueAccessorCache)
+        public ICreateItemFormViewModel<TItem> ViewModel { get; }
+
+        public CreateItemRendererContext(ICreateItemFormViewModel<TItem> createItemFormViewModel, ITypePropertyAccessorCache typePropertyAccessorCache)
         {
-            this.propertyValueAccessor = propertyValueAccessorCache?.GetPropertyAccesor(typeof(TItem))
-                ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
+            this.typePropertyAccessor = typePropertyAccessorCache?.GetPropertyAccesor(typeof(TItem))
+                ?? throw new ArgumentNullException(nameof(typePropertyAccessorCache));
 
-            this.createItemForm = createItemForm ?? throw new ArgumentNullException(nameof(createItemForm));
+            this.ViewModel = createItemFormViewModel ?? throw new ArgumentNullException(nameof(createItemFormViewModel));
         }
 
         public object GetActualItemColumnValue(string columnName)
-            => propertyValueAccessor.GetValue(createItemForm.Model, columnName);
+            => typePropertyAccessor.GetValue(ViewModel.Model, columnName);
 
         public void SetActulItemColumnValue(string columnName, object value)
-            => propertyValueAccessor.SetValue(createItemForm.Model, columnName, value);
+            => typePropertyAccessor.SetValue(ViewModel.Model, columnName, value);
+
+        public IEnumerable<PropertyInfo> GetModelFields()
+            => typePropertyAccessor.Properties;
     }
 }

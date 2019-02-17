@@ -85,7 +85,7 @@ namespace Blazor.FlexGrid.DataSet
         public void EditItemProperty(string propertyName, object propertyValue)
             => RowEditOptions.AddNewValue(propertyName, propertyValue);
 
-        public Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor)
+        public Task<bool> SaveItem(ITypePropertyAccessor propertyValueAccessor)
         {
             try
             {

@@ -70,7 +70,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<IMasterDetailTableDataSetFactory, MasterDetailTableDataSetFactory>();
             services.AddSingleton<ConventionsSet>();
-            services.AddSingleton<IPropertyValueAccessorCache, PropertyValueAccessorCache>();
+            services.AddSingleton<ITypePropertyAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
             services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
 
@@ -104,7 +104,8 @@ namespace Blazor.FlexGrid
                     .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
                     .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(), measurableLogger))
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
-                    .AddRenderer(new GridPaginationRenderer(), RendererType.AfterTag);
+                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag)
+                    .AddRenderer(new CreateItemModalRenderer(), RendererType.AfterTag);
 
                 return gridRenderer;
             });

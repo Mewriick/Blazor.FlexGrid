@@ -8,6 +8,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         InlineEditOptions InlineEditOptions { get; }
 
+        CreateItemOptions CreateItemOptions { get; }
+
         GridCssClasses CssClasses { get; }
 
         IMasterDetailRelationship FindRelationshipConfiguration(Type detailType);

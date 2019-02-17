@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+﻿using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
+using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
@@ -13,20 +14,19 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
         }
 
         public void BuildRendererTree(
+            ICreateFormLayout<TItem> createFormLayout,
             CreateItemRendererContext<TItem> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {
+            var hederAction = createFormLayout.BuildHeaderRendererTree();
+            var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, editInputRendererTree);
+            var footerAction = createFormLayout.BuildFooterRendererTree(createItemRendererContext);
+
             rendererTreeBuilder.OpenElement(HtmlTagNames.Div);
 
-            foreach (var property in typeof(TItem).GetProperties())
-            {
-                createItemRendererContext.ActualColumnName = property.Name;
-
-                editInputRendererTree.BuildInputRendererTree(
-                    rendererTreeBuilder,
-                    createItemRendererContext,
-                    createItemRendererContext.SetActulItemColumnValue);
-            }
+            hederAction?.Invoke(rendererTreeBuilder);
+            bodyAction?.Invoke(rendererTreeBuilder);
+            footerAction?.Invoke(rendererTreeBuilder);
 
             rendererTreeBuilder.CloseElement();
         }

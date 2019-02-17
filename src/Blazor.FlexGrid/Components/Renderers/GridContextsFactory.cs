@@ -14,13 +14,13 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private readonly Dictionary<Type, ImutableGridRendererContext> imutableRendererContextCache;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
-        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
         private readonly ICurrentUserPermission currentUserPermission;
         private readonly ILogger<GridContextsFactory> logger;
 
         public GridContextsFactory(
             IGridConfigurationProvider gridConfigurationProvider,
-            IPropertyValueAccessorCache propertyValueAccessorCache,
+            ITypePropertyAccessorCache propertyValueAccessorCache,
             ICurrentUserPermission currentUserPermission,
             ILogger<GridContextsFactory> logger)
         {

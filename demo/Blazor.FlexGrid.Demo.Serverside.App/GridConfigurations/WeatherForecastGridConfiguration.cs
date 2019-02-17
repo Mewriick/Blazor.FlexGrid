@@ -8,6 +8,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
+            builder.AllowCreateItem();
             builder.AllowInlineEdit();
 
             builder.Property(e => e.Date)

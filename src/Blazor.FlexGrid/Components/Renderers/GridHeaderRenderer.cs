@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +11,8 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
+            var canRenderCreateItemButton = rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed && permissionContext.HasCreateItemPermission;
+
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
 
@@ -24,7 +27,12 @@ namespace Blazor.FlexGrid.Components.Renderers
                 RenderColumnHeader(rendererContext, property);
             }
 
-            if (rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed)
+            if (canRenderCreateItemButton)
+            {
+                BuildCreateItemButtonRendererTree(rendererContext, permissionContext);
+            }
+
+            if (rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed && !canRenderCreateItemButton)
             {
                 RenderEmptyColumnHeader(rendererContext);
             }
@@ -92,6 +100,26 @@ namespace Blazor.FlexGrid.Components.Renderers
         private void RenderEmptyColumnHeader(GridRendererContext rendererContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.CloseElement();
+        }
+
+        private void BuildCreateItemButtonRendererTree(GridRendererContext rendererContext, PermissionContext permissionContext)
+        {
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.OpenElement(HtmlTagNames.Div, "create-button-wrapper");
+
+            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.AddOnClickEvent(() =>
+                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    FlexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))
+            );
+
+            rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
+            rendererContext.OpenElement(HtmlTagNames.I, "fas fa-plus");
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
 

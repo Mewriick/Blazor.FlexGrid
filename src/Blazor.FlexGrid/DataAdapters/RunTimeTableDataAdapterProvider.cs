@@ -10,11 +10,11 @@ namespace Blazor.FlexGrid.DataAdapters
     {
         private readonly IGridConfigurationProvider gridConfigurationProvider;
         private readonly IDetailDataAdapterVisitors detailDataAdapterVisitors;
-        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
 
         public RunTimeTableDataAdapterProvider(
             IGridConfigurationProvider gridConfigurationProvider,
-            IPropertyValueAccessorCache propertyValueAccessorCache,
+            ITypePropertyAccessorCache propertyValueAccessorCache,
             IDetailDataAdapterVisitors detailDataAdapterVisitors)
         {
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));

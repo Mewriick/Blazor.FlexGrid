@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyCollection<PropertyInfo> GridItemProperties { get; private set; }
 
-        public IPropertyValueAccessor GetPropertyValueAccessor { get; }
+        public ITypePropertyAccessor GetPropertyValueAccessor { get; }
 
         public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters => valueFormatters;
 
@@ -32,7 +32,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public ImutableGridRendererContext(
             IEntityType gridEntityConfiguration,
-            IPropertyValueAccessor propertyValueAccessor,
+            ITypePropertyAccessor propertyValueAccessor,
             ICurrentUserPermission currentUserPermission)
         {
             valueFormatters = new Dictionary<string, ValueFormatter>();

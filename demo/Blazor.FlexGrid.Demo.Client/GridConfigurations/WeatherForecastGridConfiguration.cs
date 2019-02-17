@@ -8,6 +8,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
+            builder.AllowCreateItem();
+
             builder.AllowInlineEdit(conf =>
             {
                 conf.AllowDeleting = true;

@@ -11,6 +11,7 @@
         public const string DetailUpdateUrl = "DetailUpdateUrl";
         public const string DetailDeleteUrl = "DetailDeleteUrl";
         public const string InlineEditOptions = "InlineEditOptions";
+        public const string CreateItemOptions = "CreateItemOptions";
 
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";

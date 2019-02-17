@@ -16,12 +16,12 @@ namespace Blazor.FlexGrid.DataSet
         private const string DeleteUrlPattern = @"\/{\s*(?<prop>\w+)\s*(,\s*(?<prop>\w+)\s*)*}";
 
         private readonly HttpClient httpClient;
-        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
         private readonly ILogger<HttpLazyDataSetItemManipulator<TItem>> logger;
 
         public HttpLazyDataSetItemManipulator(
             IHttpClientFactory httpClientFactory,
-            IPropertyValueAccessorCache propertyValueAccessorCache,
+            ITypePropertyAccessorCache propertyValueAccessorCache,
             ILogger<HttpLazyDataSetItemManipulator<TItem>> logger)
         {
             this.httpClient = httpClientFactory?.Create() ?? throw new ArgumentNullException(nameof(httpClientFactory));

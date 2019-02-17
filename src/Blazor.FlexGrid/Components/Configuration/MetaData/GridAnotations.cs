@@ -50,6 +50,21 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public CreateItemOptions CreateItemOptions
+        {
+            get
+            {
+
+                var createItemOptions = annotations[GridViewAnnotationNames.CreateItemOptions];
+                if (createItemOptions is NullAnotationValue)
+                {
+                    return NullCreateItemOptions.Instance;
+                }
+
+                return (CreateItemOptions)createItemOptions;
+            }
+        }
+
         public GridAnotations(IEntityType entityType)
         {
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));

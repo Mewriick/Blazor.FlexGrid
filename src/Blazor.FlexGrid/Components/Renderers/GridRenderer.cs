@@ -34,7 +34,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                 gridPartRenderersAfter.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
-                rendererContext.CloseElement(); // Close table wrapper
+                rendererContext.CloseElement(); // Close table wrapper                
             }
             catch (Exception ex)
             {

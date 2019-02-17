@@ -17,6 +17,8 @@
         public const string Select = "select";
         public const string Input = "input";
         public const string Option = "option";
+        public const string Label = "label";
+        public const string H1 = "h1";
     }
 
     public class HtmlAttributes
@@ -31,6 +33,7 @@
         public const string Value = "value";
         public const string Selected = "selected";
         public const string Type = "type";
+        public const string Id = "id";
     }
 
     public class HtmlJSEvents

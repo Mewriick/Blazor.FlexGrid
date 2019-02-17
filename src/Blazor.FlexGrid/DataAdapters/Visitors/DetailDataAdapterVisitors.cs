@@ -8,10 +8,10 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
 {
     public class DetailDataAdapterVisitors : IDetailDataAdapterVisitors
     {
-        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
 
-        public DetailDataAdapterVisitors(IPropertyValueAccessorCache propertyValueAccessorCache, IGridConfigurationProvider gridConfigurationProvider)
+        public DetailDataAdapterVisitors(ITypePropertyAccessorCache propertyValueAccessorCache, IGridConfigurationProvider gridConfigurationProvider)
         {
             this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
             this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));

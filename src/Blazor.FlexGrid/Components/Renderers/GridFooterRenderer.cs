@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridPaginationRenderer : GridPartRenderer
+    public class GridFooterRenderer : GridPartRenderer
     {
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {

@@ -114,7 +114,7 @@ namespace Blazor.FlexGrid.DataSet
         public void EditItemProperty(string propertyName, object propertyValue)
             => tableDataSet.EditItemProperty(propertyName, propertyValue);
 
-        public Task<bool> SaveItem(IPropertyValueAccessor propertyValueAccessor)
+        public Task<bool> SaveItem(ITypePropertyAccessor propertyValueAccessor)
             => tableDataSet.SaveItem(propertyValueAccessor);
 
         public Task<bool> DeleteItem(object item)

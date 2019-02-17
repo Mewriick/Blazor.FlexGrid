@@ -48,7 +48,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public GridCssClasses CssClasses { get; }
 
-        public IPropertyValueAccessor PropertyValueAccessor { get; }
+        public ITypePropertyAccessor PropertyValueAccessor { get; }
 
         public IRendererTreeBuilder RendererTreeBuilder { get; }
 
@@ -166,6 +166,15 @@ namespace Blazor.FlexGrid.Components.Renderers
             RendererTreeBuilder.CloseComponent();
         }
 
+        public void AddCreateItemComponent()
+        {
+            RendererTreeBuilder.OpenComponent(typeof(CreateItemForm<>).MakeGenericType(TableDataSet.UnderlyingTypeOfItem()));
+            RendererTreeBuilder.CloseComponent();
+        }
+
+        public object GetActualItemColumnValue(string columnName)
+            => PropertyValueAccessor.GetValue(ActualItem, columnName);
+
         private void AddEventAttributes()
         {
             if (TableDataSet.GridViewEvents.SaveOperationFinished != null)
@@ -175,8 +184,5 @@ namespace Blazor.FlexGrid.Components.Renderers
                     RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.SaveOperationFinished));
             }
         }
-
-        public object GetActualItemColumnValue(string columnName)
-            => PropertyValueAccessor.GetValue(ActualItem, columnName);
     }
 }

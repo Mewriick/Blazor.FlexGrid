@@ -58,5 +58,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool AllowInlineEdit(InlineEditOptions inlineEditOptions)
             => HasAnnotation(GridViewAnnotationNames.InlineEditOptions, inlineEditOptions);
+
+        public bool AllowCreateItem(CreateItemOptions createItemOptions)
+            => HasAnnotation(GridViewAnnotationNames.CreateItemOptions, createItemOptions);
     }
 }

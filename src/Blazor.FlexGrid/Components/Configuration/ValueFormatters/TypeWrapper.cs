@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
 {
-    public class TypeWrapper : IPropertyValueAccessor
+    public class TypeWrapper : ITypePropertyAccessor
     {
         private readonly Dictionary<string, Func<object, object>> getters
             = new Dictionary<string, Func<object, object>>();
@@ -14,12 +14,21 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
         private readonly Dictionary<string, Action<object, object>> setters
             = new Dictionary<string, Action<object, object>>();
 
+        private readonly List<PropertyInfo> properties;
+
         private readonly ILogger logger;
+
+        public IEnumerable<PropertyInfo> Properties => properties;
+
 
         public TypeWrapper(Type clrType, ILogger logger)
         {
+            properties = new List<PropertyInfo>();
+
             foreach (var property in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
+                properties.Add(property);
+
                 var wrappedObjectParameter = Expression.Parameter(typeof(object));
                 var valueParameter = Expression.Parameter(typeof(object));
 

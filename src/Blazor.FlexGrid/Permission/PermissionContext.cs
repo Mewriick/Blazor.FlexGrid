@@ -12,6 +12,7 @@ namespace Blazor.FlexGrid.Permission
 
         public bool HasDeleteItemPermission { get; }
 
+        public bool HasCreateItemPermission { get; }
 
         public PermissionContext(ICurrentUserPermission currentUserPermission, IEntityType gridEntityConfiguration)
         {
@@ -21,6 +22,9 @@ namespace Blazor.FlexGrid.Permission
 
             HasDeleteItemPermission = new GridAnotations(gridEntityConfiguration)
                 .InlineEditOptions.DeletePermissionRestriction(currentUserPermission);
+
+            HasCreateItemPermission = new GridAnotations(gridEntityConfiguration)
+                .CreateItemOptions.CreatePermissionRestriction(currentUserPermission);
         }
 
         public bool HasCurrentUserReadPermission(string columnName)

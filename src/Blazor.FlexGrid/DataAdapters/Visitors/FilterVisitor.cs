@@ -10,12 +10,12 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
     {
         private readonly IMasterDetailRelationship masterDetailRelationship;
         private readonly IMasterDetailRowArguments masterDetailRowArguments;
-        private readonly IPropertyValueAccessorCache propertyValueAccessorCache;
+        private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
 
         public FilterVisitor(
             IMasterDetailRelationship masterDetailRelationship,
             IMasterDetailRowArguments masterDetailRowArguments,
-            IPropertyValueAccessorCache propertyValueAccessorCache
+            ITypePropertyAccessorCache propertyValueAccessorCache
             )
         {
             this.masterDetailRelationship = masterDetailRelationship ?? throw new ArgumentNullException(nameof(masterDetailRelationship));

@@ -1,16 +1,13 @@
 ﻿window.flexGrid = {
     showModal: function (modalName) {
-        var modal = document.getElementById(modalName);
-        modal.style.display = "block";
-
+        $('#' + modalName).modal('show');
         this.flexGrid.showedModal.name = modalName;
 
         return true;
     },
 
     hideModal: function (modalName) {
-        var modal = document.getElementById(modalName);
-        modal.style.display = "none";
+        $('#' + modalName).modal('hide');
 
         return true;
     },
@@ -20,11 +17,11 @@
     }
 }
 
-window.addEventListener("click", function (event) {
-    var modal = document.getElementById(window.flexGrid.showedModal.name);
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+document.addEventListener('keydown', function (event) {
+    const key = event.key;
+    if (key === "Escape") {
+        window.flexGrid.hideModal(window.flexGrid.showedModal.name);
+    }    
 });
 
     

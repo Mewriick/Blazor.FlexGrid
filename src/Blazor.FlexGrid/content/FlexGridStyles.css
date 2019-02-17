@@ -86,6 +86,7 @@
 
 .pagination-wrapper {
     font-size: 0.75rem;
+    float: right;
 }
 
 .pagination-wrapper-inner {
@@ -376,3 +377,12 @@
         outline: none;
         border-bottom: solid #1976d2;
     }
+
+.create-button-wrapper {
+    font-size: 0.75rem;
+    height: 56px;
+    min-height: 56px;
+    position: relative;
+    align-items: center;
+    float: right;
+}
