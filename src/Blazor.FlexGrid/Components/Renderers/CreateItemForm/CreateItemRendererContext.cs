@@ -11,9 +11,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 
         public string ActualColumnName { get; set; }
 
-        public object ActualItem => ViewModel.Model;
-
-        TItem IActualItemContext<TItem>.ActualItem => ViewModel.Model;
+        public TItem ActualItem => ViewModel.Model;
 
         public ICreateItemFormViewModel<TItem> ViewModel { get; }
 
