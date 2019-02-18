@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridRendererContext : IActualItemContext
+    public class GridRendererContext : IActualItemContext<object>
     {
         private string firstColumnName;
         private string lastColumnName;

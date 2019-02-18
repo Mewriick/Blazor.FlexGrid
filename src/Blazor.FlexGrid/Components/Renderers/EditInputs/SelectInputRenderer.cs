@@ -5,7 +5,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
 {
     public class SelectInputRenderer : AbstractEditInputRenderer
     {
-        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
+        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext<object> actualItemContext, Action<string, object> onChangeAction)
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
