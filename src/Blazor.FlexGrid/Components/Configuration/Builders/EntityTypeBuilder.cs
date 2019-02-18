@@ -71,6 +71,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         {
             var createItemOptions = new CreateItemOptions();
             configureCreateItem?.Invoke(createItemOptions);
+            createItemOptions.ItemType = createItemOptions.ItemType ?? typeof(TEntity);
 
             Builder.AllowCreateItem(createItemOptions);
 

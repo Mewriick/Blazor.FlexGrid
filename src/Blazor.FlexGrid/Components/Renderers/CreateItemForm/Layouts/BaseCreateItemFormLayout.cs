@@ -17,21 +17,10 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
             return builder =>
             {
                 builder
-                    .OpenElement(HtmlTagNames.Button, "action-button")
-                    .OpenElement(HtmlTagNames.Span)
+                    .OpenElement(HtmlTagNames.Div, "modal-footer")
+                    .OpenElement(HtmlTagNames.Button, "btn btn-primary")
                     .AddContent("Save")
                     .CloseElement()
-                    .CloseElement();
-            };
-        }
-
-        public virtual Action<IRendererTreeBuilder> BuildHeaderRendererTree()
-        {
-            return builder =>
-            {
-                builder
-                    .OpenElement(HtmlTagNames.H1)
-                    .AddContent("Create Item")
                     .CloseElement();
             };
         }
@@ -54,8 +43,11 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
             return builder =>
             {
                 builder
-                    .OpenElement(HtmlTagNames.Div)
-                    .OpenElement(HtmlTagNames.Label);
+                    .OpenElement(HtmlTagNames.Div, "form-group")
+                    .OpenElement(HtmlTagNames.Div, "form-edit-field")
+                    .OpenElement(HtmlTagNames.Label, "edit-field-name")
+                    .AddContent(field.Name)
+                    .CloseElement();
 
                 editInputRenderer.BuildInputRendererTree(builder, createItemRendererContext, createItemRendererContext.SetActulItemColumnValue);
 

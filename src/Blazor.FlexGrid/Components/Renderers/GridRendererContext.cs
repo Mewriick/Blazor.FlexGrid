@@ -168,7 +168,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddCreateItemComponent()
         {
-            RendererTreeBuilder.OpenComponent(typeof(CreateItemForm<>).MakeGenericType(TableDataSet.UnderlyingTypeOfItem()));
+            RendererTreeBuilder.OpenComponent(typeof(CreateItemForm<>).MakeGenericType(GridConfiguration.CreateItemOptions.ItemType));
             RendererTreeBuilder.CloseComponent();
         }
 

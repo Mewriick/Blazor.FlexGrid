@@ -19,6 +19,8 @@
         public const string Option = "option";
         public const string Label = "label";
         public const string H1 = "h1";
+        public const string H4 = "h4";
+        public const string Form = "form";
     }
 
     public class HtmlAttributes
@@ -34,6 +36,7 @@
         public const string Selected = "selected";
         public const string Type = "type";
         public const string Id = "id";
+        public const string AriaHidden = "aria-hidden";
     }
 
     public class HtmlJSEvents

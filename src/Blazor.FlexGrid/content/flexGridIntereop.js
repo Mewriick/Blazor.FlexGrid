@@ -1,13 +1,24 @@
 ﻿window.flexGrid = {
     showModal: function (modalName) {
-        $('#' + modalName).modal('show');
+        var modal = document.getElementById(modalName);
+        var fadeDiv = document.createElement('div');
+        fadeDiv.id = "fadeDiv";
+        fadeDiv.className = "modal-backdrop fade show";
+
+        modal.style.display = "block";        
+        modal.parentNode.insertBefore(fadeDiv, modal.nextSibling);
+
+        document.body.className = "modal-open";
         this.flexGrid.showedModal.name = modalName;
 
         return true;
     },
 
     hideModal: function (modalName) {
-        $('#' + modalName).modal('hide');
+        var modal = document.getElementById(modalName);
+        modal.style.display = "none";
+        document.body.className = document.body.className.replace("modal-open", "");
+        document.getElementById("fadeDiv").outerHTML = "";
 
         return true;
     },

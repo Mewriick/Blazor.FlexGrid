@@ -18,13 +18,11 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
             CreateItemRendererContext<TItem> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {
-            var hederAction = createFormLayout.BuildHeaderRendererTree();
             var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, editInputRendererTree);
             var footerAction = createFormLayout.BuildFooterRendererTree(createItemRendererContext);
 
-            rendererTreeBuilder.OpenElement(HtmlTagNames.Div);
+            rendererTreeBuilder.OpenElement(HtmlTagNames.Form);
 
-            hederAction?.Invoke(rendererTreeBuilder);
             bodyAction?.Invoke(rendererTreeBuilder);
             footerAction?.Invoke(rendererTreeBuilder);
 
