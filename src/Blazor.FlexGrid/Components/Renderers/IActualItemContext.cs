@@ -1,16 +1,11 @@
 ﻿namespace Blazor.FlexGrid.Components.Renderers
 {
-    public interface IActualItemContext
+    public interface IActualItemContext<out TItem> where TItem : class
     {
         string ActualColumnName { get; }
 
-        object ActualItem { get; }
+        TItem ActualItem { get; }
 
         object GetActualItemColumnValue(string columnName);
-    }
-
-    public interface IActualItemContext<TItem> : IActualItemContext where TItem : class
-    {
-        new TItem ActualItem { get; }
     }
 }

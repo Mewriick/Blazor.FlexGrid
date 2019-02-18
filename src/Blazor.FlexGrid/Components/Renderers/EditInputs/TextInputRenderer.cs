@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         private const string InputTypeText = "text";
         private const string InputTypeEmail = "email";
 
-        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext actualItemContext, Action<string, object> onChangeAction)
+        public override void BuildInputRendererTree(IRendererTreeBuilder rendererTreeBuilder, IActualItemContext<object> actualItemContext, Action<string, object> onChangeAction)
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
