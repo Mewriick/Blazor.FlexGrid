@@ -81,7 +81,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        public RenderFragmentAdapter SpecialColumnValue
+        public IRenderFragmentAdapter<object> SpecialColumnValue
         {
             get
             {
@@ -91,7 +91,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                     return null;
                 }
 
-                return specialColumnValue as RenderFragmentAdapter;
+                return specialColumnValue as IRenderFragmentAdapter<object>;
             }
         }
         public Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc

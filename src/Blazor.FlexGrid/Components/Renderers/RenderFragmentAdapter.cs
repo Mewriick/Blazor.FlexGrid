@@ -3,12 +3,12 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public abstract class RenderFragmentAdapter
+    public interface IRenderFragmentAdapter<in TItem>
     {
-        public abstract RenderFragment GetColumnFragment(object item);
+        RenderFragment GetColumnFragment(TItem item);
     }
 
-    public class RenderFragmentAdapter<TItem> : RenderFragmentAdapter
+    public class RenderFragmentAdapter<TItem> : IRenderFragmentAdapter<TItem>
     {
         private readonly RenderFragment<TItem> renderFragment;
 
@@ -17,7 +17,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.renderFragment = renderFragment ?? throw new ArgumentNullException(nameof(renderFragment));
         }
 
-        public override RenderFragment GetColumnFragment(object item)
-            => renderFragment((TItem)item);
+        public RenderFragment GetColumnFragment(TItem item)
+            => renderFragment(item);
     }
 }

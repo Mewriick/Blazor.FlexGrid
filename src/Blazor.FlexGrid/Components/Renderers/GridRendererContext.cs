@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private readonly IEntityType gridEntityConfiguration;
         private readonly IReadOnlyDictionary<string, IValueFormatter<object>> valueFormatters;
-        private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
+        private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter<object>> specialColumnValues;
 
         public string ActualColumnName { get; set; } = string.Empty;
 

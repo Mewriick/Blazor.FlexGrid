@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         IValueFormatter<object> ValueFormatter { get; }
 
-        RenderFragmentAdapter SpecialColumnValue { get; }
+        IRenderFragmentAdapter<object> SpecialColumnValue { get; }
 
         Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc { get; }
 
