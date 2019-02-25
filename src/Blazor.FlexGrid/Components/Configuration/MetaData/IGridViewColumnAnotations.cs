@@ -18,7 +18,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         bool IsSortable { get; }
 
-        ValueFormatter ValueFormatter { get; }
+        IValueFormatter<object> ValueFormatter { get; }
 
         RenderFragmentAdapter SpecialColumnValue { get; }
 

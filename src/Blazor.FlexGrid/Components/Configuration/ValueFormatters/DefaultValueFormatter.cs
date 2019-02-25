@@ -3,10 +3,11 @@ using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
 {
-    public class DefaultValueFormatter : ValueFormatter
+    public class DefaultValueFormatter : IValueFormatter<object>
     {
-        public override Func<object, string> FormatValue { get; }
+        public Func<object, string> FormatValue { get; }
 
+        public ValueFormatterType FormatterType => ValueFormatterType.SingleProperty;
 
         public DefaultValueFormatter()
             : this(v => v == null ? string.Empty : v.ToString())
@@ -15,7 +16,6 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
         }
 
         public DefaultValueFormatter(Expression<Func<object, string>> formatValueExpression)
-            : base(formatValueExpression)
         {
             FormatValue = formatValueExpression.Compile();
         }
