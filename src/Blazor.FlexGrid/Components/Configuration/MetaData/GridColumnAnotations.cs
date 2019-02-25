@@ -67,7 +67,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        public ValueFormatter ValueFormatter
+        public IValueFormatter<object> ValueFormatter
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                     return new DefaultValueFormatter();
                 }
 
-                return formatterValueAnnotation as ValueFormatter;
+                return formatterValueAnnotation as IValueFormatter<object>;
             }
         }
 

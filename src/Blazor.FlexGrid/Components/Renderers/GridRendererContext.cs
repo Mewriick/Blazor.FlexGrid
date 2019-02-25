@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         private string lastColumnName;
 
         private readonly IEntityType gridEntityConfiguration;
-        private readonly IReadOnlyDictionary<string, ValueFormatter> valueFormatters;
+        private readonly IReadOnlyDictionary<string, IValueFormatter<object>> valueFormatters;
         private readonly IReadOnlyDictionary<string, RenderFragmentAdapter> specialColumnValues;
 
         public string ActualColumnName { get; set; } = string.Empty;

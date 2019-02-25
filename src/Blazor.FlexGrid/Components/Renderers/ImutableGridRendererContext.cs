@@ -12,7 +12,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class ImutableGridRendererContext
     {
         private readonly ICurrentUserPermission currentUserPermission;
-        private Dictionary<string, ValueFormatter> valueFormatters;
+        private Dictionary<string, IValueFormatter<object>> valueFormatters;
         private Dictionary<string, RenderFragmentAdapter> specialColumnValues;
         private List<PropertyInfo> gridItemCollectionProperties;
 
@@ -22,7 +22,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public ITypePropertyAccessor GetPropertyValueAccessor { get; }
 
-        public IReadOnlyDictionary<string, ValueFormatter> ValueFormatters => valueFormatters;
+        public IReadOnlyDictionary<string, IValueFormatter<object>> ValueFormatters => valueFormatters;
 
         public IReadOnlyDictionary<string, RenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
 
@@ -35,7 +35,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             ITypePropertyAccessor propertyValueAccessor,
             ICurrentUserPermission currentUserPermission)
         {
-            valueFormatters = new Dictionary<string, ValueFormatter>();
+            valueFormatters = new Dictionary<string, IValueFormatter<object>>();
             specialColumnValues = new Dictionary<string, RenderFragmentAdapter>();
             gridItemCollectionProperties = new List<PropertyInfo>();
 
@@ -73,7 +73,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 }
 
                 var columnOrder = columnConfig == null ? GridColumnAnotations.DefaultOrder : columnConfig.Order;
-                ValueFormatter columnValueFormatter = columnConfig?.ValueFormatter ?? new DefaultValueFormatter();
+                var columnValueFormatter = columnConfig?.ValueFormatter ?? new DefaultValueFormatter();
 
                 propertiesListWithOrder.Add((Order: columnOrder, Prop: property));
                 valueFormatters.Add(property.Name, columnValueFormatter);
