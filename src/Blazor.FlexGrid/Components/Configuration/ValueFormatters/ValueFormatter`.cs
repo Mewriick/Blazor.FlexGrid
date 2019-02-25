@@ -7,12 +7,8 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
     {
         public override Func<object, string> FormatValue { get; }
 
-        protected new virtual Expression<Func<TInputValue, string>> FormatValueExpression
-            => (Expression<Func<TInputValue, string>>)base.FormatValueExpression;
-
-
         public ValueFormatter(Expression<Func<TInputValue, string>> formatValueExpression, ValueFormatterType valueFormatterType = ValueFormatterType.SingleProperty, string defaultValue = default)
-            : base(formatValueExpression, valueFormatterType)
+            : base(valueFormatterType)
         {
             FormatValue = SanitizeConverter(formatValueExpression, defaultValue);
         }

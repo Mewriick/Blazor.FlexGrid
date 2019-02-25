@@ -15,7 +15,7 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
         }
 
         public DefaultValueFormatter(Expression<Func<object, string>> formatValueExpression)
-            : base(formatValueExpression)
+            : base()
         {
             FormatValue = formatValueExpression.Compile();
         }
