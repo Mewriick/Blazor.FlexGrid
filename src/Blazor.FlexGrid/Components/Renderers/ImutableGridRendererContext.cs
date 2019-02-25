@@ -13,7 +13,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private readonly ICurrentUserPermission currentUserPermission;
         private Dictionary<string, IValueFormatter<object>> valueFormatters;
-        private Dictionary<string, RenderFragmentAdapter> specialColumnValues;
+        private Dictionary<string, IRenderFragmentAdapter<object>> specialColumnValues;
         private List<PropertyInfo> gridItemCollectionProperties;
 
         public IEntityType GridEntityConfiguration { get; }
@@ -24,7 +24,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyDictionary<string, IValueFormatter<object>> ValueFormatters => valueFormatters;
 
-        public IReadOnlyDictionary<string, RenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
+        public IReadOnlyDictionary<string, IRenderFragmentAdapter<object>> SpecialColumnValues => specialColumnValues;
 
         public GridCssClasses CssClasses { get; }
 
@@ -36,7 +36,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             ICurrentUserPermission currentUserPermission)
         {
             valueFormatters = new Dictionary<string, IValueFormatter<object>>();
-            specialColumnValues = new Dictionary<string, RenderFragmentAdapter>();
+            specialColumnValues = new Dictionary<string, IRenderFragmentAdapter<object>>();
             gridItemCollectionProperties = new List<PropertyInfo>();
 
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
