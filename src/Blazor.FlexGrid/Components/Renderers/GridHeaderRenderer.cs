@@ -66,7 +66,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderSortableColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
         {
-            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
             rendererContext.OpenElement(HtmlTagNames.Span,
                 rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
             rendererContext.AddOnClickEvent(() =>
@@ -92,7 +92,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderSimpleColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
         {
-            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
             rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
             rendererContext.CloseElement();
         }
@@ -125,5 +125,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private string GetColumnCaption(IGridViewColumnAnotations columnConfiguration, PropertyInfo property)
             => columnConfiguration?.Caption ?? property.Name;
+
+        private string GetColumnStyle(IGridViewColumnAnotations columnConfiguration)
+            => columnConfiguration?.HeaderStyle ?? string.Empty;
     }
 }

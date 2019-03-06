@@ -18,6 +18,9 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             ModelBuilder = internalModelBuilder ?? throw new ArgumentNullException(nameof(internalModelBuilder));
         }
 
+        public bool HasHeaderStyle(string style)
+            => HasAnnotation(GridViewAnnotationNames.ColumnHeaderStyle, style);
+
         public bool HasCaption(string caption)
             => HasAnnotation(GridViewAnnotationNames.ColumnCaption, caption);
 

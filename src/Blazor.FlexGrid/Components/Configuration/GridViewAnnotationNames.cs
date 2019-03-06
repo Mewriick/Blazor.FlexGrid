@@ -13,6 +13,7 @@
         public const string InlineEditOptions = "InlineEditOptions";
         public const string CreateItemOptions = "CreateItemOptions";
 
+        public const string ColumnHeaderStyle = "GridColumnHeaderStyle";
         public const string ColumnCaption = "GridColumnCaption";
         public const string ColumnIsVisible = "GridColumnIsVisible";
         public const string ColumnIsSortable = "GridColumnIsSortable";

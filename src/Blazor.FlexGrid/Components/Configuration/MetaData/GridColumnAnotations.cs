@@ -25,6 +25,20 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public string HeaderStyle
+        {
+            get
+            {
+                var captionAnnotationValue = Annotations[GridViewAnnotationNames.ColumnHeaderStyle];
+                if (captionAnnotationValue is NullAnotationValue)
+                {
+                    return string.Empty;
+                }
+
+                return captionAnnotationValue.ToString();
+            }
+        }
+
         public int Order
         {
             get

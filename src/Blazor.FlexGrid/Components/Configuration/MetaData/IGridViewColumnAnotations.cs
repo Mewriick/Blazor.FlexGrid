@@ -12,6 +12,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         string Caption { get; }
 
+        string HeaderStyle { get; }
+
         int Order { get; }
 
         bool IsVisible { get; }
