@@ -86,6 +86,9 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddCssClass(string className)
             => RendererTreeBuilder.AddAttribute(HtmlAttributes.Class, className);
 
+        public void AddHeaderStyle(string style)
+            => RendererTreeBuilder.AddAttribute(HtmlAttributes.Style, style);
+
         public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
             => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
 
@@ -126,10 +129,14 @@ namespace Blazor.FlexGrid.Components.Renderers
             RendererTreeBuilder.AddContent(string.Empty);
         }
 
-        public void OpenElement(string elementName, string className)
+        public void OpenElement(string elementName, string className, string style = null)
         {
             OpenElement(elementName);
             AddCssClass(className);
+            if (!string.IsNullOrEmpty(style))
+            {
+                AddHeaderStyle(style);
+            }
         }
 
         public void AddAttribute(string name, object value)

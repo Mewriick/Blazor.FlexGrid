@@ -13,6 +13,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             Builder = internalPropertyBuilder ?? throw new ArgumentNullException(nameof(internalPropertyBuilder));
         }
 
+        public PropertyBuilder<TProperty, TEntity> HasHeaderStyle(string style)
+        {
+            Builder.HasHeaderStyle(style);
+
+            return this;
+        }
+
         public PropertyBuilder<TProperty, TEntity> HasCaption(string caption)
         {
             Builder.HasCaption(caption);
