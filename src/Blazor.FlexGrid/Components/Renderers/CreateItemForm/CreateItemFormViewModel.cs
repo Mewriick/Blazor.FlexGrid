@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Validation;
 using System;
+using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
@@ -9,15 +10,17 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 
         public TItem Model { get; }
 
+        public IEnumerable<ValidationResult> ValidationResults { get; private set; }
+
         public CreateItemFormViewModel(IModelValidator modelValidator)
         {
             _modelValidator = modelValidator ?? throw new ArgumentNullException(nameof(modelValidator));
             Model = Activator.CreateInstance(typeof(TItem)) as TItem;
         }
 
-        public bool IsModelValid()
+        public void ValidateModel()
         {
-            throw new System.NotImplementedException();
+            ValidationResults = _modelValidator.Validate(Model);
         }
 
         public bool SaveItem()

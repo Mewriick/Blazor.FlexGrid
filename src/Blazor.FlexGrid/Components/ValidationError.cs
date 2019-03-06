@@ -8,9 +8,6 @@ namespace Blazor.FlexGrid.Components
 {
     public class ValidationError : ComponentBase
     {
-        [Inject]
-        private IRendererTreeBuilder RendererTreeBuilder { get; set; }
-
         [Parameter]
         protected IEnumerable<Validation.ValidationResult> ValidationErrors { get; set; }
 
@@ -20,6 +17,8 @@ namespace Blazor.FlexGrid.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
+
             base.BuildRenderTree(builder);
             var propertyErrors = ValidationErrors.Where(ve => ve.MemberName.Equals(PropertyName));
             if (!propertyErrors.Any())
@@ -27,19 +26,19 @@ namespace Blazor.FlexGrid.Components
                 return;
             }
 
-            RendererTreeBuilder
+            rendererTreeBuilder
                 .OpenElement(HtmlTagNames.Div)
                 .OpenElement(HtmlTagNames.Ul);
 
             foreach (var error in propertyErrors)
             {
-                RendererTreeBuilder
+                rendererTreeBuilder
                     .OpenElement(HtmlTagNames.Li)
                     .AddContent(error.Message)
                     .CloseElement();
             }
 
-            RendererTreeBuilder
+            rendererTreeBuilder
                 .CloseElement()
                 .CloseElement();
         }

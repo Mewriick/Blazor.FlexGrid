@@ -18,6 +18,8 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
             CreateItemRendererContext<TItem> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {
+            createItemRendererContext.ViewModel.ValidateModel();
+
             var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, editInputRendererTree);
             var footerAction = createFormLayout.BuildFooterRendererTree(createItemRendererContext);
 

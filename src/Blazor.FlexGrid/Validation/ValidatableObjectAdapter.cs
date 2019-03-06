@@ -10,9 +10,11 @@ namespace Blazor.FlexGrid.Validation
         {
             var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
-            if (Validator.TryValidateObject(@object, new ValidationContext(@object), validationResults))
+            if (!Validator.TryValidateObject(@object, new ValidationContext(@object), validationResults))
             {
-                return validationResults.Select(vr => new ValidationResult(vr.MemberNames.First(), vr.ErrorMessage));
+                return validationResults
+                    .Select(vr => new ValidationResult(vr.MemberNames.First(), vr.ErrorMessage))
+                    .ToList();
             }
 
             return new List<ValidationResult>();

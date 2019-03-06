@@ -1,6 +1,8 @@
 ﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Reflection;
+
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
 {
@@ -32,7 +34,16 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
         {
             createItemRendererContext.ActualColumnName = field.Name;
 
-            return BuilFieldRendererTree(field, createItemRendererContext, editInputRenderer);
+            return builder =>
+            {
+                BuilFieldRendererTree(field, createItemRendererContext, editInputRenderer)?.Invoke(builder);
+
+                builder
+                    .OpenComponent(typeof(ValidationError))
+                    .AddAttribute("PropertyName", RuntimeHelpers.TypeCheck(field.Name))
+                    .AddAttribute("ValidationErrors", createItemRendererContext.ViewModel.ValidationResults)
+                    .CloseComponent();
+            };
         }
 
         public virtual Action<IRendererTreeBuilder> BuilFieldRendererTree(
