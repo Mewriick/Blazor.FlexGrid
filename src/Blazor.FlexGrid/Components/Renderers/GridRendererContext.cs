@@ -95,6 +95,9 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddContent(string content)
             => RendererTreeBuilder.AddContent(content);
 
+        public void AddMarkupContent(string content)
+            => RendererTreeBuilder.AddContent(new MarkupString(content));
+
         public void AddActualColumnValue(PermissionContext permissionContext)
         {
             if (!permissionContext.HasCurrentUserReadPermission(ActualColumnName))

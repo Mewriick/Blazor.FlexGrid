@@ -11,6 +11,7 @@ using Blazor.FlexGrid.DataAdapters.Visitors;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.Permission;
+using Blazor.FlexGrid.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -73,6 +74,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton<ITypePropertyAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
             services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
+            services.AddSingleton<IModelValidator, ValidatableObjectAdapter>();
 
             RegisterGridRendererTree(services);
 

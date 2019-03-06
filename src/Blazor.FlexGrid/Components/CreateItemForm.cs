@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
+using Blazor.FlexGrid.Validation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System.Threading.Tasks;
@@ -18,6 +19,9 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ITypePropertyAccessorCache PropertyValueAccessorCache { get; set; }
 
+        [Inject]
+        private IModelValidator ModelValidator { get; set; }
+
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -31,7 +35,7 @@ namespace Blazor.FlexGrid.Components
 
         protected override Task OnInitAsync()
         {
-            createItemFormViewModel = new CreateItemFormViewModel<TItem>();
+            createItemFormViewModel = new CreateItemFormViewModel<TItem>(ModelValidator);
 
             return Task.CompletedTask;
         }

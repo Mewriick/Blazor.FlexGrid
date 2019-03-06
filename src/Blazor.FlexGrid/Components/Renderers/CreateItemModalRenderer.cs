@@ -36,7 +36,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.AddAttribute("aria-label", "Close");
             rendererContext.OpenElement(HtmlTagNames.Span);
             rendererContext.AddAttribute(HtmlAttributes.AriaHidden, "true");
-            rendererContext.AddContent("&times;");
+            rendererContext.AddMarkupContent("&times;");
             rendererContext.CloseElement();
             rendererContext.CloseElement();
             rendererContext.CloseElement();

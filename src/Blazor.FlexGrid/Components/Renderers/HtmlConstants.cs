@@ -21,6 +21,8 @@
         public const string H1 = "h1";
         public const string H4 = "h4";
         public const string Form = "form";
+        public const string Ul = "ul";
+        public const string Li = "li";
     }
 
     public class HtmlAttributes

@@ -75,7 +75,7 @@ namespace Blazor.FlexGrid.Components
                 return tableDataSet.GoToPage(0);
             }
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private ITableDataSet GetTableDataSet()
