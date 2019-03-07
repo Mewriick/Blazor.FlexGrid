@@ -2,10 +2,15 @@
 
 namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
 {
-    public interface IValueFormatter<in TValue>
+    public interface IValueFormatter
     {
         ValueFormatterType FormatterType { get; }
 
-        Func<TValue, string> FormatValue { get; }
+        Func<object, string> FormatValue { get; }
+    }
+
+
+    public interface IValueFormatter<in TValue> : IValueFormatter
+    {
     }
 }

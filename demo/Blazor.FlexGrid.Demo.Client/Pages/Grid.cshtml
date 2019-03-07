@@ -12,7 +12,7 @@
 <GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
 
 @{
-    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<BlazorButton>@weather.Summary</BlazorButton>;
+    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<h1>@weather.Summary!!</h1>;
 
 Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
 }

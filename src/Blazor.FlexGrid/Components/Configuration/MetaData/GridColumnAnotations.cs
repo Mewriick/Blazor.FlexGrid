@@ -81,7 +81,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        public IValueFormatter<object> ValueFormatter
+        public IValueFormatter ValueFormatter
         {
             get
             {
@@ -91,11 +91,11 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                     return new DefaultValueFormatter();
                 }
 
-                return formatterValueAnnotation as IValueFormatter<object>;
+                return formatterValueAnnotation as IValueFormatter;
             }
         }
 
-        public IRenderFragmentAdapter<object> SpecialColumnValue
+        public IRenderFragmentAdapter SpecialColumnValue
         {
             get
             {
@@ -105,7 +105,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                     return null;
                 }
 
-                return specialColumnValue as IRenderFragmentAdapter<object>;
+                return specialColumnValue as IRenderFragmentAdapter;
             }
         }
         public Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc
@@ -137,7 +137,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         }
 
         protected IAnnotatable Annotations { get; }
-
 
         public GridColumnAnotations(IProperty property)
         {

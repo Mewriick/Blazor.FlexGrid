@@ -20,9 +20,9 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         bool IsSortable { get; }
 
-        IValueFormatter<object> ValueFormatter { get; }
+        IValueFormatter ValueFormatter { get; }
 
-        IRenderFragmentAdapter<object> SpecialColumnValue { get; }
+        IRenderFragmentAdapter SpecialColumnValue { get; }
 
         Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc { get; }
 

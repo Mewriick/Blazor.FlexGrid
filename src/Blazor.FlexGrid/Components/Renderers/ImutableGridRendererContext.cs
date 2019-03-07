@@ -12,8 +12,8 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class ImutableGridRendererContext
     {
         private readonly ICurrentUserPermission currentUserPermission;
-        private Dictionary<string, IValueFormatter<object>> valueFormatters;
-        private Dictionary<string, IRenderFragmentAdapter<object>> specialColumnValues;
+        private Dictionary<string, IValueFormatter> valueFormatters;
+        private Dictionary<string, IRenderFragmentAdapter> specialColumnValues;
         private List<PropertyInfo> gridItemCollectionProperties;
 
         public IEntityType GridEntityConfiguration { get; }
@@ -22,9 +22,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public ITypePropertyAccessor GetPropertyValueAccessor { get; }
 
-        public IReadOnlyDictionary<string, IValueFormatter<object>> ValueFormatters => valueFormatters;
+        public IReadOnlyDictionary<string, IValueFormatter> ValueFormatters => valueFormatters;
 
-        public IReadOnlyDictionary<string, IRenderFragmentAdapter<object>> SpecialColumnValues => specialColumnValues;
+        public IReadOnlyDictionary<string, IRenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
 
         public GridCssClasses CssClasses { get; }
 
@@ -35,8 +35,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             ITypePropertyAccessor propertyValueAccessor,
             ICurrentUserPermission currentUserPermission)
         {
-            valueFormatters = new Dictionary<string, IValueFormatter<object>>();
-            specialColumnValues = new Dictionary<string, IRenderFragmentAdapter<object>>();
+            valueFormatters = new Dictionary<string, IValueFormatter>();
+            specialColumnValues = new Dictionary<string, IRenderFragmentAdapter>();
             gridItemCollectionProperties = new List<PropertyInfo>();
 
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));

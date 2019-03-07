@@ -12,7 +12,6 @@ namespace Blazor.FlexGrid.Components.Configuration.ValueFormatters
         public DefaultValueFormatter()
             : this(v => v == null ? string.Empty : v.ToString())
         {
-
         }
 
         public DefaultValueFormatter(Expression<Func<object, string>> formatValueExpression)

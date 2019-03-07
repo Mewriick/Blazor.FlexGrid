@@ -30,6 +30,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
                 .HasCompositeValueFormatter(f => $"{f.Summary} - {f.TemperatureC} - {f.TemperatureF}");
 
             builder.Property(e => e.TemperatureC)
+                .HasValueFormatter(p => $"{p} C°")
                 .IsSortable();
 
             builder.Property(e => e.TemperatureF)

@@ -14,11 +14,11 @@
 @*<BlazorButton>Test</BlazorButton>*@
 <GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
 
-@*@{
-        RenderFragment<WeatherForecast> weatherTemp = (weather) => @<MatButton Raised="true" Icon="favorite">@weather.Summary</MatButton>;
+@{
+    RenderFragment<WeatherForecast> weatherTemp = (weather) => @<MatButton Raised="true" Icon="favorite">@weather.Summary</MatButton>;
 
-    Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
-    }*@
+Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
+}
 
 
 @functions{

@@ -13,7 +13,7 @@ namespace Blazor.FlexGrid.Demo.Shared
 
         public int TemperatureC { get; set; }
 
-        [Required]
+        //[Required]
         [MinLength(4)]
         public string Summary { get; set; } = string.Empty;
 
