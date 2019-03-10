@@ -1,31 +1,32 @@
-﻿using Blazor.FlexGrid.Validation;
+﻿using Microsoft.AspNetCore.Components.Forms;
 using System;
-using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
     public class CreateItemFormViewModel<TItem> : ICreateItemFormViewModel<TItem> where TItem : class
     {
-        private readonly IModelValidator _modelValidator;
-
         public TItem Model { get; }
 
-        public IEnumerable<ValidationResult> ValidationResults { get; private set; }
+        public EditContext EditContext { get; }
 
-        public CreateItemFormViewModel(IModelValidator modelValidator)
+        public CreateItemFormViewModel()
         {
-            _modelValidator = modelValidator ?? throw new ArgumentNullException(nameof(modelValidator));
             Model = Activator.CreateInstance(typeof(TItem)) as TItem;
+            EditContext = new EditContext(Model);
+            EditContext.OnFieldChanged += OnFieldChanged;
         }
 
         public void ValidateModel()
+            => EditContext.Validate();
+
+        public void SaveItem()
         {
-            ValidationResults = _modelValidator.Validate(Model);
+            Console.WriteLine(Model.ToString());
         }
 
-        public bool SaveItem()
+        private void OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            ValidateModel();
         }
     }
 }

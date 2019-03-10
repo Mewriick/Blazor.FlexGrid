@@ -6,12 +6,12 @@ using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm;
 using Blazor.FlexGrid.Components.Renderers.EditInputs;
+using Blazor.FlexGrid.Components.Renderers.FormInputs;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataAdapters.Visitors;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.Permission;
-using Blazor.FlexGrid.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -74,14 +74,14 @@ namespace Blazor.FlexGrid
             services.AddSingleton<ITypePropertyAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
             services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
-            services.AddSingleton<IModelValidator, ValidatableObjectAdapter>();
+            services.AddSingleton<FlexGridInterop>();
 
-            RegisterGridRendererTree(services);
+            RegisterRendererTreeBuilders(services);
 
             return services;
         }
 
-        private static void RegisterGridRendererTree(IServiceCollection services)
+        private static void RegisterRendererTreeBuilders(IServiceCollection services)
         {
             services.AddSingleton(typeof(CreateItemFormRenderer<>));
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
@@ -104,13 +104,18 @@ namespace Blazor.FlexGrid
                 var gridRenderer = new GridMesurablePartRenderer(
                         new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
                     .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
-                    .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(), measurableLogger))
+                    .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
                     .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag)
-                    .AddRenderer(new CreateItemModalRenderer(), RendererType.AfterTag);
+                    .AddRenderer(new CreateItemModalRenderer(provider.GetRequiredService<FlexGridInterop>()), RendererType.AfterTag);
 
                 return gridRenderer;
             });
+
+            services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
+            services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
         }
     }
 }

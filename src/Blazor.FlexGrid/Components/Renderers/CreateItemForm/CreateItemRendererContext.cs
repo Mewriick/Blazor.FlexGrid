@@ -26,7 +26,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
         public object GetActualItemColumnValue(string columnName)
             => typePropertyAccessor.GetValue(ViewModel.Model, columnName);
 
-        public void SetActulItemColumnValue(string columnName, object value)
+        public void SetActualItemColumnValue(string columnName, object value)
             => typePropertyAccessor.SetValue(ViewModel.Model, columnName, value);
 
         public IEnumerable<PropertyInfo> GetModelFields()

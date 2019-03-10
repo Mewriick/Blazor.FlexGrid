@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components.Forms;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
@@ -6,10 +6,10 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
     {
         TItem Model { get; }
 
-        bool SaveItem();
+        EditContext EditContext { get; }
+
+        void SaveItem();
 
         void ValidateModel();
-
-        IEnumerable<Validation.ValidationResult> ValidationResults { get; }
     }
 }

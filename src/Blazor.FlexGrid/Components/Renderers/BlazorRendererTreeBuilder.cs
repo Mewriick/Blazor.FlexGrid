@@ -49,6 +49,13 @@ namespace Blazor.FlexGrid.Components.Renderers
             return this;
         }
 
+        public IRendererTreeBuilder AddAttribute(string name, Func<MulticastDelegate> value)
+        {
+            renderTreeBuilder.AddAttribute(++sequence, name, value);
+
+            return this;
+        }
+
         public IRendererTreeBuilder AddContent(string textContent)
         {
             renderTreeBuilder.AddContent(++sequence, textContent);

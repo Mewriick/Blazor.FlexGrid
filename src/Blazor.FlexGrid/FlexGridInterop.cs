@@ -1,18 +1,26 @@
 ﻿using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid
 {
     public class FlexGridInterop
     {
-        public static Task<bool> ShowModal(string modalName)
+        private readonly IJSRuntime jSRuntime;
+
+        public FlexGridInterop(IJSRuntime jSRuntime)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("flexGrid.showModal", modalName);
+            this.jSRuntime = jSRuntime ?? throw new ArgumentNullException(nameof(jSRuntime));
         }
 
-        public static Task<bool> HideModal(string modalName)
+        public Task<bool> ShowModal(string modalName)
         {
-            return JSRuntime.Current.InvokeAsync<bool>("flexGrid.hideModal", modalName);
+            return jSRuntime.InvokeAsync<bool>("flexGrid.showModal", modalName);
+        }
+
+        public Task<bool> HideModal(string modalName)
+        {
+            return jSRuntime.InvokeAsync<bool>("flexGrid.hideModal", modalName);
         }
     }
 }

@@ -185,6 +185,9 @@ namespace Blazor.FlexGrid.Components.Renderers
         public object GetActualItemColumnValue(string columnName)
             => PropertyValueAccessor.GetValue(ActualItem, columnName);
 
+        public void SetActualItemColumnValue(string columnName, object value)
+            => PropertyValueAccessor.SetValue(ActualItem, columnName, value);
+
         private void AddEventAttributes()
         {
             if (TableDataSet.GridViewEvents.SaveOperationFinished != null)

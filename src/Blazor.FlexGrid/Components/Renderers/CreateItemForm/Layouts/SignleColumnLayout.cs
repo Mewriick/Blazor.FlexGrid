@@ -1,4 +1,4 @@
-﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+﻿using Blazor.FlexGrid.Components.Renderers.FormInputs;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
@@ -7,7 +7,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
     {
         public override Action<IRendererTreeBuilder> BuildBodyRendererTree(
             CreateItemRendererContext<TItem> createItemRendererContext,
-            AbstractEditInputRenderer editInputRenderer)
+            IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             return builder =>
             {
@@ -15,7 +15,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
 
                 foreach (var field in createItemRendererContext.GetModelFields())
                 {
-                    BuildFormFieldRendererTree(field, createItemRendererContext, editInputRenderer)?.Invoke(builder);
+                    BuildFormFieldRendererTree(field, createItemRendererContext, formInputRendererTreeProvider)?.Invoke(builder);
                 }
 
                 builder.CloseElement();

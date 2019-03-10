@@ -1,11 +1,19 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class CreateItemModalRenderer : GridPartRenderer
     {
+        private readonly FlexGridInterop flexGridInterop;
+
+        public CreateItemModalRenderer(FlexGridInterop flexGridInterop)
+        {
+            this.flexGridInterop = flexGridInterop ?? throw new ArgumentNullException(nameof(flexGridInterop));
+        }
+
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed;
 
@@ -30,7 +38,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "close");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)));
+                    flexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)));
             rendererContext.AddAttribute(HtmlAttributes.Type, "button");
             rendererContext.AddAttribute("data-dismiss", "modal");
             rendererContext.AddAttribute("aria-label", "Close");

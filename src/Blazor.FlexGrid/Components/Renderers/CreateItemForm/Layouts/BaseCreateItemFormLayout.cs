@@ -1,4 +1,4 @@
-﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+﻿using Blazor.FlexGrid.Components.Renderers.FormInputs;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
     {
         public abstract Action<IRendererTreeBuilder> BuildBodyRendererTree(
             CreateItemRendererContext<TItem> createItemRendererContext,
-            AbstractEditInputRenderer editInputRenderer);
+            IFormInputRendererTreeProvider formInputRendererTreeProvider);
 
 
         public virtual Action<IRendererTreeBuilder> BuildFooterRendererTree(
@@ -21,6 +21,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
                 builder
                     .OpenElement(HtmlTagNames.Div, "modal-footer")
                     .OpenElement(HtmlTagNames.Button, "btn btn-primary")
+                    .AddAttribute(HtmlJSEvents.OnClick, BindMethods.GetEventHandlerValue((UIMouseEventArgs e) => createItemRendererContext.ViewModel.SaveItem()))
                     .AddContent("Save")
                     .CloseElement()
                     .CloseElement();
@@ -30,27 +31,23 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
         public Action<IRendererTreeBuilder> BuildFormFieldRendererTree(
             PropertyInfo field,
             CreateItemRendererContext<TItem> createItemRendererContext,
-            AbstractEditInputRenderer editInputRenderer)
+            IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             createItemRendererContext.ActualColumnName = field.Name;
 
             return builder =>
             {
-                BuilFieldRendererTree(field, createItemRendererContext, editInputRenderer)?.Invoke(builder);
-
-                builder
-                    .OpenComponent(typeof(ValidationError))
-                    .AddAttribute("PropertyName", RuntimeHelpers.TypeCheck(field.Name))
-                    .AddAttribute("ValidationErrors", createItemRendererContext.ViewModel.ValidationResults)
-                    .CloseComponent();
+                BuilFieldRendererTree(field, createItemRendererContext, formInputRendererTreeProvider)?.Invoke(builder);
             };
         }
 
         public virtual Action<IRendererTreeBuilder> BuilFieldRendererTree(
             PropertyInfo field,
             CreateItemRendererContext<TItem> createItemRendererContext,
-            AbstractEditInputRenderer editInputRenderer)
+            IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
+            var inputBuilder = formInputRendererTreeProvider.GetFormInputRendererTreeBuilder(field.GetMemberType());
+
             return builder =>
             {
                 builder
@@ -60,7 +57,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
                     .AddContent(field.Name)
                     .CloseElement();
 
-                editInputRenderer.BuildInputRendererTree(builder, createItemRendererContext, createItemRendererContext.SetActulItemColumnValue);
+                inputBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
 
                 builder
                     .CloseElement()

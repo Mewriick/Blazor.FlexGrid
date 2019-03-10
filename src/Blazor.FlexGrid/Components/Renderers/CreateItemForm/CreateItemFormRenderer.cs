@@ -1,16 +1,19 @@
 ﻿using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
-using Blazor.FlexGrid.Components.Renderers.EditInputs;
+using Blazor.FlexGrid.Components.Renderers.FormInputs;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
     public class CreateItemFormRenderer<TItem> where TItem : class
     {
-        private readonly EditInputRendererTree editInputRendererTree;
+        private readonly IFormInputRendererTreeProvider formInputRendererTreeProvider;
 
-        public CreateItemFormRenderer(EditInputRendererTree editInputRendererTree)
+        public CreateItemFormRenderer(IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
-            this.editInputRendererTree = editInputRendererTree ?? throw new ArgumentNullException(nameof(editInputRendererTree));
+            this.formInputRendererTreeProvider = formInputRendererTreeProvider ?? throw new ArgumentNullException(nameof(formInputRendererTreeProvider));
         }
 
         public void BuildRendererTree(
@@ -18,17 +21,27 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
             CreateItemRendererContext<TItem> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {
-            createItemRendererContext.ViewModel.ValidateModel();
-
-            var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, editInputRendererTree);
+            var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, formInputRendererTreeProvider);
             var footerAction = createFormLayout.BuildFooterRendererTree(createItemRendererContext);
 
-            rendererTreeBuilder.OpenElement(HtmlTagNames.Form);
+            RenderFragment<EditContext> formBody = (EditContext context) => delegate (RenderTreeBuilder builder)
+            {
+                var internalBuilder = new BlazorRendererTreeBuilder(builder);
+                bodyAction?.Invoke(internalBuilder);
+                footerAction?.Invoke(internalBuilder);
 
-            bodyAction?.Invoke(rendererTreeBuilder);
-            footerAction?.Invoke(rendererTreeBuilder);
+                internalBuilder
+                .OpenComponent(typeof(DataAnnotationsValidator))
+                .CloseComponent();
+            };
 
-            rendererTreeBuilder.CloseElement();
+            rendererTreeBuilder
+                .OpenComponent(typeof(EditForm))
+                .AddAttribute(nameof(EditContext), createItemRendererContext.ViewModel.EditContext)
+                .AddAttribute(RenderTreeBuilder.ChildContent, formBody)
+                .CloseComponent();
+
+            createItemRendererContext.ViewModel.ValidateModel();
         }
     }
 }

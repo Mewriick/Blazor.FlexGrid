@@ -3,12 +3,20 @@ using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridHeaderRenderer : GridPartRenderer
     {
+        private readonly FlexGridInterop flexGridInterop;
+
+        public GridHeaderRenderer(FlexGridInterop flexGridInterop)
+        {
+            this.flexGridInterop = flexGridInterop ?? throw new ArgumentNullException(nameof(flexGridInterop));
+        }
+
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             var canRenderCreateItemButton = rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed && permissionContext.HasCreateItemPermission;
@@ -111,7 +119,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    FlexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))
+                    flexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");

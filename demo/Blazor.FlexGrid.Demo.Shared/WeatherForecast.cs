@@ -6,7 +6,6 @@ namespace Blazor.FlexGrid.Demo.Shared
 {
     public class WeatherForecast : IValidatableObject
     {
-        [Range(10, 20)]
         public int Id { get; set; }
 
         public DateTime Date { get; set; }
@@ -21,7 +20,7 @@ namespace Blazor.FlexGrid.Demo.Shared
 
         public override string ToString()
         {
-            return $"Temp: {TemperatureC}, {TemperatureF}";
+            return $"Temp: {TemperatureC}, {TemperatureF}. Summary: {Summary}";
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
