@@ -9,7 +9,11 @@ namespace Blazor.FlexGrid.Components.Configuration
 
         public virtual bool IsCreateItemAllowed => true;
 
-        public Type ItemType { get; set; }
+        public string CreateUri { get; set; } = string.Empty;
+
+        public Type ModelType { get; set; }
+
+        public Type OutputDtoType { get; set; }
 
         public Func<ICurrentUserPermission, bool> CreatePermissionRestriction { get; set; } = perm => true;
     }

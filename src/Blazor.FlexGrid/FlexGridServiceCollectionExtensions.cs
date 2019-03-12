@@ -43,6 +43,7 @@ namespace Blazor.FlexGrid
                 services.AddLogging(builder => builder.AddConsole());
                 services.AddScoped(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
+                services.AddScoped(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
             }
             else
             {
@@ -53,6 +54,7 @@ namespace Blazor.FlexGrid
                 services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
                 services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
+                services.AddSingleton(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
             }
 
             if (flexGridOptions.UseAuthorizationForHttpRequests)

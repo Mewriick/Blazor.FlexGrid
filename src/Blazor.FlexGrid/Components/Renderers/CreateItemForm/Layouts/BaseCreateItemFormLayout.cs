@@ -1,5 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Renderers.FormInputs;
-using Microsoft.AspNetCore.Components;
 using System;
 using System.Reflection;
 
@@ -20,9 +19,9 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
             {
                 builder
                     .OpenElement(HtmlTagNames.Div, "modal-footer")
-                    .OpenElement(HtmlTagNames.Button, "btn btn-primary")
-                    .AddAttribute(HtmlJSEvents.OnClick, BindMethods.GetEventHandlerValue((UIMouseEventArgs e) => createItemRendererContext.ViewModel.SaveItem()))
-                    .AddContent("Save")
+                    .OpenElement(HtmlTagNames.Input, "btn btn-primary")
+                    .AddAttribute(HtmlAttributes.Type, HtmlTagNames.Submit)
+                    .AddAttribute(HtmlAttributes.Value, "Save")
                     .CloseElement()
                     .CloseElement();
             };

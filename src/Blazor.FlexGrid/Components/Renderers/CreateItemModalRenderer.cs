@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -15,7 +16,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed;
+            => rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed && rendererContext.TableDataSet.HasItems();
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {

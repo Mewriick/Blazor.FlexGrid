@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
@@ -29,53 +30,77 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ConventionsSet ConventionsSet { get; set; }
 
+        [Parameter] CreateItemContext CreateItemContext { get; set; } = new CreateItemContext(NullCreateItemOptions.Instance);
 
-        [Parameter]
-        private ITableDataAdapter DataAdapter { get; set; }
 
-        [Parameter]
-        private ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+        [Parameter] ITableDataAdapter DataAdapter { get; set; }
 
-        [Parameter]
-        private int PageSize { get; set; }
 
-        [Parameter]
-        private Action<SaveResultArgs> SaveOperationFinished { get; set; }
+        [Parameter] ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
-        [Parameter]
-        private Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
+
+        [Parameter] int PageSize { get; set; }
+
+
+        [Parameter] Action<SaveResultArgs> SaveOperationFinished { get; set; }
+
+
+        [Parameter] Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
+
+
+        [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            Console.WriteLine("Render");
+
             base.BuildRenderTree(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
+            gridContexts.RendererContext.RequestRerender = StateHasChanged;
+
             GridRendererTreeBuilder.BuildRendererTree(gridContexts.RendererContext, gridContexts.PermissionContext);
         }
 
-        protected override Task OnInitAsync()
+        protected override async Task OnInitAsync()
         {
             dataAdapterWasEmptyInOnInit = DataAdapter == null;
             if (!dataAdapterWasEmptyInOnInit)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
+
+                var createItemOptions = RendererContextFactory
+                    .GridConfigurationProvider
+                    .GetGridConfigurationByType(DataAdapter.UnderlyingTypeOfItem)
+                    .CreateItemOptions;
+
+                CreateItemContext = new CreateItemContext(createItemOptions);
             }
 
             tableDataSet = GetTableDataSet();
 
-            return tableDataSet.GoToPage(0);
+            await tableDataSet.GoToPage(0);
         }
 
-        protected override Task OnParametersSetAsync()
+        protected override async Task OnParametersSetAsync()
         {
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {
+                if (CreateItemContext is null)
+                {
+                    var createItemOptions = RendererContextFactory
+                        .GridConfigurationProvider
+                        .GetGridConfigurationByType(DataAdapter.UnderlyingTypeOfItem)
+                        .CreateItemOptions;
+
+                    CreateItemContext = new CreateItemContext(createItemOptions);
+                }
+
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 tableDataSet = GetTableDataSet();
-                return tableDataSet.GoToPage(0);
-            }
 
-            return Task.CompletedTask;
+                await tableDataSet.GoToPage(0);
+            }
         }
 
         private ITableDataSet GetTableDataSet()
@@ -87,7 +112,8 @@ namespace Blazor.FlexGrid.Components
                 conf.GridViewEvents = new GridViewEvents
                 {
                     SaveOperationFinished = this.SaveOperationFinished,
-                    DeleteOperationFinished = this.DeleteOperationFinished
+                    DeleteOperationFinished = this.DeleteOperationFinished,
+                    NewItemCreated = this.NewItemCreated
                 };
             });
 

@@ -40,7 +40,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.AddDisabled(disabled);
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
-                    await GetPaginationTask(rendererContext, buttonType))
+                {
+                    await GetPaginationTask(rendererContext, buttonType);
+                    rendererContext.RequestRerender?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");

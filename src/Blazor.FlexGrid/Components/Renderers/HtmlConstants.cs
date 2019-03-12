@@ -23,6 +23,7 @@
         public const string Form = "form";
         public const string Ul = "ul";
         public const string Li = "li";
+        public const string Submit = "submit";
     }
 
     public class HtmlAttributes

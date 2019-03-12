@@ -52,6 +52,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IRendererTreeBuilder RendererTreeBuilder { get; }
 
+        public Action RequestRerender { get; set; }
+
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
             IRendererTreeBuilder rendererTreeBuilder,
@@ -178,7 +180,10 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddCreateItemComponent()
         {
-            RendererTreeBuilder.OpenComponent(typeof(CreateItemForm<>).MakeGenericType(GridConfiguration.CreateItemOptions.ItemType));
+            RendererTreeBuilder.OpenComponent(
+                typeof(CreateItemForm<,>)
+                    .MakeGenericType(GridConfiguration.CreateItemOptions.ModelType, GridConfiguration.CreateItemOptions.OutputDtoType)
+            );
             RendererTreeBuilder.CloseComponent();
         }
 

@@ -13,10 +13,11 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class GridContextsFactory
     {
         private readonly Dictionary<Type, ImutableGridRendererContext> imutableRendererContextCache;
-        private readonly IGridConfigurationProvider gridConfigurationProvider;
         private readonly ITypePropertyAccessorCache propertyValueAccessorCache;
         private readonly ICurrentUserPermission currentUserPermission;
         private readonly ILogger<GridContextsFactory> logger;
+
+        public IGridConfigurationProvider GridConfigurationProvider { get; }
 
         public GridContextsFactory(
             IGridConfigurationProvider gridConfigurationProvider,
@@ -24,7 +25,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             ICurrentUserPermission currentUserPermission,
             ILogger<GridContextsFactory> logger)
         {
-            this.gridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
+            this.GridConfigurationProvider = gridConfigurationProvider ?? throw new ArgumentNullException(nameof(gridConfigurationProvider));
             this.propertyValueAccessorCache = propertyValueAccessorCache ?? throw new ArgumentNullException(nameof(propertyValueAccessorCache));
             this.currentUserPermission = currentUserPermission ?? throw new ArgumentNullException(nameof(currentUserPermission));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -47,7 +48,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return imutableGridRendererContext;
             }
 
-            var gridConfiguration = gridConfigurationProvider.FindGridEntityConfigurationByType(dataSetItemType);
+            var gridConfiguration = GridConfigurationProvider.FindGridEntityConfigurationByType(dataSetItemType);
             propertyValueAccessorCache.AddPropertyAccessor(dataSetItemType, new TypeWrapper(dataSetItemType, logger));
 
             imutableGridRendererContext = new ImutableGridRendererContext(

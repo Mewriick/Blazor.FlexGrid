@@ -5,19 +5,19 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
-    public class CreateItemRendererContext<TItem> : IActualItemContext<TItem> where TItem : class
+    public class CreateItemRendererContext<TModel> : IActualItemContext<TModel> where TModel : class
     {
         private readonly ITypePropertyAccessor typePropertyAccessor;
 
         public string ActualColumnName { get; set; }
 
-        public TItem ActualItem => ViewModel.Model;
+        public TModel ActualItem => ViewModel.Model;
 
-        public ICreateItemFormViewModel<TItem> ViewModel { get; }
+        public ICreateItemFormViewModel<TModel> ViewModel { get; }
 
-        public CreateItemRendererContext(ICreateItemFormViewModel<TItem> createItemFormViewModel, ITypePropertyAccessorCache typePropertyAccessorCache)
+        public CreateItemRendererContext(ICreateItemFormViewModel<TModel> createItemFormViewModel, ITypePropertyAccessorCache typePropertyAccessorCache)
         {
-            this.typePropertyAccessor = typePropertyAccessorCache?.GetPropertyAccesor(typeof(TItem))
+            this.typePropertyAccessor = typePropertyAccessorCache?.GetPropertyAccesor(typeof(TModel))
                 ?? throw new ArgumentNullException(nameof(typePropertyAccessorCache));
 
             this.ViewModel = createItemFormViewModel ?? throw new ArgumentNullException(nameof(createItemFormViewModel));

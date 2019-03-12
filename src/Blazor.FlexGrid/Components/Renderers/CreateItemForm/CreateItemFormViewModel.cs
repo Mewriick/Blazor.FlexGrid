@@ -1,28 +1,31 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
-    public class CreateItemFormViewModel<TItem> : ICreateItemFormViewModel<TItem> where TItem : class
+    public class CreateItemFormViewModel<TModel> : ICreateItemFormViewModel<TModel> where TModel : class
     {
-        public TItem Model { get; }
+        private readonly CreateItemOptions createItemOptions;
+
+        public TModel Model { get; }
 
         public EditContext EditContext { get; }
 
-        public CreateItemFormViewModel()
+        public bool IsModelValid { get; private set; }
+
+        public Action<TModel> SaveAction { get; set; }
+
+        public CreateItemFormViewModel(CreateItemOptions createItemOptions)
         {
-            Model = Activator.CreateInstance(typeof(TItem)) as TItem;
+            this.createItemOptions = createItemOptions ?? throw new ArgumentNullException(nameof(createItemOptions));
+            Model = Activator.CreateInstance(typeof(TModel)) as TModel;
             EditContext = new EditContext(Model);
             EditContext.OnFieldChanged += OnFieldChanged;
         }
 
         public void ValidateModel()
-            => EditContext.Validate();
-
-        public void SaveItem()
-        {
-            Console.WriteLine(Model.ToString());
-        }
+            => IsModelValid = EditContext.Validate();
 
         private void OnFieldChanged(object sender, FieldChangedEventArgs e)
         {

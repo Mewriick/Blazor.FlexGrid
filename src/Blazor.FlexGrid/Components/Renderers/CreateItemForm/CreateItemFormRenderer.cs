@@ -7,18 +7,21 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 {
-    public class CreateItemFormRenderer<TItem> where TItem : class
+    public class CreateItemFormRenderer<TModel> where TModel : class
     {
         private readonly IFormInputRendererTreeProvider formInputRendererTreeProvider;
+        private readonly EventCallbackFactory eventCallbackFactory;
+
 
         public CreateItemFormRenderer(IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             this.formInputRendererTreeProvider = formInputRendererTreeProvider ?? throw new ArgumentNullException(nameof(formInputRendererTreeProvider));
+            this.eventCallbackFactory = new EventCallbackFactory();
         }
 
         public void BuildRendererTree(
-            ICreateFormLayout<TItem> createFormLayout,
-            CreateItemRendererContext<TItem> createItemRendererContext,
+            ICreateFormLayout<TModel> createFormLayout,
+            CreateItemRendererContext<TModel> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {
             var bodyAction = createFormLayout.BuildBodyRendererTree(createItemRendererContext, formInputRendererTreeProvider);
@@ -38,6 +41,8 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
             rendererTreeBuilder
                 .OpenComponent(typeof(EditForm))
                 .AddAttribute(nameof(EditContext), createItemRendererContext.ViewModel.EditContext)
+                /*.AddAttribute("OnValidSubmit", eventCallbackFactory.Create<EditContext>(this,
+                    context => createItemRendererContext.ViewModel.SaveAction.Invoke(createItemRendererContext.ViewModel.Model)))*/
                 .AddAttribute(RenderTreeBuilder.ChildContent, formBody)
                 .CloseComponent();
 

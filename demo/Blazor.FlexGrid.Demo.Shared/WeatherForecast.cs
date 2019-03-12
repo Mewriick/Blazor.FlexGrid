@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Blazor.FlexGrid.Demo.Shared
 {
-    public class WeatherForecast : IValidatableObject
+    public class WeatherForecast
     {
         public int Id { get; set; }
 
@@ -21,11 +20,6 @@ namespace Blazor.FlexGrid.Demo.Shared
         public override string ToString()
         {
             return $"Temp: {TemperatureC}, {TemperatureF}. Summary: {Summary}";
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            yield return new ValidationResult("Summary error", new List<string> { "Summary" });
         }
     }
 }

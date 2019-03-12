@@ -71,18 +71,20 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         {
             var createItemOptions = new CreateItemOptions();
             configureCreateItem?.Invoke(createItemOptions);
-            createItemOptions.ItemType = createItemOptions.ItemType ?? typeof(TEntity);
+            createItemOptions.ModelType = createItemOptions.ModelType ?? typeof(TEntity);
+            createItemOptions.OutputDtoType = createItemOptions.OutputDtoType ?? createItemOptions.ModelType;
 
             Builder.AllowCreateItem(createItemOptions);
 
             return this;
         }
 
-        public virtual EntityTypeBuilder<TEntity> AllowCreateItem<TCreateItem>(Action<CreateItemOptions> configureCreateItem = null)
+        public virtual EntityTypeBuilder<TEntity> AllowCreateItem<TCreateModel, TOutputDto>(Action<CreateItemOptions> configureCreateItem = null)
         {
             var createItemOptions = new CreateItemOptions();
             configureCreateItem?.Invoke(createItemOptions);
-            createItemOptions.ItemType = typeof(TCreateItem);
+            createItemOptions.ModelType = typeof(TCreateModel);
+            createItemOptions.OutputDtoType = typeof(TOutputDto);
 
             Builder.AllowCreateItem(createItemOptions);
 
