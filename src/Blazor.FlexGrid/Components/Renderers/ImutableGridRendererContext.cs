@@ -30,6 +30,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public PermissionContext PermissionContext { get; }
 
+        public Action RequestRerenderNotification { get; private set; }
+
         public ImutableGridRendererContext(
             IEntityType gridEntityConfiguration,
             ITypePropertyAccessor propertyValueAccessor,
@@ -87,6 +89,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             GridItemProperties = propertiesListWithOrder.OrderBy(p => p.Order)
                 .Select(p => p.Prop)
                 .ToList();
+        }
+
+        public void SetRequestRendererNotification(Action requestRendererNotification)
+        {
+            RequestRerenderNotification = requestRendererNotification ?? throw new ArgumentNullException(nameof(requestRendererNotification));
         }
     }
 }

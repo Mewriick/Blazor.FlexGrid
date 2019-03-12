@@ -25,15 +25,11 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ICreateItemHandle<TModel, TOutputDto> CreateItemHandle { get; set; }
 
-        [CascadingParameter] CreateItemContext CascadeCreateItemContext { get; set; }
-
-        protected CreateItemContext CreateItemContext { get; set; }
+        [Parameter] CreateItemContext CreateItemContext { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-
-            Console.WriteLine($"Render create form");
 
             CreatetemFormRenderer.BuildRendererTree(
                 new SignleColumnLayout<TModel>(),
@@ -43,34 +39,16 @@ namespace Blazor.FlexGrid.Components
 
         protected override void OnParametersSet()
         {
-            Console.WriteLine("OnParametersSet");
-
-            if (CreateItemContext is null)
+            if (createItemFormViewModel is null)
             {
-                if (CascadeCreateItemContext is null)
+                createItemFormViewModel = new CreateItemFormViewModel<TModel>(CreateItemContext.CreateItemOptions);
+                createItemFormViewModel.SaveAction = async model =>
                 {
-                    Console.WriteLine("NULL");
+                    Console.WriteLine($"Invoking save item. Model {model.ToString()}");
 
-                    //throw new InvalidOperationException($"CreateItemForm requires a {nameof(CascadeCreateItemContext)} parameter");
-                    return;
-                }
-
-                if (createItemFormViewModel is null)
-                {
-                    createItemFormViewModel = new CreateItemFormViewModel<TModel>(CascadeCreateItemContext.CreateItemOptions);
-                    CreateItemContext = CascadeCreateItemContext;
-                    createItemFormViewModel.SaveAction = async model =>
-                    {
-                        Console.WriteLine($"Invoking save item. Model {model.ToString()}");
-
-                        var dto = await CreateItemHandle.CreateItem(model, CascadeCreateItemContext.CreateItemOptions, CancellationToken.None);
-                        CascadeCreateItemContext.NotifyItemCreated(dto);
-                    };
-                }
-            }
-            else if (CascadeCreateItemContext != CreateItemContext)
-            {
-                throw new InvalidOperationException($"{GetType()} does not support changing the {nameof(CreateItemContext)} dynamically.");
+                    var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
+                    CreateItemContext.NotifyItemCreated(dto);
+                };
             }
         }
     }

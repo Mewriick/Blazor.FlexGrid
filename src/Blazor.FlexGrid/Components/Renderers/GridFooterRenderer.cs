@@ -42,7 +42,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
                 {
                     await GetPaginationTask(rendererContext, buttonType);
-                    rendererContext.RequestRerender?.Invoke();
+                    rendererContext.RequestRerenderNotification?.Invoke();
                 })
             );
 

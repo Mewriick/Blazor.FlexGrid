@@ -108,8 +108,8 @@ namespace Blazor.FlexGrid
                     .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
                     .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
-                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag)
-                    .AddRenderer(new CreateItemModalRenderer(provider.GetRequiredService<FlexGridInterop>()), RendererType.AfterTag);
+                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
+                //.AddRenderer(new CreateItemModalRenderer(provider.GetRequiredService<FlexGridInterop>()), RendererType.AfterTag);
 
                 return gridRenderer;
             });

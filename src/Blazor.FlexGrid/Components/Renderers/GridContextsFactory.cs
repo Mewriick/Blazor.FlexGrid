@@ -2,7 +2,6 @@
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -32,13 +31,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.imutableRendererContextCache = new Dictionary<Type, ImutableGridRendererContext>();
         }
 
-        public (GridRendererContext RendererContext, PermissionContext PermissionContext)
-            CreateContexts(ITableDataSet tableDataSet, RenderTreeBuilder renderTreeBuilder)
+        public (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) CreateContexts(ITableDataSet tableDataSet)
         {
             var imutableRendererContext = GetImutableGridRendererContext(tableDataSet.UnderlyingTypeOfItem());
 
-            return (new GridRendererContext(imutableRendererContext, new BlazorRendererTreeBuilder(renderTreeBuilder), tableDataSet),
-                    imutableRendererContext.PermissionContext);
+            return (imutableRendererContext, imutableRendererContext.PermissionContext);
         }
 
         private ImutableGridRendererContext GetImutableGridRendererContext(Type dataSetItemType)

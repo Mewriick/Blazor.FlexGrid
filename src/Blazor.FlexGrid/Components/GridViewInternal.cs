@@ -1,5 +1,4 @@
-﻿using Blazor.FlexGrid.Components.Configuration;
-using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
+﻿using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
@@ -30,8 +29,6 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ConventionsSet ConventionsSet { get; set; }
 
-        [Parameter] CreateItemContext CreateItemContext { get; set; } = new CreateItemContext(NullCreateItemOptions.Instance);
-
 
         [Parameter] ITableDataAdapter DataAdapter { get; set; }
 
@@ -53,13 +50,27 @@ namespace Blazor.FlexGrid.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("Render");
-
             base.BuildRenderTree(builder);
-            var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
+            var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
+            var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
+
+            RenderFragment<ImutableGridRendererContext> grid = (ImutableGridRendererContext imutableGridRendererContext)
+                => delegate (RenderTreeBuilder internalBuilder)
+            {
+                var gridRendererContext = new GridRendererContext(gridContexts.ImutableRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
+                GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
+            };
+
+            rendererTreeBuilder
+                .OpenComponent(typeof(GridViewTable))
+                .AddAttribute(nameof(ImutableGridRendererContext), gridContexts.ImutableRendererContext)
+                .AddAttribute(RenderTreeBuilder.ChildContent, grid)
+                .CloseComponent();
+
+            /*var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
             gridContexts.RendererContext.RequestRerender = StateHasChanged;
 
-            GridRendererTreeBuilder.BuildRendererTree(gridContexts.RendererContext, gridContexts.PermissionContext);
+            GridRendererTreeBuilder.BuildRendererTree(gridContexts.RendererContext, gridContexts.PermissionContext);*/
         }
 
         protected override async Task OnInitAsync()
@@ -68,13 +79,6 @@ namespace Blazor.FlexGrid.Components
             if (!dataAdapterWasEmptyInOnInit)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
-
-                var createItemOptions = RendererContextFactory
-                    .GridConfigurationProvider
-                    .GetGridConfigurationByType(DataAdapter.UnderlyingTypeOfItem)
-                    .CreateItemOptions;
-
-                CreateItemContext = new CreateItemContext(createItemOptions);
             }
 
             tableDataSet = GetTableDataSet();
@@ -86,16 +90,6 @@ namespace Blazor.FlexGrid.Components
         {
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {
-                if (CreateItemContext is null)
-                {
-                    var createItemOptions = RendererContextFactory
-                        .GridConfigurationProvider
-                        .GetGridConfigurationByType(DataAdapter.UnderlyingTypeOfItem)
-                        .CreateItemOptions;
-
-                    CreateItemContext = new CreateItemContext(createItemOptions);
-                }
-
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 tableDataSet = GetTableDataSet();
 

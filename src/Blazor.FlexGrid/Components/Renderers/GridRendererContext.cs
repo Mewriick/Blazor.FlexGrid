@@ -52,7 +52,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IRendererTreeBuilder RendererTreeBuilder { get; }
 
-        public Action RequestRerender { get; set; }
+        public Action RequestRerenderNotification { get; }
 
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
@@ -71,6 +71,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
+            RequestRerenderNotification = imutableGridRendererContext.RequestRerenderNotification;
 
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
@@ -184,6 +185,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 typeof(CreateItemForm<,>)
                     .MakeGenericType(GridConfiguration.CreateItemOptions.ModelType, GridConfiguration.CreateItemOptions.OutputDtoType)
             );
+            RendererTreeBuilder.AddAttribute(nameof(CreateItemContext), new CreateItemContext(GridConfiguration.CreateItemOptions));
             RendererTreeBuilder.CloseComponent();
         }
 
