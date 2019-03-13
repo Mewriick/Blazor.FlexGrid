@@ -8,7 +8,11 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
     {
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
-            builder.AllowCreateItem();
+            builder.AllowCreateItem<WeatherForecastCreateModel, WeatherForecast>(conf =>
+            {
+                conf.CreatePermissionRestriction = p => p.IsInRole("TestRole");
+                conf.CreateUri = "/api/SampleData/WeatherForecast";
+            });
 
             builder.AllowInlineEdit(conf =>
             {
@@ -35,6 +39,11 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.Property(e => e.TemperatureF)
                 .IsSortable();
+
+            builder.AppendCssClasses(conf =>
+            {
+                conf.FooterCssClasses.FooterWrapper = "test";
+            });
         }
     }
 }

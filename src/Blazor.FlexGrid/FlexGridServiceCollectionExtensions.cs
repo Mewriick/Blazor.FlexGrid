@@ -44,6 +44,8 @@ namespace Blazor.FlexGrid
                 services.AddScoped(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
                 services.AddScoped(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
+                services.AddScoped<FlexGridInterop>();
+                RegisterRendererTreeBuildersScoped(services);
             }
             else
             {
@@ -51,19 +53,21 @@ namespace Blazor.FlexGrid
                     .AddBrowserConsole()
                     .SetMinimumLevel(LogLevel.Debug));*/
 
+                if (flexGridOptions.UseAuthorizationForHttpRequests)
+                {
+                    services.AddSingleton<IHttpClientFactory, AuthorizationHttpClientFactory>();
+                }
+                else
+                {
+                    services.AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>();
+                }
+
                 services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
                 services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
                 services.AddSingleton(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
-            }
-
-            if (flexGridOptions.UseAuthorizationForHttpRequests)
-            {
-                services.AddSingleton<IHttpClientFactory, AuthorizationHttpClientFactory>();
-            }
-            else
-            {
-                services.AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>();
+                services.AddSingleton<FlexGridInterop>();
+                RegisterRendererTreeBuilders(services);
             }
 
             services.TryAddSingleton<IAuthorizationService, NullAuthorizationService>();
@@ -76,9 +80,6 @@ namespace Blazor.FlexGrid
             services.AddSingleton<ITypePropertyAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
             services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
-            services.AddSingleton<FlexGridInterop>();
-
-            RegisterRendererTreeBuilders(services);
 
             return services;
         }
@@ -109,7 +110,42 @@ namespace Blazor.FlexGrid
                     .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
                     .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
-                //.AddRenderer(new CreateItemModalRenderer(provider.GetRequiredService<FlexGridInterop>()), RendererType.AfterTag);
+
+                return gridRenderer;
+            });
+
+            services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
+            services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
+        }
+
+        private static void RegisterRendererTreeBuildersScoped(IServiceCollection services)
+        {
+            services.AddSingleton(typeof(CreateItemFormRenderer<>));
+            services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
+            services.AddSingleton<GridContextsFactory>();
+            services.AddSingleton<EditInputRendererTree>();
+
+            services.AddScoped(typeof(IGridRendererTreeBuilder), provider =>
+            {
+                var measurableLogger = provider.GetRequiredService<ILogger<GridMesurablePartRenderer>>();
+
+                var gridRowRenderer = new GridRowRenderer()
+                    .AddRenderer(new GridCellMasterActionRenderer())
+                    .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
+                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
+                    .AddRenderer(new GridActionButtonsRenderer());
+
+                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                    .AddRenderer(gridRowRenderer);
+
+                var gridRenderer = new GridMesurablePartRenderer(
+                        new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
+                    .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
+                    .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
+                    .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
+                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
 
                 return gridRenderer;
             });

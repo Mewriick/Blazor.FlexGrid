@@ -13,7 +13,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    rendererContext.TableDataSet.ToggleRowItem(localActualItem))
+                {
+                    rendererContext.TableDataSet.ToggleRowItem(localActualItem);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.AddContent(string.Empty);

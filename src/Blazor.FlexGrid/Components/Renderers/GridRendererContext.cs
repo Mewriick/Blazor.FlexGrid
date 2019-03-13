@@ -64,7 +64,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 throw new ArgumentNullException(nameof(imutableGridRendererContext));
             }
 
-            GridConfiguration = new GridAnotations(imutableGridRendererContext.GridEntityConfiguration);
+            GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
             GridItemCollectionProperties = imutableGridRendererContext.GridEntityConfiguration.ClrTypeCollectionProperties;
             CssClasses = GridConfiguration.CssClasses;
@@ -176,16 +176,6 @@ namespace Blazor.FlexGrid.Components.Renderers
                 });
 
             AddEventAttributes();
-            RendererTreeBuilder.CloseComponent();
-        }
-
-        public void AddCreateItemComponent()
-        {
-            RendererTreeBuilder.OpenComponent(
-                typeof(CreateItemForm<,>)
-                    .MakeGenericType(GridConfiguration.CreateItemOptions.ModelType, GridConfiguration.CreateItemOptions.OutputDtoType)
-            );
-            RendererTreeBuilder.AddAttribute(nameof(CreateItemContext), new CreateItemContext(GridConfiguration.CreateItemOptions));
             RendererTreeBuilder.CloseComponent();
         }
 

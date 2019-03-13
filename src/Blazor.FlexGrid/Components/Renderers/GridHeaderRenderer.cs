@@ -79,7 +79,10 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
-                    await rendererContext.TableDataSet.SetSortExpression(property.Name))
+                {
+                    await rendererContext.TableDataSet.SetSortExpression(property.Name);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             if (rendererContext.SortingByActualColumnName)

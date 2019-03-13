@@ -30,6 +30,7 @@ namespace Blazor.FlexGrid.Demo.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
             }
 
             app.UseMvc(routes =>

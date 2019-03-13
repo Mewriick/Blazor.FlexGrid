@@ -51,7 +51,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
             {
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-group")
-                    .OpenElement(HtmlTagNames.Div, "form-edit-field")
+                    //.OpenElement(HtmlTagNames.Div, "form-edit-field")
                     .OpenElement(HtmlTagNames.Label, "edit-field-name")
                     .AddContent(field.Name)
                     .CloseElement();
@@ -59,7 +59,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
                 inputBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
 
                 builder
-                    .CloseElement()
+                    //.CloseElement()
                     .CloseElement();
             };
         }

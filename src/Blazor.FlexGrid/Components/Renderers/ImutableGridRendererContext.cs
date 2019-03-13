@@ -18,6 +18,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IEntityType GridEntityConfiguration { get; }
 
+        public IGridViewAnotations GridConfiguration { get; }
+
         public IReadOnlyCollection<PropertyInfo> GridItemProperties { get; private set; }
 
         public ITypePropertyAccessor GetPropertyValueAccessor { get; }
@@ -43,9 +45,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
-            this.currentUserPermission = currentUserPermission ?? throw new ArgumentNullException(nameof(currentUserPermission));
 
             PermissionContext = new PermissionContext(currentUserPermission, gridEntityConfiguration);
+            GridConfiguration = new GridAnotations(gridEntityConfiguration);
         }
 
         public void InitializeGridProperties(List<PropertyInfo> itemProperties)

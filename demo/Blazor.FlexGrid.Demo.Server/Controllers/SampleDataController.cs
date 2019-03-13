@@ -65,13 +65,18 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPost(nameof(WeatherForecast))]
-        public IActionResult CreateWeatherForecast([FromBody] WeatherForecast weatherForecast)
+        public IActionResult CreateWeatherForecast([FromBody] WeatherForecastCreateModel model)
         {
-            var id = staticRepositoryCollections.Forecasts.ContainsKey(weatherForecast.Id)
-                ? staticRepositoryCollections.Forecasts.Keys.Max() + 1
-                : weatherForecast.Id;
+            var id = staticRepositoryCollections.Forecasts.Keys.Max() + 1;
 
-            weatherForecast.Id = id;
+            var weatherForecast = new WeatherForecast
+            {
+                Id = id,
+                Date = model.Date,
+                Summary = model.Summary,
+                TemperatureC = model.TemperatureC
+            };
+
             if (staticRepositoryCollections.Forecasts.TryAdd(id, weatherForecast))
             {
                 return Created(GetWeatherForecastUri(id), weatherForecast);

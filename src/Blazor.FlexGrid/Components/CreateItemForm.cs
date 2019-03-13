@@ -5,7 +5,6 @@ using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
 using Blazor.FlexGrid.DataSet.Http;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
-using System;
 using System.Threading;
 
 namespace Blazor.FlexGrid.Components
@@ -44,8 +43,6 @@ namespace Blazor.FlexGrid.Components
                 createItemFormViewModel = new CreateItemFormViewModel<TModel>(CreateItemContext.CreateItemOptions);
                 createItemFormViewModel.SaveAction = async model =>
                 {
-                    Console.WriteLine($"Invoking save item. Model {model.ToString()}");
-
                     var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
                     CreateItemContext.NotifyItemCreated(dto);
                 };

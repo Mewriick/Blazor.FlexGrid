@@ -48,6 +48,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             var gridCssClasses = new GridCssClasses();
             gridCssClassesConfig?.Invoke(gridCssClasses);
             gridCssClasses.AppendDefaultCssClasses(new DefaultGridCssClasses());
+            gridCssClasses.AppendDefaultFooterCssClasses(new DefaultFooterClasses());
 
             return HasAnnotation(GridViewAnnotationNames.CssClasses, gridCssClasses);
         }

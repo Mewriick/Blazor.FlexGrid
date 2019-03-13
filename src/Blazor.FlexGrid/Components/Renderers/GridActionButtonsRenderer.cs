@@ -37,7 +37,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    rendererContext.TableDataSet.StartEditItem(localActualItem))
+                {
+                    rendererContext.TableDataSet.StartEditItem(localActualItem);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
@@ -52,7 +55,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    rendererContext.TableDataSet.SaveItem(rendererContext.PropertyValueAccessor))
+                {
+                    rendererContext.TableDataSet.SaveItem(rendererContext.PropertyValueAccessor);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
@@ -75,7 +81,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    rendererContext.TableDataSet.DeleteItem(localActualItem))
+                {
+                    rendererContext.TableDataSet.DeleteItem(localActualItem);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
@@ -90,7 +99,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    rendererContext.TableDataSet.CancelEditation())
+                {
+                    rendererContext.TableDataSet.CancelEditation();
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");

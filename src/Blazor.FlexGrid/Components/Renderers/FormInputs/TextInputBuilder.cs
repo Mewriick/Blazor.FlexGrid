@@ -28,7 +28,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             return builder =>
             {
                 builder
-                    .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
+                    //.OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                     .OpenComponent(typeof(InputText))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
@@ -36,8 +36,8 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .AddAttribute("ValueExpression", valueExpression)
                     .AddAttribute("ValueChanged", eventCallbackFactory.Create<string>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
                     .CloseComponent()
-                    .AddValidationMessage<string>(valueExpression)
-                    .CloseElement();
+                    .AddValidationMessage<string>(valueExpression);
+                //.CloseElement();
             };
         }
 

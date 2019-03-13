@@ -11,7 +11,7 @@ namespace Blazor.FlexGrid.Demo.Serverside
         public void ConfigureServices(IServiceCollection services)
         {
             // Adds the Server-Side Blazor services, and those registered by the app project's startup.
-            services.AddRazorComponents<App.Startup>();
+            services.AddRazorComponents();
             services.AddMvc();
 
             services.AddResponseCompression();
@@ -30,8 +30,7 @@ namespace Blazor.FlexGrid.Demo.Serverside
             app.UseMvc();
             app.UseStaticFiles();
 
-            // Use component registrations and static files from the app project.
-            app.UseRazorComponents<App.Startup>();
+            app.
         }
     }
 }

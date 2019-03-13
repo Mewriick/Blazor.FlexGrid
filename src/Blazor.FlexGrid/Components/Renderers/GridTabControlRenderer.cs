@@ -85,7 +85,10 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, localActualItem)))
+                {
+                    masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, localActualItem));
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
             );
 
             rendererContext.OpenElement(HtmlTagNames.Span, "tabs-button-text");

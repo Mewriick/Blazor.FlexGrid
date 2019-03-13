@@ -1,9 +1,11 @@
-﻿using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
@@ -51,6 +53,7 @@ namespace Blazor.FlexGrid.Components
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
+
             var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
 
@@ -67,10 +70,14 @@ namespace Blazor.FlexGrid.Components
                 .AddAttribute(RenderTreeBuilder.ChildContent, grid)
                 .CloseComponent();
 
-            /*var gridContexts = RendererContextFactory.CreateContexts(tableDataSet, builder);
-            gridContexts.RendererContext.RequestRerender = StateHasChanged;
-
-            GridRendererTreeBuilder.BuildRendererTree(gridContexts.RendererContext, gridContexts.PermissionContext);*/
+            if (gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed)
+            {
+                rendererTreeBuilder
+                      .OpenComponent(typeof(CreateItemModal))
+                      .AddAttribute(nameof(CreateItemOptions), gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
+                      .AddAttribute(nameof(PermissionContext), gridContexts.PermissionContext)
+                      .CloseComponent();
+            }
         }
 
         protected override async Task OnInitAsync()

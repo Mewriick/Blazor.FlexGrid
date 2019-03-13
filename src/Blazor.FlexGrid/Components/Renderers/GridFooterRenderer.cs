@@ -12,8 +12,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             var nextButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsLastPage;
             var previousButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsFirstPage;
 
-            rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
-            rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper-inner");
+            //rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
+            rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
             rendererContext.OpenElement(HtmlTagNames.Div, "pagination-right");
             rendererContext.CloseElement();
             rendererContext.OpenElement(HtmlTagNames.Span, "pagination-page-status");
@@ -28,7 +28,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.CloseElement();
             rendererContext.CloseElement();
-            rendererContext.CloseElement();
+            //rendererContext.CloseElement();
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
@@ -36,7 +36,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)
         {
-            rendererContext.OpenElement(HtmlTagNames.Button, !disabled ? "pagination-button" : "pagination-button pagination-button-disabled");
+            rendererContext.OpenElement(HtmlTagNames.Button, !disabled
+                ? rendererContext.CssClasses.FooterCssClasses.PaginationButton
+                : rendererContext.CssClasses.FooterCssClasses.PaginationButtonDisabled);
             rendererContext.AddDisabled(disabled);
             rendererContext.AddOnClickEvent(() =>
                 BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
