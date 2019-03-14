@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Permission;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Linq.Expressions;
 
@@ -58,6 +59,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public PropertyBuilder<TProperty, TEntity> HasValueFormatter(Expression<Func<TProperty, string>> valueFormatterExpression, string defaultValue)
         {
             Builder.HasValueFormatter(valueFormatterExpression, defaultValue);
+
+            return this;
+        }
+
+        public PropertyBuilder<TProperty, TEntity> HasColumnValueRender(RenderFragment<TEntity> fragment)
+        {
+            Builder.HasBlazorComponentValue(fragment);
 
             return this;
         }

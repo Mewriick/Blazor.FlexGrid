@@ -35,7 +35,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             return builder =>
             {
                 builder
-                    //.OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
+                    .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
                     .OpenComponent(typeof(InputSelect<>).MakeGenericType(field.GetMemberType()))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
@@ -44,11 +44,10 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .AddAttribute(RenderTreeBuilder.ChildContent, optionsFragment)
                     .AddAttribute("ValueChanged", valueChanged)
                     .CloseComponent()
-                    //.AddValidationMessage<string>(valueExpression);
                     .OpenComponent(typeof(ValidationMessage<>).MakeGenericType(field.GetMemberType()))
                     .AddAttribute("For", valueExpression)
-                    .CloseComponent();
-                //.CloseElement();
+                    .CloseComponent()
+                    .CloseElement();
             };
         }
 

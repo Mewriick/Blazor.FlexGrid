@@ -25,7 +25,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             return builder =>
             {
                 builder
-                    .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
+                    .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
                     .OpenComponent(typeof(InputDate<>).MakeGenericType(field.GetMemberType()))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")

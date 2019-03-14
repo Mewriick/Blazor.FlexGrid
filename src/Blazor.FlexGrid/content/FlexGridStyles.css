@@ -390,19 +390,16 @@
     transform-origin: top left;
 }
 
-.form-edit-field {
-    width: 200px;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 16px;
-    margin-bottom: 8px;
-    border: 0;
-    display: inline-flex;
-    padding: 0;
-    position: relative;
-    min-width: 0;
-    flex-direction: column;
-    vertical-align: top;
+.form-field-wrapper {
+    padding: 10px;
+}
+
+.validation-message {
+    padding-top: 5px;
+    color: red;
+    font-style: italic;
+    font-size: 0.85rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .create-button-wrapper {
