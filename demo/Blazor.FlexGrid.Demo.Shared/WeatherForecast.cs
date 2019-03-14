@@ -33,10 +33,27 @@ namespace Blazor.FlexGrid.Demo.Shared
         [MinLength(4)]
         public string Summary { get; set; } = string.Empty;
 
+        public Season Season { get; set; }
+
+        public TemperatureUnit PreferedUnit { get; set; }
 
         public override string ToString()
         {
             return $"Temp: {TemperatureC}, Summary: {Summary}";
         }
+    }
+
+    public enum Season
+    {
+        Spring = 0,
+        Summer = 1,
+        Autumn = 2,
+        Winter = 3
+    }
+
+    public enum TemperatureUnit
+    {
+        Celsius = 0,
+        Fahrenheit = 1
     }
 }

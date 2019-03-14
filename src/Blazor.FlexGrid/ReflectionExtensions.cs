@@ -49,7 +49,7 @@ namespace Blazor.FlexGrid
 
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string keyProperty)
             => OrderBy(nameof(_OrderByDescending), source, GetPropertyExpression(typeof(T), keyProperty));
-        
+
         private static IOrderedQueryable<T> _OrderByDescending<T, TKey>(IQueryable<T> source, LambdaExpression keySelector)
             => source.OrderByDescending((Expression<Func<T, TKey>>)keySelector);
 

@@ -41,9 +41,9 @@ namespace Blazor.FlexGrid
             if (flexGridOptions.IsServerSideBlazorApp)
             {
                 services.AddLogging(builder => builder.AddConsole());
-                services.AddScoped(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
-                services.AddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
-                services.AddScoped(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
+                services.TryAddScoped(typeof(ILazyDataSetLoader<>), typeof(NullLazyDataSetLoader<>));
+                services.TryAddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(NullLazyDataSetItemManipulator<>));
+                services.TryAddScoped(typeof(ICreateItemHandle<,>), typeof(NullCreateItemHandler<,>));
                 services.AddScoped<FlexGridInterop>();
                 RegisterRendererTreeBuildersScoped(services);
             }
@@ -80,8 +80,18 @@ namespace Blazor.FlexGrid
             services.AddSingleton<ITypePropertyAccessorCache, PropertyValueAccessorCache>();
             services.AddSingleton<IDetailDataAdapterVisitors, DetailDataAdapterVisitors>();
             services.AddSingleton<ITableDataAdapterProvider, RunTimeTableDataAdapterProvider>();
+            RegisterFormInputBuilders(services);
 
             return services;
+        }
+
+        private static void RegisterFormInputBuilders(IServiceCollection services)
+        {
+            services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, SelectInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
+            services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
         }
 
         private static void RegisterRendererTreeBuilders(IServiceCollection services)
@@ -117,6 +127,7 @@ namespace Blazor.FlexGrid
             services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
             services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
             services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, SelectInputBuilder>();
             services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
         }
 
@@ -149,11 +160,6 @@ namespace Blazor.FlexGrid
 
                 return gridRenderer;
             });
-
-            services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
-            services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
-            services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
-            services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
         }
     }
 }
