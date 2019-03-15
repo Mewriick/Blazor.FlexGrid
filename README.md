@@ -250,7 +250,14 @@ two column layout is used. You can also write your own layout. You only have to 
 create your own layout provider by creating class which implements **IFormLayoutProvider** and register this provider to IoC. 
 Properties are in default layouts rendered in order that they are write in class.
 After item is succesfully create event **NewItemCreated** is fired.
+You can also change the modal dialog css classes by using:
 
+```
+builder.AppendCssClasses(conf =>
+{
+    conf.CreateFormCssClasses.ModalSize = "modal-lg";
+});
+```
 
 # Master / Detail 
 You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is collection
