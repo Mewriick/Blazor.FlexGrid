@@ -63,7 +63,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
-        public PropertyBuilder<TProperty, TEntity> HasColumnValueRender(RenderFragment<TEntity> fragment)
+        public PropertyBuilder<TProperty, TEntity> HasBlazorComponentValueRender(RenderFragment<TEntity> fragment)
         {
             Builder.HasBlazorComponentValue(fragment);
 

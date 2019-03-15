@@ -77,6 +77,7 @@ namespace Blazor.FlexGrid.Components
                       .AddAttribute(nameof(CreateItemOptions), gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
                       .AddAttribute(nameof(PermissionContext), gridContexts.PermissionContext)
                       .AddAttribute(nameof(CreateFormCssClasses), gridContexts.ImutableRendererContext.CssClasses.CreateFormCssClasses)
+                      .AddAttribute(nameof(NewItemCreated), NewItemCreated)
                       .CloseComponent();
             }
         }

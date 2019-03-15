@@ -1,8 +1,10 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
+using System;
 
 namespace Blazor.FlexGrid.Components
 {
@@ -13,6 +15,9 @@ namespace Blazor.FlexGrid.Components
         [Parameter] PermissionContext PermissionContext { get; set; }
 
         [Parameter] CreateFormCssClasses CreateFormCssClasses { get; set; }
+
+        [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
+
 
         [Inject]
         private FlexGridInterop FlexGridInterop { get; set; }
@@ -28,6 +33,9 @@ namespace Blazor.FlexGrid.Components
             base.BuildRenderTree(builder);
 
             var internalBuilder = new BlazorRendererTreeBuilder(builder);
+
+            var createItemContext = new CreateItemContext(CreateItemOptions, CreateFormCssClasses);
+            createItemContext.OnItemCreated += (object sender, ItemCreatedArgs e) => NewItemCreated?.Invoke(e);
 
             internalBuilder
                 .OpenElement(HtmlTagNames.Div, "modal")
@@ -54,7 +62,7 @@ namespace Blazor.FlexGrid.Components
                 .OpenElement(HtmlTagNames.Div, CreateFormCssClasses.ModalBody)
                 .OpenComponent(typeof(CreateItemForm<,>)
                     .MakeGenericType(CreateItemOptions.ModelType, CreateItemOptions.OutputDtoType))
-                .AddAttribute(nameof(CreateItemContext), new CreateItemContext(CreateItemOptions, CreateFormCssClasses))
+                .AddAttribute(nameof(CreateItemContext), createItemContext)
                 .CloseComponent()
                 .CloseElement()
                 .CloseElement()

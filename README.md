@@ -8,12 +8,11 @@ GridView component for Blazor
 ## IMPORTANT!
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
-**Known issues after support Blazor 0.8.0**
-> ServerSide demo application does not render FlexGrid styles  
+**Known issues after support Blazor 0.9.0**
 > Blazor.Extensions.Logging cannot be used for now  
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.5.2-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.6.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
@@ -215,6 +214,44 @@ And the last thing you have to provide **RenderFragment** for columns
 }
 ```
 
+Also you can use registration of fragment in startup configuration
+```cs
+RenderFragment<Customer> customerEmailComponent = (Customer customer) => delegate (RenderTreeBuilder rendererTreeBuilder)
+{
+    var internalBuilder = new BlazorRendererTreeBuilder(rendererTreeBuilder);
+    internalBuilder
+        .OpenElement(HtmlTagNames.H4)
+        .AddContent(customer.Email)
+        .CloseElement();
+};
+
+builder.Property(c => c.Email)
+    .HasBlazorComponentValueRender(customerEmailComponent);
+```
+
+# Create item form
+You can have very easily **Create item form** for your models. You can configure even different type of model for create item form
+than is used for rendering in **FlexGrid**. You can also specify the return type from your Api which can be different than input.
+Now the restriction for model is that have **default constructor**
+Configuration example:
+
+```cs
+builder.AllowCreateItem<WeatherForecastCreateModel, WeatherForecast>(conf =>
+{
+    conf.CreatePermissionRestriction = p => p.IsInRole("TestRole");
+    conf.CreateUri = "/api/SampleData/WeatherForecast";
+});
+```
+
+You can also restrict the creation of items only for some users. Important property is **CreateUri** which must be filled. Form includes also 
+validations which are run after every change. Submit can be done only if form is in **Valid** state. For rendering are used two layouts types.
+You can have one column layout or you can have two columns layout. Now the behavior is that every model that have more than 6 properties the
+two column layout is used. You can also write your own layout. You only have to inherit from **BaseCreateItemFormLayout** and also you must
+create your own layout provider by creating class which implements **IFormLayoutProvider** and register this provider to IoC. 
+Properties are in default layouts rendered in order that they are write in class.
+After item is succesfully create event **NewItemCreated** is fired.
+
+
 # Master / Detail 
 You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is collection
 **FlexGrid** component automatically find out this and will render this kind of object as Master / Detail grid.
@@ -330,16 +367,17 @@ builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
 You can subscribe some events which **FlexGrid** provides only things which you must do are add using
 **@using Blazor.FlexGrid.Components.Events** and register **EventHandler** in HTML of Grid component.
 
-Suppoerted events:\
-``SaveOperationFinished``
-``DeleteOperationFinished``
+Suppoerted events:
+``SaveOperationFinished``  
+``DeleteOperationFinished``  
+``NewItemCreated``  
 
 # Design
-You can override some default CssClasses by your own CssClasses by using fluent api configuration
+You can override some default CssClasses by your own CssClasses by using fluent api configuration.
 ```cs
 public void Configure(EntityTypeBuilder<WeatherForecast> builder)
 {  
-	builder.UseCssClasses(conf =>
+	builder.AppendCssClasses(conf =>
 	{
 		conf.Table = "my-table";
 		conf.TableBody = "my-table-body";

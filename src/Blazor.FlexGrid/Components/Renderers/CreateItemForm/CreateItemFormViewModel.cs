@@ -8,7 +8,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
     {
         private readonly CreateItemOptions createItemOptions;
 
-        public TModel Model { get; }
+        public TModel Model { get; private set; }
 
         public EditContext EditContext { get; }
 
@@ -26,6 +26,9 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
 
         public void ValidateModel()
             => IsModelValid = EditContext.Validate();
+
+        public void ClearModel()
+            => Model = Activator.CreateInstance(typeof(TModel)) as TModel;
 
         private void OnFieldChanged(object sender, FieldChangedEventArgs e)
         {

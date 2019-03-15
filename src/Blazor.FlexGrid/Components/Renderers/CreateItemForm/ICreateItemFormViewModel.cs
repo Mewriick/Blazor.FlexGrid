@@ -15,5 +15,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
         Action<TModel> SaveAction { get; set; }
 
         void ValidateModel();
+
+        void ClearModel();
     }
 }

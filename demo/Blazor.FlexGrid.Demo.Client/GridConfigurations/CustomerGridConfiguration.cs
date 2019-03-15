@@ -17,6 +17,20 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.HasDetailRelationship<CustomerAddress>(c => c.Id, o => o.CustomerId)
                 .HasCaption("Customer addresses");
+
+
+            /* RenderFragment<Customer> customerEmailComponent = (Customer customer) => delegate (RenderTreeBuilder rendererTreeBuilder)
+             {
+                 var internalBuilder = new BlazorRendererTreeBuilder(rendererTreeBuilder);
+                 internalBuilder
+                     .OpenElement(HtmlTagNames.H4)
+                     .AddContent(customer.Email)
+                     .CloseElement();
+             };
+
+             builder.Property(c => c.Email)
+                 .HasBlazorComponentValueRender(customerEmailComponent);
+                 */
         }
     }
 }

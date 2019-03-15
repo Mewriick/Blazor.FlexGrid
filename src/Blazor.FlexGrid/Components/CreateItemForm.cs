@@ -49,6 +49,8 @@ namespace Blazor.FlexGrid.Components
                 {
                     var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
                     CreateItemContext.NotifyItemCreated(dto);
+                    createItemFormViewModel.ClearModel();
+                    StateHasChanged();
                 };
             }
         }

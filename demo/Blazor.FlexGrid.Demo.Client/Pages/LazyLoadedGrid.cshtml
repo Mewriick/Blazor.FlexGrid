@@ -21,7 +21,8 @@
                                     DeleteUri = "/api/SampleData/Delete/{Id}" })"
           PageSize="10"
           SaveOperationFinished="@ItemSavedOperationFinished"
-          DeleteOperationFinished="@ItemDeletedOperationFinished">
+          DeleteOperationFinished="@ItemDeletedOperationFinished"
+          NewItemCreated="@ItemCreated">
 </GridView>
 
 
@@ -34,6 +35,11 @@
     public void ItemDeletedOperationFinished(DeleteResultArgs deleteResultArgs)
     {
         Console.WriteLine($"Item deleted result: {deleteResultArgs.ItemSuccesfullyDeleted}");
+    }
+
+    public void ItemCreated(ItemCreatedArgs itemCreatedArgs)
+    {
+        Console.WriteLine($"Item created result: {itemCreatedArgs.CreatedItem}");
     }
 }
 
