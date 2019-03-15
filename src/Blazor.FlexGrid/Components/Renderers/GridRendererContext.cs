@@ -67,11 +67,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
             GridItemCollectionProperties = imutableGridRendererContext.GridEntityConfiguration.ClrTypeCollectionProperties;
-            CssClasses = GridConfiguration.CssClasses;
-            TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
+            CssClasses = imutableGridRendererContext.CssClasses;
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
             RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
             RequestRerenderNotification = imutableGridRendererContext.RequestRerenderNotification;
+            TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
 
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;

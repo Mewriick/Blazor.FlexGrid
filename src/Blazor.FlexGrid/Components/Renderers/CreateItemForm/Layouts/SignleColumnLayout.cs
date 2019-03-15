@@ -3,10 +3,10 @@ using System;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
 {
-    public class SignleColumnLayout<TItem> : BaseCreateItemFormLayout<TItem> where TItem : class
+    public class SignleColumnLayout<TModel> : BaseCreateItemFormLayout<TModel> where TModel : class
     {
         public override Action<IRendererTreeBuilder> BuildBodyRendererTree(
-            CreateItemRendererContext<TItem> createItemRendererContext,
+            CreateItemRendererContext<TModel> createItemRendererContext,
             IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             return builder =>

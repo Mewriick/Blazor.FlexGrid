@@ -3,7 +3,6 @@ using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
-using System;
 
 namespace Blazor.FlexGrid.Components
 {
@@ -13,13 +12,13 @@ namespace Blazor.FlexGrid.Components
 
         [Parameter] PermissionContext PermissionContext { get; set; }
 
+        [Parameter] CreateFormCssClasses CreateFormCssClasses { get; set; }
+
         [Inject]
         private FlexGridInterop FlexGridInterop { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine(CreateItemOptions.IsCreateItemAllowed);
-
             if (!CreateItemOptions.IsCreateItemAllowed ||
                 !PermissionContext.HasCreateItemPermission)
             {
@@ -34,9 +33,10 @@ namespace Blazor.FlexGrid.Components
                 .OpenElement(HtmlTagNames.Div, "modal")
                 .AddAttribute(HtmlAttributes.Id, CreateItemOptions.CreateItemModalName)
                 .AddAttribute("role", "dialog")
-                .OpenElement(HtmlTagNames.Div, "modal-dialog modal modal-dialog-centered")
+                .OpenElement(HtmlTagNames.Div, $"modal-dialog modal-dialog-centered {CreateFormCssClasses.ModalSize}")
+                .AddAttribute(HtmlAttributes.Id, CreateItemOptions.CreateItemModalSizeDiv)
                 .OpenElement(HtmlTagNames.Div, "modal-content")
-                .OpenElement(HtmlTagNames.Div, "modal-header")
+                .OpenElement(HtmlTagNames.Div, CreateFormCssClasses.ModalHeader)
                 .OpenElement(HtmlTagNames.H4, "modal-title")
                 .AddContent("Create Item")
                 .CloseElement()
@@ -51,10 +51,10 @@ namespace Blazor.FlexGrid.Components
                 .CloseElement()
                 .CloseElement()
                 .CloseElement()
-                .OpenElement(HtmlTagNames.Div, "modal-body")
+                .OpenElement(HtmlTagNames.Div, CreateFormCssClasses.ModalBody)
                 .OpenComponent(typeof(CreateItemForm<,>)
                     .MakeGenericType(CreateItemOptions.ModelType, CreateItemOptions.OutputDtoType))
-                .AddAttribute(nameof(CreateItemContext), new CreateItemContext(CreateItemOptions))
+                .AddAttribute(nameof(CreateItemContext), new CreateItemContext(CreateItemOptions, CreateFormCssClasses))
                 .CloseComponent()
                 .CloseElement()
                 .CloseElement()

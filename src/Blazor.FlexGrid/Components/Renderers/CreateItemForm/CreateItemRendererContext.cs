@@ -1,6 +1,8 @@
-﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
@@ -9,18 +11,25 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
     {
         private readonly ITypePropertyAccessor typePropertyAccessor;
 
+
         public string ActualColumnName { get; set; }
 
         public TModel ActualItem => ViewModel.Model;
 
         public ICreateItemFormViewModel<TModel> ViewModel { get; }
 
-        public CreateItemRendererContext(ICreateItemFormViewModel<TModel> createItemFormViewModel, ITypePropertyAccessorCache typePropertyAccessorCache)
+        public CreateFormCssClasses CreateFormCssClasses { get; }
+
+        public CreateItemRendererContext(
+            ICreateItemFormViewModel<TModel> createItemFormViewModel,
+            ITypePropertyAccessorCache typePropertyAccessorCache,
+            CreateFormCssClasses createFormCssClasses)
         {
             this.typePropertyAccessor = typePropertyAccessorCache?.GetPropertyAccesor(typeof(TModel))
                 ?? throw new ArgumentNullException(nameof(typePropertyAccessorCache));
 
             this.ViewModel = createItemFormViewModel ?? throw new ArgumentNullException(nameof(createItemFormViewModel));
+            this.CreateFormCssClasses = createFormCssClasses ?? new DefaultCreateFormCssClasses();
         }
 
         public object GetActualItemColumnValue(string columnName)
@@ -30,6 +39,6 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
             => typePropertyAccessor.SetValue(ViewModel.Model, columnName, value);
 
         public IEnumerable<PropertyInfo> GetModelFields()
-            => typePropertyAccessor.Properties;
+            => typePropertyAccessor.Properties.Where(p => p.CanWrite);
     }
 }

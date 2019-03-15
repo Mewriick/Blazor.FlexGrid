@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
         }
 
         public void BuildRendererTree(
-            ICreateFormLayout<TModel> createFormLayout,
+            IFormLayout<TModel> createFormLayout,
             CreateItemRendererContext<TModel> createItemRendererContext,
             IRendererTreeBuilder rendererTreeBuilder)
         {

@@ -10,9 +10,12 @@ namespace Blazor.FlexGrid.Components
 
         public CreateItemOptions CreateItemOptions { get; }
 
-        public CreateItemContext(CreateItemOptions createItemOptions)
+        public CreateFormCssClasses CreateFormCssClasses { get; }
+
+        public CreateItemContext(CreateItemOptions createItemOptions, CreateFormCssClasses createFormCssClasses)
         {
             CreateItemOptions = createItemOptions ?? throw new ArgumentNullException(nameof(createItemOptions));
+            CreateFormCssClasses = createFormCssClasses ?? new DefaultCreateFormCssClasses();
         }
 
         public void NotifyItemCreated(object item)

@@ -22,17 +22,21 @@ namespace Blazor.FlexGrid.Components
         private ITypePropertyAccessorCache PropertyValueAccessorCache { get; set; }
 
         [Inject]
+        private IFormLayoutProvider<TModel> LayoutProvider { get; set; }
+
+        [Inject]
         private ICreateItemHandle<TModel, TOutputDto> CreateItemHandle { get; set; }
 
         [Parameter] CreateItemContext CreateItemContext { get; set; }
+
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
 
             CreatetemFormRenderer.BuildRendererTree(
-                new SignleColumnLayout<TModel>(),
-                new CreateItemRendererContext<TModel>(createItemFormViewModel, PropertyValueAccessorCache),
+                LayoutProvider.GetLayoutBuilder() ?? new SignleColumnLayout<TModel>(),
+                new CreateItemRendererContext<TModel>(createItemFormViewModel, PropertyValueAccessorCache, CreateItemContext.CreateFormCssClasses),
                 new BlazorRendererTreeBuilder(builder));
         }
 

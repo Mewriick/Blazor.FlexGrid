@@ -48,6 +48,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             PermissionContext = new PermissionContext(currentUserPermission, gridEntityConfiguration);
             GridConfiguration = new GridAnotations(gridEntityConfiguration);
+            CssClasses = GridConfiguration.CssClasses;
         }
 
         public void InitializeGridProperties(List<PropertyInfo> itemProperties)

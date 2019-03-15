@@ -5,6 +5,7 @@ using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm;
+using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
 using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.Components.Renderers.FormInputs;
 using Blazor.FlexGrid.DataAdapters;
@@ -91,7 +92,9 @@ namespace Blazor.FlexGrid
             services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
             services.AddSingleton<IFormInputRendererBuilder, SelectInputBuilder>();
             services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
+            services.AddSingleton<IFormInputRendererBuilder, CheckBoxInputBuilder>();
             services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
+            services.TryAddSingleton(typeof(IFormLayoutProvider<>), typeof(BasicFormLayoutProvider<>));
         }
 
         private static void RegisterRendererTreeBuilders(IServiceCollection services)

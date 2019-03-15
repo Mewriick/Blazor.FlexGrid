@@ -29,17 +29,21 @@ namespace Blazor.FlexGrid.Demo.Shared
 
         public int TemperatureC { get; set; }
 
-        [Required]
-        [MinLength(4)]
-        public string Summary { get; set; } = string.Empty;
+        public bool RainyDay { get; set; }
+
+        public int WindSpeed { get; set; }
 
         public Season Season { get; set; }
 
         public TemperatureUnit PreferedUnit { get; set; }
 
+        [Required]
+        [MinLength(4)]
+        public string Summary { get; set; } = string.Empty;
+
         public override string ToString()
         {
-            return $"Temp: {TemperatureC}, Summary: {Summary}";
+            return $"Date: {Date} Temp: {TemperatureC}, RainyDay: {RainyDay}, Season: {Season}, PreferedUnit: {PreferedUnit} Summary: {Summary}";
         }
     }
 

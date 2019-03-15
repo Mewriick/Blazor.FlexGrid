@@ -5,21 +5,21 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
 {
-    public abstract class BaseCreateItemFormLayout<TItem> : ICreateFormLayout<TItem> where TItem : class
+    public abstract class BaseCreateItemFormLayout<TModel> : IFormLayout<TModel> where TModel : class
     {
         public abstract Action<IRendererTreeBuilder> BuildBodyRendererTree(
-            CreateItemRendererContext<TItem> createItemRendererContext,
+            CreateItemRendererContext<TModel> createItemRendererContext,
             IFormInputRendererTreeProvider formInputRendererTreeProvider);
 
 
         public virtual Action<IRendererTreeBuilder> BuildFooterRendererTree(
-            CreateItemRendererContext<TItem> createItemRendererContext)
+            CreateItemRendererContext<TModel> createItemRendererContext)
         {
             return builder =>
             {
                 builder
-                    .OpenElement(HtmlTagNames.Div, "modal-footer")
-                    .OpenElement(HtmlTagNames.Input, "btn btn-primary")
+                    .OpenElement(HtmlTagNames.Div, createItemRendererContext.CreateFormCssClasses.ModalFooter)
+                    .OpenElement(HtmlTagNames.Input, createItemRendererContext.CreateFormCssClasses.SubmitButton)
                     .AddAttribute(HtmlAttributes.Type, HtmlTagNames.Submit)
                     .AddAttribute(HtmlAttributes.Value, "Save")
                     .CloseElement()
@@ -29,38 +29,34 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
 
         public Action<IRendererTreeBuilder> BuildFormFieldRendererTree(
             PropertyInfo field,
-            CreateItemRendererContext<TItem> createItemRendererContext,
+            CreateItemRendererContext<TModel> createItemRendererContext,
             IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             createItemRendererContext.ActualColumnName = field.Name;
-
-            return builder =>
-            {
-                BuilFieldRendererTree(field, createItemRendererContext, formInputRendererTreeProvider)?.Invoke(builder);
-            };
-        }
-
-        public virtual Action<IRendererTreeBuilder> BuilFieldRendererTree(
-            PropertyInfo field,
-            CreateItemRendererContext<TItem> createItemRendererContext,
-            IFormInputRendererTreeProvider formInputRendererTreeProvider)
-        {
             var inputBuilder = formInputRendererTreeProvider.GetFormInputRendererTreeBuilder(field.GetMemberType());
 
             return builder =>
             {
+                BuildFieldRendererTree(field, createItemRendererContext, inputBuilder)?.Invoke(builder);
+            };
+        }
+
+        public virtual Action<IRendererTreeBuilder> BuildFieldRendererTree(
+            PropertyInfo field,
+            CreateItemRendererContext<TModel> createItemRendererContext,
+            IFormInputRendererBuilder formInputRendererBuilder)
+        {
+            return builder =>
+            {
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-group")
-                    //.OpenElement(HtmlTagNames.Div, "form-edit-field")
-                    .OpenElement(HtmlTagNames.Label, "edit-field-name")
+                    .OpenElement(HtmlTagNames.Label, createItemRendererContext.CreateFormCssClasses.FieldName)
                     .AddContent(field.Name)
                     .CloseElement();
 
-                inputBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
+                formInputRendererBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
 
-                builder
-                    //.CloseElement()
-                    .CloseElement();
+                builder.CloseElement();
             };
         }
     }

@@ -22,5 +22,10 @@ namespace Blazor.FlexGrid
         {
             return jSRuntime.InvokeAsync<bool>("flexGrid.hideModal", modalName);
         }
+
+        public Task<bool> AppendCssClass(string elementName, string cssClass)
+        {
+            return jSRuntime.InvokeAsync<bool>("flexGrid.appendCssClass", elementName, cssClass);
+        }
     }
 }

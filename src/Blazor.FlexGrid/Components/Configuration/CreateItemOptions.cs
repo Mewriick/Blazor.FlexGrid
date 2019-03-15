@@ -6,6 +6,7 @@ namespace Blazor.FlexGrid.Components.Configuration
     public class CreateItemOptions
     {
         public static readonly string CreateItemModalName = "createItemModal";
+        public static readonly string CreateItemModalSizeDiv = "createItemModalSize";
 
         public virtual bool IsCreateItemAllowed => true;
 

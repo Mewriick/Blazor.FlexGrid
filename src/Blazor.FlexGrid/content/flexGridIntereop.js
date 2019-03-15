@@ -25,6 +25,13 @@
 
     showedModal: {
         name: "None"
+    },
+
+    appendCssClass: function (elementId, cssClass) {
+        var element = document.getElementById(modalName);
+        element.className = element.className + ' ' + cssClass;
+
+        return true;
     }
 }
 

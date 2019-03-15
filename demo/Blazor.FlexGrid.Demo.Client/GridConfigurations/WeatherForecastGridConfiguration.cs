@@ -42,7 +42,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.AppendCssClasses(conf =>
             {
-                conf.FooterCssClasses.FooterWrapper = "test";
+                conf.CreateFormCssClasses.ModalSize = "modal-lg";
             });
         }
     }

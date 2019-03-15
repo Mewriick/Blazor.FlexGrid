@@ -21,6 +21,8 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
 
             var valueExpression = GetValueExpression(value, actualItemContext.ActualItem, field);
+            var convertedValue = ConvertToDateTime(value);
+            actualItemContext.SetActualItemColumnValue(localColumnName, convertedValue);
 
             return builder =>
             {
@@ -29,7 +31,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .OpenComponent(typeof(InputDate<>).MakeGenericType(field.GetMemberType()))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
-                    .AddAttribute("Value", ConvertToDateTime(value))
+                    .AddAttribute("Value", convertedValue)
                     .AddAttribute("ValueExpression", valueExpression);
 
                 if (value is DateTime)
