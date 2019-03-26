@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "demo\WebApplication1\WebApplication1.csproj", "{25AB515C-2703-400F-B228-A6265C0152E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Components.Demo.FlexGrid", "demo\Blazor.Components.Demo.FlexGrid\Blazor.Components.Demo.FlexGrid.csproj", "{25AB515C-2703-400F-B228-A6265C0152E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +66,7 @@ Global
 		{A35498DB-93E2-4E74-B73E-AFB58AE22446} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
 		{5B20FC7E-F00C-448B-9F9B-F3428FB289F9} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
 		{3A240664-60C1-41F1-A5D8-E0E25CD1F322} = {4879EB58-9DF2-45E9-AF1D-F0E942DF5BFD}
+		{25AB515C-2703-400F-B228-A6265C0152E0} = {436ACBD2-E8DA-47A3-967A-62B80BA3A3F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6BE7CF41-5635-41DC-98E5-7B43EB4B0EB4}

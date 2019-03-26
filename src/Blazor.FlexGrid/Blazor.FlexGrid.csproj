@@ -16,6 +16,10 @@
     <Version>0.6.0</Version>
     <PackageReleaseNotes>Fix ValueFormatters and BlazorComponent value renderer</PackageReleaseNotes>
     <PackageIconUrl>https://msdnshared.blob.core.windows.net/media/2018/04/Blazor-300x280.jpg</PackageIconUrl>
+    <RestoreAdditionalProjectSources>
+      https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
+      https://dotnet.myget.org/F/blazor-dev/api/v3/index.json;
+    </RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,22 +32,7 @@
   <ItemGroup>
     <BlazorLinkerDescriptor Include="content\Linker.xml" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="content\flexGridIntereop.js" />
-    <None Remove="content\fontawesome\css\all.css" />
-    <None Remove="content\fontawesome\css\fontawesome.css" />
-    <None Remove="content\fontawesome\css\regular.css" />
-    <None Remove="content\fontawesome\css\svg-with-js.css" />
-    <None Remove="content\fontawesome\css\v4-shims.css" />
-    <None Remove="content\fontawesome\css\v4-shims.min.css" />
-    <None Remove="content\fontawesome\webfonts\fa-regular-400.eot" />
-    <None Remove="content\fontawesome\webfonts\fa-regular-400.svg" />
-    <None Remove="content\fontawesome\webfonts\fa-regular-400.ttf" />
-    <None Remove="content\fontawesome\webfonts\fa-regular-400.woff" />
-    <None Remove="content\fontawesome\webfonts\fa-regular-400.woff2" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.9.0-preview3-19154-02" />    
     <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview3-19153-02" />   
