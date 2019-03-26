@@ -264,7 +264,7 @@ You can have one column layout or you can have two columns layout. Now the behav
 two column layout is used. You can also write your own layout. You only have to inherit from **BaseCreateItemFormLayout** and also you must
 create your own layout provider by creating class which implements **IFormLayoutProvider** and register this provider to IoC. 
 Properties are in default layouts rendered in order that they are write in class.
-After item is succesfully create event **NewItemCreated** is fired.
+After item is succesfully created event **NewItemCreated** is fired.
 You can also change the modal dialog css classes by using:
 
 ```
@@ -389,7 +389,7 @@ builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
 You can subscribe some events which **FlexGrid** provides only things which you must do are add using
 **@using Blazor.FlexGrid.Components.Events** and register **EventHandler** in HTML of Grid component.
 
-Suppoerted events:
+**Suppoerted events:**  
 ``SaveOperationFinished``  
 ``DeleteOperationFinished``  
 ``NewItemCreated``  
