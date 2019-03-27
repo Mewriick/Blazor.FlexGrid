@@ -50,6 +50,15 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public virtual EntityTypeBuilder<TEntity> IsMasterTable(Action<MasterDetailOptions> configureMasterDetails)
+        {
+            var masterDetails = new MasterDetailOptions();
+            configureMasterDetails?.Invoke(masterDetails);
+            Builder.IsMasterTable(masterDetails);
+            
+            return this;
+        }
+
         public virtual EntityTypeBuilder<TEntity> AllowInlineEdit()
         {
             Builder.AllowInlineEdit(new InlineEditOptions());
@@ -91,10 +100,10 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
-        public virtual EntityTypeBuilder<TEntity> OnlyShowExplicitDetailTables()
-        {
-            Builder.Metadata.OnlyShowExplicitDetailTables = true;
-            return this;
-        }
+        //public virtual EntityTypeBuilder<TEntity> OnlyShowExplicitDetailTables()
+        //{
+        //    Builder.Metadata.OnlyShowExplicitDetailTables = true;
+        //    return this;
+        //}
     }
 }

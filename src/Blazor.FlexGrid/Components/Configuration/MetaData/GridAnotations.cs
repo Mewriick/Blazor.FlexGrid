@@ -22,11 +22,14 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        public bool OnlyShowExplicitDetailTables
+        
+        public MasterDetailOptions MasterDetailOptions
         {
             get
             {
-                return entityTypeMetadata.OnlyShowExplicitDetailTables;
+                var masterDetailOptions = annotations[GridViewAnnotationNames.MasterDetailOptions];
+                
+                return (MasterDetailOptions)masterDetailOptions;
             }
         }
 

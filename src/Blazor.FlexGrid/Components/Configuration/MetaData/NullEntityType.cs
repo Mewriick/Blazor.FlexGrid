@@ -19,8 +19,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         public IReadOnlyCollection<PropertyInfo> ClrTypeCollectionProperties => new List<PropertyInfo>();
 
 
-        public bool OnlyShowExplicitDetailTables { get; set; } = false;
-
         public IProperty AddProperty(MemberInfo memberInfo)
         {
             return null;
