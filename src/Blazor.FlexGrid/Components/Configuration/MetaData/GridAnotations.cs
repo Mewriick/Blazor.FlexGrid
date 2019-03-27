@@ -22,6 +22,14 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public bool OnlyShowExplicitDetailTables
+        {
+            get
+            {
+                return entityTypeMetadata.OnlyShowExplicitDetailTables;
+            }
+        }
+
         public GridCssClasses CssClasses
         {
             get
@@ -64,6 +72,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 return (CreateItemOptions)createItemOptions;
             }
         }
+
+        
 
         public GridAnotations(IEntityType entityType)
         {

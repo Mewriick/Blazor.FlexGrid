@@ -90,5 +90,11 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public virtual EntityTypeBuilder<TEntity> OnlyShowExplicitDetailTables()
+        {
+            Builder.Metadata.OnlyShowExplicitDetailTables = true;
+            return this;
+        }
     }
 }

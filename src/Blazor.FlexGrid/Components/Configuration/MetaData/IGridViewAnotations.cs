@@ -6,6 +6,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
     {
         bool IsMasterTable { get; }
 
+        bool OnlyShowExplicitDetailTables { get; }
+
         InlineEditOptions InlineEditOptions { get; }
 
         CreateItemOptions CreateItemOptions { get; }

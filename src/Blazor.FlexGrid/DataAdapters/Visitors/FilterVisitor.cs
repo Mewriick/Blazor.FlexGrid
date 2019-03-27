@@ -36,10 +36,18 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
 
                 var parameter = Expression.Parameter(detailAdapterItemType, "x");
                 var member = Expression.Property(parameter, masterDetailRelationship.MasterDetailConnection.ForeignPropertyName);
-                var constant = Expression.Constant(constantValue);
+
+                //If the type of the member expression is a nullable,
+                //the call to Expression.Equal will fail
+                Expression constant;
+                if (member.Type.IsGenericType && member.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    constant = Expression.Constant(constantValue, member.Type);
+                else
+                    constant = Expression.Constant(constantValue);
+
                 var body = Expression.Equal(member, constant);
 
-                collectionTableDataAdapter.Filter = Expression.Lambda<Func<TItem, bool>>(body, parameter); ;
+                collectionTableDataAdapter.Filter = Expression.Lambda<Func<TItem, bool>>(body, parameter); 
             }
         }
     }
