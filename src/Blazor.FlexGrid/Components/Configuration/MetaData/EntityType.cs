@@ -16,6 +16,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         public string Name { get; }
 
         public IReadOnlyCollection<PropertyInfo> ClrTypeCollectionProperties { get; }
+        
 
         public EntityType(Type clrType, Model model)
         {

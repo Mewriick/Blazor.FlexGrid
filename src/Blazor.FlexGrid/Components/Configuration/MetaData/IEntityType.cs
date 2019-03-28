@@ -14,6 +14,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         IReadOnlyCollection<PropertyInfo> ClrTypeCollectionProperties { get; }
 
+        
         IEnumerable<IProperty> GetProperties();
 
         IProperty FindProperty(string name);
