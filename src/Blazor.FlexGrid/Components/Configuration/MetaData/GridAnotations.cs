@@ -28,7 +28,11 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             get
             {
                 var masterDetailOptions = annotations[GridViewAnnotationNames.MasterDetailOptions];
-                
+                if (masterDetailOptions is NullAnotationValue)
+                {
+                    return new NullMasterDetailOptions();
+                }
+
                 return (MasterDetailOptions)masterDetailOptions;
             }
         }
