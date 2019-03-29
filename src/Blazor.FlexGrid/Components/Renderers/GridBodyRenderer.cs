@@ -19,11 +19,25 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
             try
             {
-                foreach (var item in rendererContext.TableDataSet.Items)
+                if (!rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
                 {
-                    rendererContext.ActualItem = item;
-                    foreach (var renderer in gridPartRenderers)
-                        renderer.BuildRendererTree(rendererContext, permissionContext);
+
+                    foreach (var item in rendererContext.TableDataSet.Items)
+                    {
+                        rendererContext.ActualItem = item;
+                        foreach (var renderer in gridPartRenderers)
+                            renderer.BuildRendererTree(rendererContext, permissionContext);
+                    }
+                }
+                else
+                {
+                    
+                    foreach (var item in rendererContext.TableDataSet.GroupedItems)
+                    {
+                        rendererContext.ActualItem = item;
+                        foreach (var renderer in gridPartRenderers)
+                            renderer.BuildRendererTree(rendererContext, permissionContext);
+                    }
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -57,5 +60,37 @@ namespace Blazor.FlexGrid.DataSet
 
         public static bool IsItemEdited(this ITableDataSet tableDataSet, object item)
             => tableDataSet.RowEditOptions.ItemInEditMode == item;
+
+        public static IEnumerable<IGrouping<object, TItem>> GroupItems<TItem>(this IGroupableTableDataSet tableDataSet)
+        {
+
+            return tableDataSet.GroupItems<TItem>(((IBaseTableDataSet<TItem>)tableDataSet).Items.AsQueryable());
+
+        }
+
+        public static IEnumerable<IGrouping<object, TItem>> GroupItems<TItem>(
+            this IGroupableTableDataSet tableDataSet, IQueryable<TItem> source)
+        {
+            var groupingOptions = tableDataSet.GroupingOptions;
+            if (groupingOptions.IsGroupingActive)
+            {
+
+
+                var param = Expression.Parameter(typeof(TItem));
+                var propertyOrField = Expression.PropertyOrField(param, groupingOptions.GroupedProperty.Name);
+                var keyExpression = Expression.Lambda(propertyOrField, param);
+
+                var groupedItems = source.GroupBy((Func<TItem, object>)keyExpression.Compile());
+
+                return groupedItems;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+
     }
 }

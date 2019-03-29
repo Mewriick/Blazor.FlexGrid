@@ -60,7 +60,9 @@ namespace Blazor.FlexGrid.Components
             RenderFragment<ImutableGridRendererContext> grid = (ImutableGridRendererContext imutableGridRendererContext)
                 => delegate (RenderTreeBuilder internalBuilder)
             {
-                var gridRendererContext = new GridRendererContext(gridContexts.ImutableRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
+                var gridRendererContext = new GridRendererContext(gridContexts.ImutableRendererContext, 
+                                                                  new BlazorRendererTreeBuilder(internalBuilder), 
+                                                                  tableDataSet);
                 GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
             };
 
@@ -106,6 +108,7 @@ namespace Blazor.FlexGrid.Components
             }
         }
 
+
         private ITableDataSet GetTableDataSet()
         {
             var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
@@ -126,6 +129,7 @@ namespace Blazor.FlexGrid.Components
             }
 
             tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
+
 
             return tableDataSet;
         }

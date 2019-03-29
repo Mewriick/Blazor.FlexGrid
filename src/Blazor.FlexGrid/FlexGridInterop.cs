@@ -27,5 +27,7 @@ namespace Blazor.FlexGrid
         {
             return jSRuntime.InvokeAsync<bool>("flexGrid.appendCssClass", elementName, cssClass);
         }
+
+
     }
 }

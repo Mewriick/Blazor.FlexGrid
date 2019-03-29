@@ -1,12 +1,20 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridFooterRenderer : GridPartRenderer
     {
+        private readonly string groupingSelectId = "grouping-select";
+        private readonly string noGroupingOptionText = "(no grouping)";
+        private readonly string groupByPlaceholder = "Group by:";
+
+        [Inject]
+        private FlexGridInterop FlexGridInterop { get; set; }
+
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             var nextButtonIsDisabled = rendererContext.TableDataSet.PageableOptions.IsLastPage;
@@ -14,6 +22,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             //rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
+
+            RenderGroupingFooterPart(rendererContext);
+
             rendererContext.OpenElement(HtmlTagNames.Div, "pagination-right");
             rendererContext.CloseElement();
             rendererContext.OpenElement(HtmlTagNames.Span, "pagination-page-status");
@@ -33,6 +44,60 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.TableDataSet.HasItems();
+
+        private void RenderGroupingFooterPart(GridRendererContext rendererContext)
+        {
+            rendererContext.OpenElement(HtmlTagNames.Div);
+            rendererContext.OpenElement(HtmlTagNames.Select);
+            rendererContext.AddAttribute(HtmlAttributes.Id, groupingSelectId);
+
+            rendererContext.AddOnChangeEvent(() =>
+                BindMethods.GetEventHandlerValue(async (UIChangeEventArgs e) =>
+                {
+                    string propertyName = e.Value.ToString();
+                    if (propertyName == noGroupingOptionText)
+                        rendererContext.TableDataSet.GroupingOptions.DisableGrouping();
+                    else
+                        rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(propertyName);
+                    await rendererContext.TableDataSet.GoToPage(0);
+                    rendererContext.RequestRerenderNotification?.Invoke();
+                })
+            );
+
+
+            if (!rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
+            {
+                rendererContext.OpenElement(HtmlTagNames.Option);
+                rendererContext.AddAttribute(HtmlAttributes.Disabled, true);
+                rendererContext.AddContent(groupByPlaceholder);
+                rendererContext.CloseElement();
+            }
+            else
+            {
+                rendererContext.OpenElement(HtmlTagNames.Option);
+                rendererContext.AddAttribute(HtmlAttributes.Value, string.Empty);
+                rendererContext.AddContent(noGroupingOptionText);
+                rendererContext.CloseElement();
+            }
+
+            foreach (var groupableProperty in rendererContext.TableDataSet.GroupingOptions.GroupableProperties)
+            {
+                rendererContext.OpenElement(HtmlTagNames.Option);
+
+                if (groupableProperty == rendererContext.TableDataSet.GroupingOptions.GroupedProperty)
+                    rendererContext.AddAttribute(HtmlAttributes.Selected, true);
+
+                rendererContext.AddAttribute(HtmlAttributes.Value, groupableProperty.Name);
+                rendererContext.ActualColumnName = groupableProperty.Name;
+                var displayedGroupablePropertyName = rendererContext.ActualColumnConfiguration?.Caption ?? groupableProperty.Name;
+                rendererContext.AddContent(displayedGroupablePropertyName);
+                rendererContext.CloseElement();
+            }
+            rendererContext.CloseElement();
+            rendererContext.CloseElement();
+        }
+
+
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)
         {

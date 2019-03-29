@@ -72,6 +72,15 @@
     vertical-align: middle;
 }
 
+.table-group-row{
+    
+
+}
+
+.table-group-row-cell {
+    column-span: all;
+}
+
 .table-cell {
     display: table-cell;
     padding: 4px 56px 4px 24px;

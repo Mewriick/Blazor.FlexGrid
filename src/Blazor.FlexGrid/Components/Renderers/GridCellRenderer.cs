@@ -1,5 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
+using Microsoft.AspNetCore.Components;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -19,6 +21,22 @@ namespace Blazor.FlexGrid.Components.Renderers
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
+
+            //Action onRowClickAction = null;
+            //if (rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
+            //{
+
+            //    var onRowClicked = rendererContext.TableDataSet.OnRowClicked;
+
+            //    onRowClickAction = onRowClicked?.Invoke(rendererContext);
+            //    rendererContext.AddOnClickEvent(
+            //           () => BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+            //           {
+            //               onRowClickAction();
+            //           })
+            //    );
+
+            //}
 
             if (!rendererContext.IsActualItemEdited)
             {

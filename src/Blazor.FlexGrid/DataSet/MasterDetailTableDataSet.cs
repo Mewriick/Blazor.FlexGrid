@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using System;
@@ -33,7 +34,11 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
+        public Func<GridRendererContext, Action> OnRowClicked => throw new NotImplementedException();
 
+        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+
+        public IEnumerable GroupedItems { get; set; }
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,
@@ -119,5 +124,6 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task<bool> DeleteItem(object item)
             => tableDataSet.DeleteItem(item);
+
     }
 }
