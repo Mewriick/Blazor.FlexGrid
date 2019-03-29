@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Reflection;
 
@@ -62,6 +63,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             IsMasterTable();
             return HasAnnotation(GridViewAnnotationNames.MasterDetailOptions, masterDetailOptions);
         }
+
+        public bool OnlyShowExplicitProperties()
+        {
+            return HasAnnotation(GridViewAnnotationNames.OnlyShowExplicitProperties, true);
+        }
+
 
 
         public bool AllowInlineEdit(InlineEditOptions inlineEditOptions)
