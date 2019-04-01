@@ -59,7 +59,11 @@ namespace Blazor.FlexGrid.Components.Renderers
                 RenderTab(rendererContext, masterTableDataSet, selectedDataAdapter, dataAdapter);
             }
 
-            if (!rendererContext.GridConfiguration.MasterDetailOptions.OnlyShowExplicitDetailTables)
+            if (rendererContext.ShowExplicitDetailTables())
+            {
+                return;
+            }
+
             foreach (var collectionProperty in rendererContext.GridItemCollectionProperties)
             {
                 if (permissionContext.HasCurrentUserReadPermission(collectionProperty.Name))

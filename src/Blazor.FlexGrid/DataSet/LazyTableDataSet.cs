@@ -36,8 +36,6 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-
-
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
