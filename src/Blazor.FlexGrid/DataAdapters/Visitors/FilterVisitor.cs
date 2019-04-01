@@ -15,8 +15,7 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
         public FilterVisitor(
             IMasterDetailRelationship masterDetailRelationship,
             IMasterDetailRowArguments masterDetailRowArguments,
-            ITypePropertyAccessorCache propertyValueAccessorCache
-            )
+            ITypePropertyAccessorCache propertyValueAccessorCache)
         {
             this.masterDetailRelationship = masterDetailRelationship ?? throw new ArgumentNullException(nameof(masterDetailRelationship));
             this.masterDetailRowArguments = masterDetailRowArguments ?? throw new ArgumentNullException(nameof(masterDetailRowArguments));
@@ -47,7 +46,7 @@ namespace Blazor.FlexGrid.DataAdapters.Visitors
 
                 var body = Expression.Equal(member, constant);
 
-                collectionTableDataAdapter.Filter = Expression.Lambda<Func<TItem, bool>>(body, parameter); 
+                collectionTableDataAdapter.Filter = Expression.Lambda<Func<TItem, bool>>(body, parameter);
             }
         }
     }

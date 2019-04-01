@@ -60,7 +60,7 @@ namespace Blazor.FlexGrid.Components
             RenderFragment<ImutableGridRendererContext> grid = (ImutableGridRendererContext imutableGridRendererContext)
                 => delegate (RenderTreeBuilder internalBuilder)
             {
-                var gridRendererContext = new GridRendererContext(gridContexts.ImutableRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
+                var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
                 GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
             };
 
