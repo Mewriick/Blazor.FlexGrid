@@ -73,7 +73,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             RequestRerenderNotification = imutableGridRendererContext.RequestRerenderNotification;
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
             if (TableDataSet.GroupingOptions == null)
-                TableDataSet.GroupingOptions = new GroupingOptions();
+                TableDataSet.GroupingOptions = new NullGroupingOptions();
             TableDataSet.GroupingOptions.GroupableProperties = this.GridItemProperties.ToList();
 
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;

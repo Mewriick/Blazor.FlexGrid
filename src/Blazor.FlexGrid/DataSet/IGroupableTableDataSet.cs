@@ -17,9 +17,11 @@ namespace Blazor.FlexGrid.DataSet
     {
         IGroupingOptions GroupingOptions { get; set; }
 
-        IEnumerable GroupedItems { get; set;  }
+        IEnumerable<GroupItem> GroupedItems { get; set;  }
 
-        //ITableDataSet ConvertToGroupedTableDataSetIfRequired();
+
+        void ToggleGroupRow(object groupItemKey);
+
 
     }
 }

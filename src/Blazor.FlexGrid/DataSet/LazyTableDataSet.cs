@@ -37,11 +37,10 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public Func<GridRendererContext, Action> OnRowClicked => throw new NotImplementedException();
 
         public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
 
-        public IEnumerable GroupedItems { get; set; }
+        public IEnumerable<GroupItem> GroupedItems { get; set; }
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
@@ -152,5 +151,9 @@ namespace Blazor.FlexGrid.DataSet
             return removedItem != null ? true : false;
         }
 
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

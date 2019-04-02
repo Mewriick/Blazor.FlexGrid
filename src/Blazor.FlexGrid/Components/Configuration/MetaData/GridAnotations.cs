@@ -81,6 +81,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+
+
         public bool OnlyShowExplicitProperties
         {
             get

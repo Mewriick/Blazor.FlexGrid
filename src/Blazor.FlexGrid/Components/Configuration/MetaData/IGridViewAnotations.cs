@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.DataSet.Options;
+using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -13,7 +14,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         MasterDetailOptions MasterDetailOptions { get; }
 
         CreateItemOptions CreateItemOptions { get; }
-
+        
         GridCssClasses CssClasses { get; }
 
         IMasterDetailRelationship FindRelationshipConfiguration(Type detailType);

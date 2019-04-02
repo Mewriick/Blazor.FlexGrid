@@ -43,7 +43,8 @@
             {
                 FooterWrapper = $"{defaultFooterClasses.FooterWrapper} {FooterCssClasses.FooterWrapper}".TrimEnd(),
                 PaginationButton = $"{defaultFooterClasses.PaginationButton} {FooterCssClasses.PaginationButton}".TrimEnd(),
-                PaginationButtonDisabled = $"{defaultFooterClasses.PaginationButtonDisabled} {FooterCssClasses.PaginationButtonDisabled}".TrimEnd()
+                PaginationButtonDisabled = $"{defaultFooterClasses.PaginationButtonDisabled} {FooterCssClasses.PaginationButtonDisabled}".TrimEnd(),
+                GroupingPartWrapper = $"{defaultFooterClasses.GroupingPartWrapper} {FooterCssClasses.GroupingPartWrapper}".TrimEnd()
             };
         }
 
@@ -68,6 +69,8 @@
         public string PaginationButton { get; set; } = string.Empty;
 
         public string PaginationButtonDisabled { get; set; } = string.Empty;
+
+        public string GroupingPartWrapper { get; set; } = string.Empty;
     }
 
     public class CreateFormCssClasses
@@ -111,6 +114,7 @@
             FooterWrapper = "pagination-wrapper-inner";
             PaginationButton = "pagination-button";
             PaginationButtonDisabled = "pagination-button pagination-button-disabled";
+            GroupingPartWrapper = "grouping-part-wrapper";
         }
     }
 

@@ -1,8 +1,12 @@
-﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
+﻿using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -18,25 +22,29 @@ namespace Blazor.FlexGrid.Components.Renderers
         public override bool CanRender(GridRendererContext rendererContext)
             => true;
 
+
+
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
 
-            //Action onRowClickAction = null;
-            //if (rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
-            //{
+            Action onRowClickAction = null;
+            if (rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
+            {
 
-            //    var onRowClicked = rendererContext.TableDataSet.OnRowClicked;
+                var onRowClicked = OnRowClicked(rendererContext);
 
-            //    onRowClickAction = onRowClicked?.Invoke(rendererContext);
-            //    rendererContext.AddOnClickEvent(
-            //           () => BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-            //           {
-            //               onRowClickAction();
-            //           })
-            //    );
+                onRowClickAction = onRowClicked?.Invoke(rendererContext);
+                
+                if (!rendererContext.IsActualItemEdited)
+                    rendererContext.AddOnClickEvent(
+                           () => BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                           {
+                               onRowClickAction();
+                           })
+                    );
 
-            //}
+            }
 
             if (!rendererContext.IsActualItemEdited)
             {
@@ -59,6 +67,32 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
 
             rendererContext.CloseElement();
+        }
+
+        private Func<GridRendererContext, Action> OnRowClicked(GridRendererContext rendererContext)
+        {
+            Action<object> onItemClicked;
+            var gridViewEvents = rendererContext.TableDataSet.GridViewEvents;
+            if (gridViewEvents != null && gridViewEvents.OnItemClicked != null)
+                onItemClicked = (item) => gridViewEvents.OnItemClicked(new ItemClickedArgs { Item = item });
+            else
+                onItemClicked = (item) => { };
+
+            return (context) =>
+            {
+
+                object actualItem = context.ActualItem;
+                if (actualItem != null)
+                    return () =>
+                    {
+                        onItemClicked(actualItem);
+                    };
+                else
+                    return () => { };
+
+
+            };
+
         }
     }
 }

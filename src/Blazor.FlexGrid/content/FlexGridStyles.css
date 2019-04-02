@@ -72,13 +72,28 @@
     vertical-align: middle;
 }
 
-.table-group-row{
+.table-group-row {
     
-
 }
 
 .table-group-row-cell {
     column-span: all;
+    border-style: groove;
+    background-color: rgba(150,00,150,0.01);
+    font-family: inherit;
+    height: 50px;
+    border-width: thick;
+    border-color: snow;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: dimgrey;
+}
+
+.table-group-row-wrapper-collapsed tr:not(:first-child) {
+    display: none;
+}
+
+.table-group-row-wrapper {
 }
 
 .table-cell {
@@ -91,6 +106,15 @@
     font-weight: 400;
     text-align: right;
     flex-direction: row-reverse;
+}
+
+
+.grouping-part-wrapper select {
+    border-radius: 10px 10px;
+    width: 180px;
+    height: 40px;
+    border-width: thick;
+    border-color: rgba(0, 0, 0, 0.35);
 }
 
 .pagination-wrapper {

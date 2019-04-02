@@ -75,6 +75,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+
+
         public virtual EntityTypeBuilder<TEntity> AllowInlineEdit(Action<InlineEditOptions> configureInlineEdit)
         {
             var inlineEditOptions = new InlineEditOptions();
@@ -108,6 +110,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+
 
         
     }

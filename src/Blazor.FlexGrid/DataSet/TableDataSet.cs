@@ -33,27 +33,8 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public Action<TItem> OnItemClicked { get; set; }
 
-        public Func<GridRendererContext, Action> OnRowClicked
-        {
-            get
-            {
-                return (context) =>
-                {
-
-                    TItem actualItem = Items.SingleOrDefault(it => (TItem)context.ActualItem == it);
-                    if (OnItemClicked != null && actualItem != null)
-                        return () => OnItemClicked(actualItem);
-                    else
-                        return () => { };
-
-
-                };
-            }
-        }
-
-        public IEnumerable GroupedItems { get; set; }
+        public IEnumerable<GroupItem> GroupedItems { get; set; }
 
         public TableDataSet(IQueryable<TItem> source)
         {
@@ -82,7 +63,10 @@ namespace Blazor.FlexGrid.DataSet
                 SortingOptions.SortDescending = !SortingOptions.SortDescending;
             }
 
-            return GoToPage(0);
+            if (!GroupingOptions.IsGroupingActive)
+                return GoToPage(0);
+            else
+                return Task.Run(() => LoadFromQueryableSource());
         }
 
         public void ToggleRowItem(object item)
@@ -157,29 +141,72 @@ namespace Blazor.FlexGrid.DataSet
         private void LoadFromQueryableSource()
         {
             PageableOptions.TotalItemsCount = ApplyDeletedConditionToQueryable(source).Count();
-            Items = ApplyFiltersToQueryable(source).ToList();
-            if (GroupingOptions.IsGroupingActive)
-                GroupedItems = ApplyGroupingToQueryable(source);
+            if (!GroupingOptions.IsGroupingActive)
+            {
+                Items = ApplyFiltersToQueryable(source).ToList();
+            }
+            else
+            {
+                GroupedItems = ApplyFiltersWithGroupingToQueryable(source);
+            }
         }
 
-        private IEnumerable ApplyGroupingToQueryable(IQueryable<TItem> source)
+        private IQueryable<GroupItem<TItem>> ApplyFiltersWithGroupingToQueryable(IQueryable<TItem> source)
         {
-            var groupedItems = this.GroupItems<TItem>(source);
-            groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
-            groupedItems = ApplySortingToGroupedQueryable(groupedItems);
-            return groupedItems;
+            try
+            {
+                var groupedItems = this.GroupItems<TItem>(source);
+                groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
+                groupedItems = ApplySortingToGroupedQueryable(groupedItems);
+
+
+                if (this.GroupedItems == null)
+                {
+
+                    return groupedItems.Select(item => new GroupItem<TItem>(item) { IsCollapsed = true });
+                }
+                else
+                {
+
+                    //Join query with pre-existing GroupItems collection in order not to lose "IsCollapsed" values
+                    string defaultStrValueIfNull = Guid.NewGuid().ToString();
+                    var queryIfCollapsedValues = from newItem in groupedItems
+                                           join oldItem in this.GroupedItems on newItem.Key ?? defaultStrValueIfNull
+                                                                         equals oldItem.Key ?? defaultStrValueIfNull
+                                                                         into joinQuery
+                                           from x in joinQuery.DefaultIfEmpty()
+                                           select new GroupItem<TItem>(newItem) { IsCollapsed = x != null ? x.IsCollapsed : true };
+
+                    return queryIfCollapsedValues;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+            
         }
 
-        private IEnumerable<IGrouping<object, TItem>> ApplySortingToGroupedQueryable(IEnumerable<IGrouping<object, TItem>> queryable)
+        private IQueryable<IGrouping<object, TItem>> ApplySortingToGroupedQueryable(IQueryable<IGrouping<object, TItem>> queryable)
         {
             if (!string.IsNullOrEmpty(SortingOptions?.SortExpression))
             {
-                var sortedQueryable = queryable;
-                foreach (var group in sortedQueryable)
+                if (SortingOptions.SortExpression != GroupingOptions.GroupedProperty.Name)
                 {
-                    ApplySortingToQueryable(group.AsQueryable());
+                                                                      
+
+                    var query = queryable
+                        .Select(x => new GroupItem<TItem>(x.Key, 
+                                SortingOptions.SortDescending ? x.AsQueryable().OrderByDescending(SortingOptions.SortExpression)
+                                                              : x.AsQueryable().OrderBy(SortingOptions.SortExpression) ));
+                    return query;
                 }
-                return sortedQueryable;
+                else
+                    return SortingOptions.SortDescending
+                        ? queryable.OrderByDescending(x => x.Key).AsQueryable()
+                        : queryable.OrderBy(x => x.Key).AsQueryable();
+
             }
             else
             {
@@ -187,7 +214,7 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        private IEnumerable<IGrouping<object, TItem>> ApplyPagingToGroupedQueryable(IEnumerable<IGrouping<object, TItem>> queryable)
+        private IQueryable<IGrouping<object, TItem>> ApplyPagingToGroupedQueryable(IQueryable<IGrouping<object, TItem>> queryable)
         {
             PageableOptions.TotalItemsCount = queryable.Count();
             return ApplyPagingToQueryable<IGrouping<object, TItem>>(queryable.AsQueryable());
@@ -237,8 +264,15 @@ namespace Blazor.FlexGrid.DataSet
                 : source.OrderBy(SortingOptions.SortExpression);
         }
 
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            var groupItemToToggle = this.GroupedItems.FirstOrDefault(item => item.Key == groupItemKey);
+            groupItemToToggle.IsCollapsed = !groupItemToToggle.IsCollapsed;
 
-
+            this.GroupedItems = this.GroupedItems.Select(item => (((GroupItem<TItem>)item).Key != groupItemKey)
+                                                                ? item
+                                                                : groupItemToToggle);
+        }
 
 
     }

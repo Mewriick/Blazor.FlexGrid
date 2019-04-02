@@ -34,11 +34,10 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public Func<GridRendererContext, Action> OnRowClicked => throw new NotImplementedException();
 
         public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
 
-        public IEnumerable GroupedItems { get; set; }
+        public IEnumerable<GroupItem> GroupedItems { get; set; }
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,
@@ -125,5 +124,9 @@ namespace Blazor.FlexGrid.DataSet
         public Task<bool> DeleteItem(object item)
             => tableDataSet.DeleteItem(item);
 
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

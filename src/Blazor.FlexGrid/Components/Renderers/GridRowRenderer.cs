@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Permission;
+﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Permission;
 using System.Linq;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -6,8 +7,8 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class GridRowRenderer : GridCompositeRenderer
     {
         public override bool CanRender(GridRendererContext rendererContext)
-            => !rendererContext.ActualItem.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IGrouping<,>));
-            
+            => !(rendererContext.ActualItem is GroupItem 
+            || rendererContext.GetType().BaseType == typeof(GroupItem));
 
         protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {

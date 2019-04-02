@@ -14,7 +14,9 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         public bool IsGroupingActive => GroupedProperty != null;
 
-        public void DisableGrouping()
+        public bool IsGroupingEnabled { get; set; } = true;
+
+        public void DeactivateGrouping()
         {
             GroupedProperty = null;
         }

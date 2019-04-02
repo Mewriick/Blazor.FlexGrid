@@ -12,8 +12,6 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly string noGroupingOptionText = "(no grouping)";
         private readonly string groupByPlaceholder = "Group by:";
 
-        [Inject]
-        private FlexGridInterop FlexGridInterop { get; set; }
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
@@ -23,7 +21,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             //rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
 
-            RenderGroupingFooterPart(rendererContext);
+            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled
+                && rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
+                RenderGroupingFooterPart(rendererContext);
 
             rendererContext.OpenElement(HtmlTagNames.Div, "pagination-right");
             rendererContext.CloseElement();
@@ -47,7 +47,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderGroupingFooterPart(GridRendererContext rendererContext)
         {
-            rendererContext.OpenElement(HtmlTagNames.Div);
+            rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.GroupingPartWrapper);
             rendererContext.OpenElement(HtmlTagNames.Select);
             rendererContext.AddAttribute(HtmlAttributes.Id, groupingSelectId);
 
@@ -56,7 +56,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 {
                     string propertyName = e.Value.ToString();
                     if (propertyName == noGroupingOptionText)
-                        rendererContext.TableDataSet.GroupingOptions.DisableGrouping();
+                        rendererContext.TableDataSet.GroupingOptions.DeactivateGrouping();
                     else
                         rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(propertyName);
                     await rendererContext.TableDataSet.GoToPage(0);

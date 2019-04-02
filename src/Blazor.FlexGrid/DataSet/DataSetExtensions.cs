@@ -68,21 +68,28 @@ namespace Blazor.FlexGrid.DataSet
 
         }
 
-        public static IEnumerable<IGrouping<object, TItem>> GroupItems<TItem>(
+        public static IQueryable<IGrouping<object, TItem>> GroupItems<TItem>(
             this IGroupableTableDataSet tableDataSet, IQueryable<TItem> source)
         {
             var groupingOptions = tableDataSet.GroupingOptions;
             if (groupingOptions.IsGroupingActive)
             {
+                try
+                {
+
+                    var param = Expression.Parameter(typeof(TItem));
+                    var propertyOrField = Expression.PropertyOrField(param, groupingOptions.GroupedProperty.Name);
+                    var keyExpression = Expression.Lambda(propertyOrField, param);
+
+                    var groupedItems = source.GroupBy((Func<TItem, object>)keyExpression.Compile());
 
 
-                var param = Expression.Parameter(typeof(TItem));
-                var propertyOrField = Expression.PropertyOrField(param, groupingOptions.GroupedProperty.Name);
-                var keyExpression = Expression.Lambda(propertyOrField, param);
-
-                var groupedItems = source.GroupBy((Func<TItem, object>)keyExpression.Compile());
-
-                return groupedItems;
+                    return groupedItems.AsQueryable();
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
             }
             else
             {

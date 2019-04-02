@@ -12,7 +12,7 @@ namespace Blazor.FlexGrid.DataSet
     {
         GridViewEvents GridViewEvents { get; }
 
-        Func<GridRendererContext, Action> OnRowClicked { get; }
+        
 
 
     }
