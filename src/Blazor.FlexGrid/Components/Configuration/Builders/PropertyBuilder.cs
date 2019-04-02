@@ -42,6 +42,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public PropertyBuilder<TProperty, TEntity> IsFilterable()
+        {
+            Builder.IsFilterable();
+
+            return this;
+        }
+
         public PropertyBuilder<TProperty, TEntity> HasOrder(int order)
         {
             Builder.HasOrder(order);

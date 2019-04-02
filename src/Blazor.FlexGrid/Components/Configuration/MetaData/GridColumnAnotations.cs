@@ -81,6 +81,21 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public bool IsFilterable
+        {
+            get
+            {
+                var filterAnnotationValue = Annotations[GridViewAnnotationNames.ColumnIsFilterable];
+                if (filterAnnotationValue is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)filterAnnotationValue;
+            }
+        }
+
+
         public IValueFormatter ValueFormatter
         {
             get
@@ -137,6 +152,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         }
 
         protected IAnnotatable Annotations { get; }
+
 
         public GridColumnAnotations(IProperty property)
         {

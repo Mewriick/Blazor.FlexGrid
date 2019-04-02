@@ -2,7 +2,7 @@
 
 namespace Blazor.FlexGrid.Filters
 {
-    public class ExpressionFilter : IFilterDefinition
+    public class ExpressionFilterDefinition : IFilterDefinition
     {
         public string ColumnName { get; }
 
@@ -10,7 +10,7 @@ namespace Blazor.FlexGrid.Filters
 
         public FilterOperation FilterOperation { get; }
 
-        public ExpressionFilter(string columnName, FilterOperation filterOperation, object value)
+        public ExpressionFilterDefinition(string columnName, FilterOperation filterOperation, object value)
         {
             ColumnName = string.IsNullOrWhiteSpace(columnName)
                 ? throw new ArgumentNullException(nameof(columnName))

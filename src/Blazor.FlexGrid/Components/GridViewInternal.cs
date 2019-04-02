@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData.Conventions;
 using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.Components.Filters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
@@ -18,6 +19,7 @@ namespace Blazor.FlexGrid.Components
     {
         private ITableDataSet tableDataSet;
         private bool dataAdapterWasEmptyInOnInit;
+        private FilterContext fixedFilterContext;
 
         [Inject]
         private IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
@@ -57,29 +59,41 @@ namespace Blazor.FlexGrid.Components
             var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
 
-            RenderFragment<ImutableGridRendererContext> grid = (ImutableGridRendererContext imutableGridRendererContext)
-                => delegate (RenderTreeBuilder internalBuilder)
+            RenderFragment<ImutableGridRendererContext> tableFragment =
+                (ImutableGridRendererContext imutableGridRendererContext) => delegate (RenderTreeBuilder internalBuilder)
             {
                 var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
                 GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
             };
 
-            rendererTreeBuilder
-                .OpenComponent(typeof(GridViewTable))
-                .AddAttribute(nameof(ImutableGridRendererContext), gridContexts.ImutableRendererContext)
-                .AddAttribute(RenderTreeBuilder.ChildContent, grid)
-                .CloseComponent();
-
-            if (gridContexts.ImutableRendererContext.CreateItemIsAllowed())
+            RenderFragment flexGridFragment = delegate (RenderTreeBuilder interalBuilder)
             {
-                rendererTreeBuilder
-                      .OpenComponent(typeof(CreateItemModal))
-                      .AddAttribute(nameof(CreateItemOptions), gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
-                      .AddAttribute(nameof(PermissionContext), gridContexts.PermissionContext)
-                      .AddAttribute(nameof(CreateFormCssClasses), gridContexts.ImutableRendererContext.CssClasses.CreateFormCssClasses)
-                      .AddAttribute(nameof(NewItemCreated), NewItemCreated)
-                      .CloseComponent();
-            }
+                var internalRendererTreeBuilder = new BlazorRendererTreeBuilder(interalBuilder);
+
+                internalRendererTreeBuilder
+                    .OpenComponent(typeof(GridViewTable))
+                    .AddAttribute(nameof(ImutableGridRendererContext), gridContexts.ImutableRendererContext)
+                    .AddAttribute(RenderTreeBuilder.ChildContent, tableFragment)
+                    .CloseComponent();
+
+                if (gridContexts.ImutableRendererContext.CreateItemIsAllowed())
+                {
+                    internalRendererTreeBuilder
+                          .OpenComponent(typeof(CreateItemModal))
+                          .AddAttribute(nameof(CreateItemOptions), gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
+                          .AddAttribute(nameof(PermissionContext), gridContexts.PermissionContext)
+                          .AddAttribute(nameof(CreateFormCssClasses), gridContexts.ImutableRendererContext.CssClasses.CreateFormCssClasses)
+                          .AddAttribute(nameof(NewItemCreated), NewItemCreated)
+                          .CloseComponent();
+                }
+            };
+
+            rendererTreeBuilder
+                .OpenComponent(typeof(CascadingValue<FilterContext>))
+                .AddAttribute("IsFixed", true)
+                .AddAttribute("Value", fixedFilterContext)
+                .AddAttribute(nameof(RenderTreeBuilder.ChildContent), flexGridFragment)
+                .CloseComponent();
         }
 
         protected override async Task OnInitAsync()
@@ -97,6 +111,8 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnParametersSetAsync()
         {
+            fixedFilterContext = new FilterContext();
+
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);

@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+using Blazor.FlexGrid.Components.Filters;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
@@ -177,6 +178,14 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             AddEventAttributes();
             RendererTreeBuilder.CloseComponent();
+        }
+
+        public void AddFilterComponent(PropertyInfo property)
+        {
+            RendererTreeBuilder
+                .OpenComponent(typeof(ColumnFilter<>).MakeGenericType(property.PropertyType))
+                .AddAttribute("ColumnName", property.Name)
+                .CloseComponent();
         }
 
         public object GetActualItemColumnValue(string columnName)
