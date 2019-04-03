@@ -50,7 +50,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 var keyValue = keyProperty != null ? keyProperty.GetValue(rendererContext.ActualItem) : null;
                 var key = keyValue != null ? keyValue.ToString() : "(null)";
                 if (string.IsNullOrEmpty(key)) key = @"""";
-                rendererContext.AddContent($"       {key}   ");
+                rendererContext.AddContent($"     {key}   ");
 
                 rendererContext.OpenElement(HtmlTagNames.I);
                 rendererContext.AddContent($"({actualGroupItem.Count})");

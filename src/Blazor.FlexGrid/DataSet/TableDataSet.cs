@@ -163,7 +163,7 @@ namespace Blazor.FlexGrid.DataSet
                 if (this.GroupedItems == null)
                 {
 
-                    return groupedItems.Select(item => new GroupItem<TItem>(item) { IsCollapsed = true });
+                    return groupedItems.Select(item => new GroupItem<TItem>(item.Key, item.Items) { IsCollapsed = true });
                 }
                 else
                 {
@@ -175,7 +175,7 @@ namespace Blazor.FlexGrid.DataSet
                                                                          equals oldItem.Key ?? defaultStrValueIfNull
                                                                          into joinQuery
                                            from x in joinQuery.DefaultIfEmpty()
-                                           select new GroupItem<TItem>(newItem) { IsCollapsed = x != null ? x.IsCollapsed : true };
+                                           select new GroupItem<TItem>(newItem.Key, newItem.Items) { IsCollapsed = x != null ? x.IsCollapsed : true };
 
                     return queryIfCollapsedValues;
                 }
@@ -188,7 +188,7 @@ namespace Blazor.FlexGrid.DataSet
             
         }
 
-        private IQueryable<IGrouping<object, TItem>> ApplySortingToGroupedQueryable(IQueryable<IGrouping<object, TItem>> queryable)
+        private IQueryable<GroupItem<TItem>> ApplySortingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
         {
             if (!string.IsNullOrEmpty(SortingOptions?.SortExpression))
             {
@@ -214,10 +214,10 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        private IQueryable<IGrouping<object, TItem>> ApplyPagingToGroupedQueryable(IQueryable<IGrouping<object, TItem>> queryable)
+        private IQueryable<GroupItem<TItem>> ApplyPagingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
         {
             PageableOptions.TotalItemsCount = queryable.Count();
-            return ApplyPagingToQueryable<IGrouping<object, TItem>>(queryable.AsQueryable());
+            return ApplyPagingToQueryable<GroupItem<TItem>>(queryable);
         }
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
@@ -266,12 +266,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public void ToggleGroupRow(object groupItemKey)
         {
-            var groupItemToToggle = this.GroupedItems.FirstOrDefault(item => item.Key == groupItemKey);
-            groupItemToToggle.IsCollapsed = !groupItemToToggle.IsCollapsed;
-
-            this.GroupedItems = this.GroupedItems.Select(item => (((GroupItem<TItem>)item).Key != groupItemKey)
-                                                                ? item
-                                                                : groupItemToToggle);
+            this.ToggleGroupRow<TItem>(groupItemKey);
         }
 
 

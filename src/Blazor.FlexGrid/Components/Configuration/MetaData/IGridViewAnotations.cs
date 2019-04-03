@@ -17,6 +17,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         
         GridCssClasses CssClasses { get; }
 
+        GlobalGroupingOptions GroupingOptions { get; }
+
         IMasterDetailRelationship FindRelationshipConfiguration(Type detailType);
     }
 }

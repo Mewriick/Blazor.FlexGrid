@@ -153,7 +153,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public void ToggleGroupRow(object groupItemKey)
         {
-            throw new NotImplementedException();
+            this.ToggleGroupRow<TItem>(groupItemKey);
         }
     }
 }

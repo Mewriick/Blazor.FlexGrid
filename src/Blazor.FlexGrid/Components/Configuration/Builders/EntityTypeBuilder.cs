@@ -58,6 +58,19 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public virtual EntityTypeBuilder<TEntity> EnableGrouping()
+        {
+            Builder.EnableGrouping();
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> EnableGrouping(Action<GlobalGroupingOptions> confGroupingOptions)
+        {
+            var groupingOptions = new GlobalGroupingOptions();
+            confGroupingOptions?.Invoke(groupingOptions);
+            Builder.EnableGrouping(groupingOptions);
+            return this;
+        }
 
         public virtual EntityTypeBuilder<TEntity> IsMasterTable(Action<MasterDetailOptions> configureMasterDetails)
         {

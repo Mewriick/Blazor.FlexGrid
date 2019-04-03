@@ -15,7 +15,7 @@ namespace Blazor.FlexGrid.DataSet
 
     public interface IGroupableTableDataSet
     {
-        IGroupingOptions GroupingOptions { get; set; }
+        IGroupingOptions GroupingOptions { get;  }
 
         IEnumerable<GroupItem> GroupedItems { get; set;  }
 

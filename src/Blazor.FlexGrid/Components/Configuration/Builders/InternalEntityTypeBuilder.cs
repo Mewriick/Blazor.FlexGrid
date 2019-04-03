@@ -69,7 +69,11 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return HasAnnotation(GridViewAnnotationNames.OnlyShowExplicitProperties, true);
         }
 
-
+        public bool EnableGrouping(GlobalGroupingOptions groupingOptions = null)
+        {
+            return HasAnnotation(GridViewAnnotationNames.GroupingOptions,
+                groupingOptions ?? new GlobalGroupingOptions { IsGroupingEnabled = true });
+        }
 
         public bool AllowInlineEdit(InlineEditOptions inlineEditOptions)
             => HasAnnotation(GridViewAnnotationNames.InlineEditOptions, inlineEditOptions);

@@ -9,9 +9,10 @@ namespace Blazor.FlexGrid.DataSet
     public class GroupItem<TItem>: GroupItem, IGrouping<object, TItem>
     {
         
-        private IEnumerable<TItem> items;
+        //private IEnumerable<TItem> items;
+        public IEnumerable<TItem> Items { get; set; }
 
-        public override int Count => items != null ? items.Count() : 0;
+        public override int Count => Items != null ? Items.Count() : 0;
                 
 
         public GroupItem()
@@ -22,26 +23,27 @@ namespace Blazor.FlexGrid.DataSet
         public GroupItem(object key, IEnumerable<TItem> items)
         {
             this.ItemType = typeof(TItem);
-            this.items = items;
+            this.Items = items;
             this.Key = key;
         }
 
         public GroupItem(IGrouping<object, TItem> groupItems)
         {
             this.ItemType = typeof(TItem);
-            this.items = groupItems;
+            
+            this.Items = groupItems;
             this.Key = groupItems.Key;
         }
 
 
         public IEnumerator<TItem> GetEnumerator()
         {
-            return items.GetEnumerator();
+            return Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return items.GetEnumerator();
+            return Items.GetEnumerator();
         }
     }
 

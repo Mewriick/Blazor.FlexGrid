@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
 namespace Blazor.FlexGrid.DataSet.Options
 {
-    public class GroupingOptions : IGroupingOptions
+    public class GroupingOptions : GlobalGroupingOptions, IGroupingOptions
     {
         //public IList<PropertyInfo> GroupedProperties { get; set; }
         public PropertyInfo GroupedProperty { get; set; }
@@ -14,11 +15,17 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         public bool IsGroupingActive => GroupedProperty != null;
 
-        public bool IsGroupingEnabled { get; set; } = true;
 
         public void DeactivateGrouping()
         {
             GroupedProperty = null;
+        }
+
+        public void SetConfiguration(GlobalGroupingOptions globalGroupingOptions)
+        {
+            this.IsGroupingEnabled = globalGroupingOptions != null 
+                ? globalGroupingOptions.IsGroupingEnabled
+                : false;
         }
 
         public bool SetGroupedProperty(string propertyName)

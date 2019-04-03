@@ -97,7 +97,18 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-
+        public GlobalGroupingOptions GroupingOptions
+        {
+            get
+            {
+                var groupingOptions = annotations[GridViewAnnotationNames.GroupingOptions];
+                if (groupingOptions is NullAnotationValue)
+                {
+                    return new NullGlobalGroupingOptions();
+                }
+                return (GlobalGroupingOptions)groupingOptions;
+            }
+        }
 
         public GridAnotations(IEntityType entityType)
         {

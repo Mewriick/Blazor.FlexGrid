@@ -21,8 +21,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             //rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
 
-            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled
-                && rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
+            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled)
                 RenderGroupingFooterPart(rendererContext);
 
             rendererContext.OpenElement(HtmlTagNames.Div, "pagination-right");

@@ -35,9 +35,19 @@ namespace Blazor.FlexGrid.DataSet
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
 
-        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+        public IGroupingOptions GroupingOptions => tableDataSet.GroupingOptions;
 
-        public IEnumerable<GroupItem> GroupedItems { get; set; }
+        public IEnumerable<GroupItem> GroupedItems
+        {
+            get
+            {
+                return tableDataSet.GroupedItems;
+            }
+            set
+            {
+                tableDataSet.GroupedItems = value;
+            }
+        }
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,
@@ -126,7 +136,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public void ToggleGroupRow(object groupItemKey)
         {
-            throw new NotImplementedException();
+            this.ToggleGroupRow<TItem>(groupItemKey);
         }
     }
 }

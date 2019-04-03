@@ -68,7 +68,7 @@ namespace Blazor.FlexGrid.DataSet
 
         }
 
-        public static IQueryable<IGrouping<object, TItem>> GroupItems<TItem>(
+        public static IQueryable<GroupItem<TItem>> GroupItems<TItem>(
             this IGroupableTableDataSet tableDataSet, IQueryable<TItem> source)
         {
             var groupingOptions = tableDataSet.GroupingOptions;
@@ -79,12 +79,36 @@ namespace Blazor.FlexGrid.DataSet
 
                     var param = Expression.Parameter(typeof(TItem));
                     var propertyOrField = Expression.PropertyOrField(param, groupingOptions.GroupedProperty.Name);
-                    var keyExpression = Expression.Lambda(propertyOrField, param);
 
-                    var groupedItems = source.GroupBy((Func<TItem, object>)keyExpression.Compile());
+                    var callToString = Expression.Call(propertyOrField,
+                        propertyOrField.Type.GetMethods().FirstOrDefault(m => m.Name == "ToString"));
+
+                    var callExprReturnLabel = Expression.Label(typeof(string));
+
+                    Expression<Func<TItem, string>> keyExpression;
+
+                    if (CanAcceptNullValueExpression(propertyOrField.Type))
+                    {
+                        var test = Expression.Equal(propertyOrField, Expression.Constant(null, propertyOrField.Type));
+                        var returnIfTrue = Expression.Return(callExprReturnLabel, Expression.Constant(null, typeof(string)));
+                        var returnIfFalse = Expression.Return(callExprReturnLabel, callToString);
+                        var callAndNullCheckExpr = Expression.IfThenElse(
+                            test, returnIfTrue, returnIfFalse);
 
 
-                    return groupedItems.AsQueryable();
+                        var lambdaBodyBlock = Expression.Block(callAndNullCheckExpr,
+                            Expression.Label(callExprReturnLabel, Expression.Constant(null, typeof(string))));
+                        keyExpression = Expression.Lambda<Func<TItem, string>>(lambdaBodyBlock, param);
+                    }
+                    else
+                    {
+                        keyExpression = Expression.Lambda<Func<TItem, string>>(callToString, param);
+                    }
+
+                    return source.GroupBy(keyExpression)
+                                .Select(grp => new GroupItem<TItem>(grp.Key, grp));
+
+                    
                 }
                 catch(Exception ex)
                 {
@@ -96,6 +120,45 @@ namespace Blazor.FlexGrid.DataSet
                 return null;
             }
 
+        }
+
+        private static bool CanAcceptNullValueExpression(Type type)
+        {
+            try
+            {
+                Expression.Constant(null, type);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void ToggleGroupRow<TItem>(this ITableDataSet tableDataSet, object groupItemKey)
+        {
+            var keyEqualityComparer = new GroupingKeyEqualityComparer();
+            var groupItemToToggle = tableDataSet.GroupedItems.FirstOrDefault(item => keyEqualityComparer.Equals(item.Key, groupItemKey) );
+            groupItemToToggle.IsCollapsed = !groupItemToToggle.IsCollapsed;
+
+            tableDataSet.GroupedItems = tableDataSet.GroupedItems.Select(item => !keyEqualityComparer.Equals(((GroupItem<TItem>)item).Key, groupItemKey)
+                                                                ? item
+                                                                : groupItemToToggle);
+        }
+
+        private class GroupingKeyEqualityComparer : IEqualityComparer<object>
+        {
+            public new bool Equals(object x, object y)
+            {
+                return (x != null && y != null)
+                      ? x.ToString() == y.ToString()
+                      : x == null && y == null;
+            }
+
+            public int GetHashCode(object obj)
+            {
+                return obj.GetHashCode();
+            }
         }
 
 
