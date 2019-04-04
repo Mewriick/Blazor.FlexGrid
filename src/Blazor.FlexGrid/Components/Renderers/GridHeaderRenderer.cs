@@ -55,9 +55,14 @@ namespace Blazor.FlexGrid.Components.Renderers
         private void RenderColumnHeader(GridRendererContext rendererContext, PropertyInfo property)
         {
             var columnConfiguration = rendererContext.ActualColumnConfiguration;
+
+            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
+
             if (columnConfiguration == null)
             {
-                RenderSimpleColumnHeader(rendererContext, property, columnConfiguration);
+                rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
+                rendererContext.AddFilterComponent(property);
+                rendererContext.CloseElement();
 
                 return;
             }
@@ -68,13 +73,15 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
             else
             {
-                RenderSimpleColumnHeader(rendererContext, property, columnConfiguration);
+                rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
             }
+
+            rendererContext.AddFilterComponent(property);
+            rendererContext.CloseElement();
         }
 
         private void RenderSortableColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
         {
-            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
             rendererContext.OpenElement(HtmlTagNames.Span,
                 rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
             rendererContext.AddOnClickEvent(() =>
@@ -97,14 +104,6 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
             }
 
-            rendererContext.CloseElement();
-            rendererContext.CloseElement();
-        }
-
-        private void RenderSimpleColumnHeader(GridRendererContext rendererContext, PropertyInfo property, IGridViewColumnAnotations columnConfiguration)
-        {
-            rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
-            rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
             rendererContext.CloseElement();
         }
 

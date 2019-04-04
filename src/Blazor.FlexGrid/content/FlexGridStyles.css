@@ -325,6 +325,13 @@
         outline: none;
     }
 
+.action-button-small {
+    height: 24px;
+    font-size: 0.8rem;
+    width: 24px;
+    padding-left: 5px;
+}
+
 .action-button-span {
     width: 100%;
     display: flex;
@@ -475,3 +482,25 @@
     .radio label input[type="radio"]:disabled + .cr {
         opacity: .5;
     }
+
+.filter-wrapper {
+    width: 201px;
+    height: 151px;
+    overflow: hidden;
+    top: 344.156px;
+    z-index: 10002;
+    left: 645.031px;
+    box-sizing: content-box;
+    display: none;
+    position: absolute;
+}
+
+.filter-wrapper-open {
+    width: 201px;
+    height: 151px;
+    overflow: visible;
+    z-index: 10002; 
+    box-sizing: content-box;
+    display: block;
+    position: absolute;
+}
