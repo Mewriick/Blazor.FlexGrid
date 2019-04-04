@@ -19,7 +19,6 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
-        //public Action<TItem> OnItemClicked { get; set; }
 
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
@@ -38,7 +37,6 @@ namespace Blazor.FlexGrid.DataAdapters
                 GridViewEvents = tableDataSetOptions.GridViewEvents,
                 GroupingOptions = new GroupingOptions()
             };
-            //tableDataSet.OnItemClicked = this.OnItemClicked;
 
             return tableDataSet;
         }

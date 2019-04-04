@@ -61,12 +61,7 @@ namespace Blazor.FlexGrid.DataSet
         public static bool IsItemEdited(this ITableDataSet tableDataSet, object item)
             => tableDataSet.RowEditOptions.ItemInEditMode == item;
 
-        public static IEnumerable<IGrouping<object, TItem>> GroupItems<TItem>(this IGroupableTableDataSet tableDataSet)
-        {
 
-            return tableDataSet.GroupItems<TItem>(((IBaseTableDataSet<TItem>)tableDataSet).Items.AsQueryable());
-
-        }
 
         public static IQueryable<GroupItem<TItem>> GroupItems<TItem>(
             this IGroupableTableDataSet tableDataSet, IQueryable<TItem> source)
@@ -146,20 +141,7 @@ namespace Blazor.FlexGrid.DataSet
                                                                 : groupItemToToggle);
         }
 
-        private class GroupingKeyEqualityComparer : IEqualityComparer<object>
-        {
-            public new bool Equals(object x, object y)
-            {
-                return (x != null && y != null)
-                      ? x.ToString() == y.ToString()
-                      : x == null && y == null;
-            }
 
-            public int GetHashCode(object obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
 
 
     }

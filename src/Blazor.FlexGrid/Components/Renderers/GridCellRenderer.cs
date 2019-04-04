@@ -28,23 +28,22 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
 
-            Action onRowClickAction = null;
-            if (rendererContext.TableDataSet.GetType().GetGenericTypeDefinition() == typeof(TableDataSet<>))
-            {
-
-                var onRowClicked = OnRowClicked(rendererContext);
-
-                onRowClickAction = onRowClicked?.Invoke(rendererContext);
-                
+            
                 if (!rendererContext.IsActualItemEdited)
-                    rendererContext.AddOnClickEvent(
+                {
+                           var localActualItem = rendererContext.ActualItem;
+
+                           rendererContext.AddOnClickEvent(
                            () => BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                            {
-                               onRowClickAction();
+                               
+                               rendererContext.TableDataSet
+                                .GridViewEvents
+                                .OnItemClicked?.Invoke(new ItemClickedArgs { Item = localActualItem });
                            })
                     );
 
-            }
+                }
 
             if (!rendererContext.IsActualItemEdited)
             {
@@ -69,30 +68,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
         }
 
-        private Func<GridRendererContext, Action> OnRowClicked(GridRendererContext rendererContext)
-        {
-            Action<object> onItemClicked;
-            var gridViewEvents = rendererContext.TableDataSet.GridViewEvents;
-            if (gridViewEvents != null && gridViewEvents.OnItemClicked != null)
-                onItemClicked = (item) => gridViewEvents.OnItemClicked(new ItemClickedArgs { Item = item });
-            else
-                onItemClicked = (item) => { };
 
-            return (context) =>
-            {
-
-                object actualItem = context.ActualItem;
-                if (actualItem != null)
-                    return () =>
-                    {
-                        onItemClicked(actualItem);
-                    };
-                else
-                    return () => { };
-
-
-            };
-
-        }
     }
 }

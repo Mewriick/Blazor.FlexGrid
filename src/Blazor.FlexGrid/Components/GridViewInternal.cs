@@ -51,7 +51,9 @@ namespace Blazor.FlexGrid.Components
 
         [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
 
-        [Parameter] Action<object> OnItemClicked { get; set; }
+        [Parameter] Action<ItemClickedArgs> OnItemClicked { get; set; }
+
+        
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -125,9 +127,7 @@ namespace Blazor.FlexGrid.Components
                     SaveOperationFinished = this.SaveOperationFinished,
                     DeleteOperationFinished = this.DeleteOperationFinished,
                     NewItemCreated = this.NewItemCreated,
-                    OnItemClicked = OnItemClicked != null 
-                                 ? (Action<ItemClickedArgs>)((args) => this.OnItemClicked(args.Item))
-                                 : null
+                    OnItemClicked = this.OnItemClicked
                                     
                 };
             });

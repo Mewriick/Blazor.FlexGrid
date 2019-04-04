@@ -159,11 +159,9 @@ namespace Blazor.FlexGrid.DataSet
                 groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
                 groupedItems = ApplySortingToGroupedQueryable(groupedItems);
 
-
                 if (this.GroupedItems == null)
                 {
-
-                    return groupedItems.Select(item => new GroupItem<TItem>(item.Key, item.Items) { IsCollapsed = true });
+                    return groupedItems;
                 }
                 else
                 {
@@ -171,11 +169,11 @@ namespace Blazor.FlexGrid.DataSet
                     //Join query with pre-existing GroupItems collection in order not to lose "IsCollapsed" values
                     string defaultStrValueIfNull = Guid.NewGuid().ToString();
                     var queryIfCollapsedValues = from newItem in groupedItems
-                                           join oldItem in this.GroupedItems on newItem.Key ?? defaultStrValueIfNull
-                                                                         equals oldItem.Key ?? defaultStrValueIfNull
-                                                                         into joinQuery
-                                           from x in joinQuery.DefaultIfEmpty()
-                                           select new GroupItem<TItem>(newItem.Key, newItem.Items) { IsCollapsed = x != null ? x.IsCollapsed : true };
+                                                 join oldItem in this.GroupedItems on newItem.Key ?? defaultStrValueIfNull
+                                                                               equals oldItem.Key ?? defaultStrValueIfNull
+                                                                               into joinQuery
+                                                 from x in joinQuery.DefaultIfEmpty()
+                                                 select new GroupItem<TItem>(newItem.Key, newItem.Items) { IsCollapsed = x != null ? x.IsCollapsed : true };
 
                     return queryIfCollapsedValues;
                 }
