@@ -10,6 +10,7 @@ GridView component for Blazor
 
 **Known issues after support Blazor 0.9.0**
 > Blazor.Extensions.Logging cannot be used for now  
+> Styles are not properly loaded when using Razor Components
 
 # Instalation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.6.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
