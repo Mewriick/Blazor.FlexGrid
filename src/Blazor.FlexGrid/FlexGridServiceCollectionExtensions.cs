@@ -126,12 +126,6 @@ namespace Blazor.FlexGrid
 
                 return gridRenderer;
             });
-
-            services.AddSingleton<IFormInputRendererBuilder, TextInputBuilder>();
-            services.AddSingleton<IFormInputRendererBuilder, NumberInputBuilder>();
-            services.AddSingleton<IFormInputRendererBuilder, DateInputBuilder>();
-            services.AddSingleton<IFormInputRendererBuilder, SelectInputBuilder>();
-            services.AddSingleton<IFormInputRendererTreeProvider, FormInputsRendererTreeProvider>();
         }
 
         private static void RegisterRendererTreeBuildersScoped(IServiceCollection services)

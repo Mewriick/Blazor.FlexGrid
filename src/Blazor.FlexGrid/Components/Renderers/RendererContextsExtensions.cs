@@ -12,6 +12,9 @@
             => rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed;
 
         public static bool InlineEditItemIsAllowed(this GridRendererContext rendererContext)
-            => rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed;
+            => rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed;
+
+        public static bool InlineEditItemIsAllowed(this ImutableGridRendererContext rendererContext)
+            => rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed;
     }
 }

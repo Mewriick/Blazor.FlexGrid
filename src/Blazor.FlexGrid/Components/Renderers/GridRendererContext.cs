@@ -22,6 +22,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly IEntityType gridEntityConfiguration;
         private readonly IReadOnlyDictionary<string, IValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter> specialColumnValues;
+        private readonly FlexGridContext flexGridContext;
 
         public string ActualColumnName { get; set; } = string.Empty;
 
@@ -53,26 +54,28 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IRendererTreeBuilder RendererTreeBuilder { get; }
 
-        public Action RequestRerenderNotification { get; }
+        public Action RequestRerenderNotification => flexGridContext.RequestRerenderTableRowsNotification;
 
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
             IRendererTreeBuilder rendererTreeBuilder,
-            ITableDataSet tableDataSet)
+            ITableDataSet tableDataSet,
+            FlexGridContext flexGridContext)
         {
             if (imutableGridRendererContext is null)
             {
                 throw new ArgumentNullException(nameof(imutableGridRendererContext));
             }
 
+            RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
+            TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
+            this.flexGridContext = flexGridContext ?? throw new ArgumentNullException(nameof(flexGridContext));
+
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;
             GridItemCollectionProperties = imutableGridRendererContext.GridEntityConfiguration.ClrTypeCollectionProperties;
             CssClasses = imutableGridRendererContext.CssClasses;
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
-            RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
-            RequestRerenderNotification = imutableGridRendererContext.RequestRerenderNotification;
-            TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
 
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;

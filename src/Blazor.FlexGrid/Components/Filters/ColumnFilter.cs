@@ -8,8 +8,9 @@ namespace Blazor.FlexGrid.Components.Filters
     public class ColumnFilter<TValue> : ComponentBase
     {
         private bool filterDefinitionOpened = false;
+        private FilterContext filterContext;
 
-        [CascadingParameter] FilterContext FilterContext { get; set; }
+        [CascadingParameter] FlexGridContext CascadeFlexGridContext { get; set; }
 
         [Parameter] string ColumnName { get; set; }
 
@@ -37,10 +38,17 @@ namespace Blazor.FlexGrid.Components.Filters
                 .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(string.Empty))
                 .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
                 {
-                    FilterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, FilterOperation.Contains, __value));
+                    filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, FilterOperation.Contains, __value));
                 }, string.Empty))
                 .CloseElement()
                 .CloseElement();
+        }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+
+            filterContext = CascadeFlexGridContext.FilterContext;
         }
     }
 }

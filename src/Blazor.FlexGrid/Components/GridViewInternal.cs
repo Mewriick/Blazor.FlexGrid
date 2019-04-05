@@ -17,9 +17,11 @@ namespace Blazor.FlexGrid.Components
 {
     public class GridViewInternal : ComponentBase
     {
+        private readonly EventCallbackFactory eventCallbackFactory = new EventCallbackFactory();
+
         private ITableDataSet tableDataSet;
         private bool dataAdapterWasEmptyInOnInit;
-        private FilterContext fixedFilterContext;
+        private FlexGridContext fixedFlexGridContext;
 
         [Inject]
         private IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
@@ -62,7 +64,7 @@ namespace Blazor.FlexGrid.Components
             RenderFragment<ImutableGridRendererContext> tableFragment =
                 (ImutableGridRendererContext imutableGridRendererContext) => delegate (RenderTreeBuilder internalBuilder)
             {
-                var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet);
+                var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet, fixedFlexGridContext);
                 GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
             };
 
@@ -89,11 +91,11 @@ namespace Blazor.FlexGrid.Components
             };
 
             rendererTreeBuilder
-                .OpenComponent(typeof(CascadingValue<FilterContext>))
-                .AddAttribute("IsFixed", true)
-                .AddAttribute("Value", fixedFilterContext)
-                .AddAttribute(nameof(RenderTreeBuilder.ChildContent), flexGridFragment)
-                .CloseComponent();
+                .OpenComponent(typeof(CascadingValue<FlexGridContext>))
+                    .AddAttribute("IsFixed", true)
+                    .AddAttribute("Value", fixedFlexGridContext)
+                    .AddAttribute(nameof(RenderTreeBuilder.ChildContent), flexGridFragment)
+                    .CloseComponent();
         }
 
         protected override async Task OnInitAsync()
@@ -111,7 +113,7 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnParametersSetAsync()
         {
-            fixedFilterContext = new FilterContext();
+            fixedFlexGridContext = new FlexGridContext(new FilterContext());
 
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {

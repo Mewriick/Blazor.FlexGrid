@@ -77,6 +77,13 @@ namespace Blazor.FlexGrid.Components.Renderers
             return this;
         }
 
+        public IRendererTreeBuilder AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
+        {
+            AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
+
+            return this;
+        }
+
         public IRendererTreeBuilder CloseComponent()
         {
             renderTreeBuilder.CloseComponent();
