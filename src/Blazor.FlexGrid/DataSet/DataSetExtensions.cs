@@ -130,6 +130,29 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
+        public static IQueryable<GroupItem<TItem>> RetrieveGroupItemsIfCollapsedValues<TItem>(this IQueryable<GroupItem<TItem>> newGroupedItems, 
+                                                        IEnumerable<GroupItem> oldGroupedItems)
+        {
+            if (oldGroupedItems == null)
+            {
+                return newGroupedItems;
+            }
+            else
+            {
+
+                //Join query with pre-existing GroupItems collection in order not to lose "IsCollapsed" values
+                string defaultStrValueIfNull = Guid.NewGuid().ToString();
+                var queryIfCollapsedValues = from newItem in newGroupedItems
+                                             join oldItem in oldGroupedItems on newItem.Key ?? defaultStrValueIfNull
+                                                                           equals oldItem.Key ?? defaultStrValueIfNull
+                                                                           into joinQuery
+                                             from x in joinQuery.DefaultIfEmpty()
+                                             select new GroupItem<TItem>(newItem.Key, newItem.Items) { IsCollapsed = x != null ? x.IsCollapsed : true };
+
+                return queryIfCollapsedValues;
+            }
+        }
+
         public static void ToggleGroupRow<TItem>(this ITableDataSet tableDataSet, object groupItemKey)
         {
             var keyEqualityComparer = new GroupingKeyEqualityComparer();

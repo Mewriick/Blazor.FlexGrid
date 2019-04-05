@@ -42,6 +42,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
             else
             {
+                if (rendererContext.TableDataSet?.GroupedItems != null)
                 foreach (var item in rendererContext.TableDataSet.GroupedItems)
                 {
                         rendererContext.ActualItem = item;
