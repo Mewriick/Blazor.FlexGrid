@@ -344,6 +344,10 @@
     flex-shrink: 0;    
 }
 
+.action-button-filter-active {
+    color: #24DC14;
+}
+
 .edit-field-wrapper {
     color: rgba(0, 0, 0, 0.87);
     cursor: text;

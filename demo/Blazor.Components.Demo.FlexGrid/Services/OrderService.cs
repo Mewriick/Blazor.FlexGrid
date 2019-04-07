@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Demo.Shared;
+using Blazor.FlexGrid.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,8 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         public Task<LazyLoadingDataSetResult<Order>> GetTablePageData(
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
-            ISortingOptions sortingOptions)
+            ISortingOptions sortingOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
             var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams.First(e => e.Key == "CustomerId").Value);
             var customerOrders = orders.Where(o => o.CustomerId == customerId);

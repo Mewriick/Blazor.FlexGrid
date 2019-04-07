@@ -57,6 +57,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             var columnConfiguration = rendererContext.ActualColumnConfiguration;
 
             rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell, GetColumnStyle(columnConfiguration));
+            rendererContext.OpenElement(HtmlTagNames.Div);
+            rendererContext.AddAttribute(HtmlAttributes.Style, "position: relative;");
 
             if (columnConfiguration == null)
             {
@@ -77,6 +79,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
 
             rendererContext.AddFilterComponent(property);
+            rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
 

@@ -344,6 +344,10 @@
     flex-shrink: 0;    
 }
 
+.action-button-filter-active {
+    color: #24DC14;
+}
+
 .edit-field-wrapper {
     color: rgba(0, 0, 0, 0.87);
     cursor: text;
@@ -487,20 +491,40 @@
     width: 201px;
     height: 151px;
     overflow: hidden;
-    top: 344.156px;
-    z-index: 10002;
-    left: 645.031px;
+    z-index: 2;
     box-sizing: content-box;
     display: none;
     position: absolute;
+    right: 10px; 
 }
 
 .filter-wrapper-open {
-    width: 201px;
-    height: 151px;
     overflow: visible;
-    z-index: 10002; 
-    box-sizing: content-box;
     display: block;
-    position: absolute;
+}
+
+.filter-wrapper select {
+    margin: 50px;
+    width: 150px;
+    padding: 5px 35px 5px 5px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 10px 10px;
+    height: 34px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url(filterSelect.png) 96% / 13% no-repeat #eee;
+}
+
+/* CAUTION: IE hackery ahead */
+select::-ms-expand {
+    display: none; /* remove default arrow on ie10 and ie11 */
+}
+
+/* target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width:0\0) {
+    select {
+        background: none\9;
+        padding: 5px\9;
+    }
 }

@@ -187,8 +187,8 @@ namespace Blazor.FlexGrid.DataSet
             }
 
             return SortingOptions.SortDescending
-                ? source.OrderByDescending(SortingOptions.SortExpression)
-                : source.OrderBy(SortingOptions.SortExpression);
+                ? queryable.OrderByDescending(SortingOptions.SortExpression)
+                : queryable.OrderBy(SortingOptions.SortExpression);
         }
     }
 }

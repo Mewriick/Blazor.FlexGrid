@@ -3,12 +3,15 @@ using Blazor.FlexGrid.Filters;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Blazor.FlexGrid.Components.Filters
 {
     public class ColumnFilter<TValue> : ComponentBase
     {
+        private static Dictionary<string, ColumnFilterState> stateCache = new Dictionary<string, ColumnFilterState>();
+
         private const FilterOperation StringFilterOperations = FilterOperation.Contains | FilterOperation.EndsWith | FilterOperation.StartsWith | FilterOperation.NotEqual | FilterOperation.Equal;
         private const FilterOperation NumberFilterOperations = FilterOperation.GreaterThan | FilterOperation.GreaterThanOrEqual | FilterOperation.LessThan |
             FilterOperation.LessThanOrEqual | FilterOperation.Equal | FilterOperation.NotEqual;
@@ -18,7 +21,9 @@ namespace Blazor.FlexGrid.Components.Filters
         private static FilterOperation allowedFilterOperations;
 
         private FilterOperation selectedFilterOperation;
+        private TValue actualFilterValue;
         private bool filterDefinitionOpened = false;
+        private bool filterIsApplied = false;
         private FilterContext filterContext;
 
         [CascadingParameter] FlexGridContext CascadeFlexGridContext { get; set; }
@@ -69,6 +74,10 @@ namespace Blazor.FlexGrid.Components.Filters
                 parser = TryParseDateTimeOffset;
                 allowedFilterOperations = NumberFilterOperations;
             }
+            else if (targetType == typeof(bool))
+            {
+                parser = TryParseBool;
+            }
             else
             {
                 throw new InvalidOperationException($"The type '{targetType}' is not a supported type.");
@@ -79,10 +88,12 @@ namespace Blazor.FlexGrid.Components.Filters
         {
             base.BuildRenderTree(builder);
 
+            LoadStateIfExists();
+
             var rendererBuilder = new BlazorRendererTreeBuilder(builder);
 
             rendererBuilder
-                .OpenElement(HtmlTagNames.Button, "action-button action-button-small")
+                .OpenElement(HtmlTagNames.Button, filterIsApplied ? "action-button action-button-small action-button-filter-active" : "action-button action-button-small")
                 .AddAttribute(HtmlJSEvents.OnClick,
                     BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                     {
@@ -94,24 +105,30 @@ namespace Blazor.FlexGrid.Components.Filters
                 .CloseElement()
                 .CloseElement()
                 .CloseElement()
-                .OpenElement(HtmlTagNames.Div, filterDefinitionOpened ? "filter-wrapper-open" : "filter-wrapper");
+                .OpenElement(HtmlTagNames.Div, filterDefinitionOpened ? "filter-wrapper filter-wrapper-open" : "filter-wrapper");
 
             BuildRendererTreeForFilterOperations(rendererBuilder);
 
             rendererBuilder
                 .OpenElement(HtmlTagNames.Input)
-                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(string.Empty))
+                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(filterIsApplied ? actualFilterValue.ToString() : string.Empty))
                 .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
                 {
-                    parser(__value, out var parsedValue);
-                    filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, parsedValue));
-                }, string.Empty))
+                    parser(__value, out actualFilterValue);
+                    filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+                    filterIsApplied = true;
+                    filterDefinitionOpened = false;
+                    CacheActualState();
+
+                }, actualFilterValue?.ToString() ?? string.Empty))
                 .CloseElement()
                 .OpenElement(HtmlTagNames.Button)
                 .AddOnClickEvent(() =>
                     BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                     {
                         filterContext.RemoveFilter(ColumnName);
+                        filterIsApplied = false;
+                        stateCache.Remove(ColumnName);
                     })
                 )
                 .CloseElement()
@@ -125,6 +142,29 @@ namespace Blazor.FlexGrid.Components.Filters
             filterContext = CascadeFlexGridContext.FilterContext;
         }
 
+        private void LoadStateIfExists()
+        {
+            if (stateCache.TryGetValue(ColumnName, out var columnFilterState))
+            {
+                selectedFilterOperation = columnFilterState.FilterOperation;
+                actualFilterValue = (TValue)columnFilterState.FilterValue;
+                filterIsApplied = true;
+            }
+        }
+
+        private void CacheActualState()
+        {
+            var filterState = new ColumnFilterState(actualFilterValue, selectedFilterOperation);
+            if (!stateCache.ContainsKey(ColumnName))
+            {
+                stateCache.Add(ColumnName, filterState);
+            }
+            else
+            {
+                stateCache[ColumnName] = filterState;
+            }
+        }
+
         private void BuildRendererTreeForFilterOperations(BlazorRendererTreeBuilder rendererBuilder)
         {
             rendererBuilder
@@ -132,14 +172,26 @@ namespace Blazor.FlexGrid.Components.Filters
                     .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
                     {
                         selectedFilterOperation = (FilterOperation)__value;
+                        if (filterIsApplied)
+                        {
+                            filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+                        }
+
                     }, (int)selectedFilterOperation));
 
             foreach (var enumValue in Enum.GetValues(typeof(FilterOperation)))
             {
-                if (!allowedFilterOperations.HasFlag((FilterOperation)enumValue))
+                var filterOperation = (FilterOperation)enumValue;
+
+                if (!allowedFilterOperations.HasFlag(filterOperation)
+                    || filterOperation == FilterOperation.None)
                 {
                     continue;
                 }
+
+                selectedFilterOperation = selectedFilterOperation == FilterOperation.None
+                    ? filterOperation
+                    : selectedFilterOperation;
 
                 var enumStringValue = enumValue.ToString();
                 rendererBuilder.OpenElement(HtmlTagNames.Option);
@@ -267,6 +319,34 @@ namespace Blazor.FlexGrid.Components.Filters
                 result = default;
                 return false;
             }
+        }
+
+        static bool TryParseBool(string value, out TValue result)
+        {
+            var success = bool.TryParse(value, out var parsedValue);
+            if (success)
+            {
+                result = (TValue)(object)parsedValue;
+                return true;
+            }
+            else
+            {
+                result = default;
+                return false;
+            }
+        }
+    }
+
+    internal class ColumnFilterState
+    {
+        public object FilterValue { get; }
+
+        public FilterOperation FilterOperation { get; }
+
+        public ColumnFilterState(object filterValue, FilterOperation filterOperation)
+        {
+            FilterValue = filterValue;
+            FilterOperation = filterOperation;
         }
     }
 }
