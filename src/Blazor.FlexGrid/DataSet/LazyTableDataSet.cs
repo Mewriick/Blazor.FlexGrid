@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -143,6 +144,11 @@ namespace Blazor.FlexGrid.DataSet
             }
 
             return removedItem != null ? true : false;
+        }
+
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
+        {
+            throw new NotImplementedException();
         }
     }
 }

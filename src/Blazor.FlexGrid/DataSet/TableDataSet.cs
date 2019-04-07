@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace Blazor.FlexGrid.DataSet
 {
     public class TableDataSet<TItem> : ITableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
+        private readonly IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder;
+
         private IQueryable<TItem> source;
         private HashSet<object> selectedItems;
         private HashSet<object> deletedItems;
@@ -30,9 +33,10 @@ namespace Blazor.FlexGrid.DataSet
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
 
-        public TableDataSet(IQueryable<TItem> source)
+        public TableDataSet(IQueryable<TItem> source, IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
+            this.filterExpressionTreeBuilder = filterExpressionTreeBuilder ?? throw new ArgumentNullException(nameof(filterExpressionTreeBuilder));
             this.selectedItems = new HashSet<object>();
             this.deletedItems = new HashSet<object>();
         }
@@ -40,9 +44,9 @@ namespace Blazor.FlexGrid.DataSet
         public Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            LoadFromQueryableSource();
+            ApplyFiltersToQueryableSource(source);
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task SetSortExpression(string expression)
@@ -58,6 +62,19 @@ namespace Blazor.FlexGrid.DataSet
             }
 
             return GoToPage(0);
+        }
+
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
+        {
+            if (!filters.Any())
+            {
+                return GoToPage(0);
+            }
+
+            PageableOptions.CurrentPage = 0;
+            ApplyFiltersToQueryableSource(source.Where(filterExpressionTreeBuilder.BuildExpressionTree(filters)));
+
+            return Task.CompletedTask;
         }
 
         public void ToggleRowItem(object item)
@@ -129,7 +146,7 @@ namespace Blazor.FlexGrid.DataSet
         public void CancelEditation()
             => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
-        private void LoadFromQueryableSource()
+        private void ApplyFiltersToQueryableSource(IQueryable<TItem> source)
         {
             PageableOptions.TotalItemsCount = ApplyDeletedConditionToQueryable(source).Count();
             Items = ApplyFiltersToQueryable(source).ToList();

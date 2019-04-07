@@ -26,5 +26,15 @@ namespace Blazor.FlexGrid.Components.Filters
 
             OnFilterChanged?.Invoke(this, new FilterChangedEventArgs(filterDefinitions));
         }
+
+        public void RemoveFilter(string columnName)
+        {
+            var definition = filterDefinitions.FirstOrDefault(fd => fd.ColumnName == columnName);
+            if (definition != null)
+            {
+                filterDefinitions.Remove(definition);
+                OnFilterChanged?.Invoke(this, new FilterChangedEventArgs(filterDefinitions));
+            }
+        }
     }
 }

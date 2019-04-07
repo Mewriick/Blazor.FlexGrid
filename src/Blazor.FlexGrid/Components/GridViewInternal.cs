@@ -6,6 +6,7 @@ using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
@@ -17,8 +18,6 @@ namespace Blazor.FlexGrid.Components
 {
     public class GridViewInternal : ComponentBase
     {
-        private readonly EventCallbackFactory eventCallbackFactory = new EventCallbackFactory();
-
         private ITableDataSet tableDataSet;
         private bool dataAdapterWasEmptyInOnInit;
         private FlexGridContext fixedFlexGridContext;
@@ -100,6 +99,8 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnInitAsync()
         {
+            fixedFlexGridContext = new FlexGridContext(new FilterContext());
+
             dataAdapterWasEmptyInOnInit = DataAdapter == null;
             if (!dataAdapterWasEmptyInOnInit)
             {
@@ -113,8 +114,6 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnParametersSetAsync()
         {
-            fixedFlexGridContext = new FlexGridContext(new FilterContext());
-
             if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
@@ -140,12 +139,19 @@ namespace Blazor.FlexGrid.Components
 
             if (tableDataSet is null)
             {
-                return new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable());
+                return new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable(), new FilterExpressionTreeBuilder<EmptyDataSetItem>());
             }
 
             tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
+            fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
 
             return tableDataSet;
+        }
+
+        private void FilterChanged(object sender, FilterChangedEventArgs e)
+        {
+            tableDataSet.ApplyFilters(e.Filters);
+            fixedFlexGridContext.RequestRerenderTableRowsNotification?.Invoke();
         }
     }
 }

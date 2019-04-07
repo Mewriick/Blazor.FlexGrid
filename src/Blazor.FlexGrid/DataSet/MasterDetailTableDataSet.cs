@@ -4,6 +4,7 @@ using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -118,5 +119,8 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task<bool> DeleteItem(object item)
             => tableDataSet.DeleteItem(item);
+
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
+            => tableDataSet.ApplyFilters(filters);
     }
 }

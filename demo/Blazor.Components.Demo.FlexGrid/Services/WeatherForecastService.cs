@@ -34,12 +34,11 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
             var rng = new Random();
-            return Task.FromResult(Enumerable.Range(1, 20).Select(index => new WeatherForecast
-            {
-                Date = startDate.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            }).ToArray());
+            return Task.FromResult(staticRepositoryCollections.Forecasts
+                .Take(20)
+                .Select(kv => kv.Value)
+                .ToArray()
+            );
         }
 
         public Task<LazyLoadingDataSetResult<WeatherForecast>> GetTablePageData(

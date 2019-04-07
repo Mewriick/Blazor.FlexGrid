@@ -9,7 +9,7 @@ namespace Blazor.FlexGrid.Filters
     {
         public Expression<Func<TItem, bool>> BuildExpressionTree(IReadOnlyCollection<IFilterDefinition> filters)
         {
-            if (filters.Any())
+            if (!filters.Any())
             {
                 return null;
             }

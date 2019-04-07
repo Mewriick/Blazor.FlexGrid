@@ -52,7 +52,7 @@ namespace Blazor.FlexGrid.DataSet
             var from = tableDataSet.PageableOptions.CurrentPage * tableDataSet.PageableOptions.PageSize + 1;
             var to = from + tableDataSet.PageableOptions.PageSize - 1;
 
-            return $"{from} - {to}";
+            return $"{from} - {Math.Min(to, tableDataSet.PageableOptions.TotalItemsCount)}";
         }
 
         public static bool IsItemEdited(this ITableDataSet tableDataSet, object item)

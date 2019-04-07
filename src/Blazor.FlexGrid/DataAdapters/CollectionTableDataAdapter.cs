@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable())
+            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable(), new FilterExpressionTreeBuilder<TItem>())
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = new SortingOptions(),
