@@ -1,4 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -8,6 +10,7 @@ namespace Blazor.FlexGrid.DataSet
         Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
-            ISortingOptions sortingOptions);
+            ISortingOptions sortingOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null);
     }
 }

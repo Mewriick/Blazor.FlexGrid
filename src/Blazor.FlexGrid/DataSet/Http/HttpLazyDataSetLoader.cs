@@ -1,10 +1,12 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Filters;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,7 +25,10 @@ namespace Blazor.FlexGrid.DataSet
         }
 
         public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
-            ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions)
+            ILazyLoadingOptions lazyLoadingOptions,
+            IPagingOptions pageableOptions,
+            ISortingOptions sortingOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
             if (string.IsNullOrWhiteSpace(lazyLoadingOptions.DataUri))
             {
@@ -38,7 +43,14 @@ namespace Blazor.FlexGrid.DataSet
             var dataUri = $"{lazyLoadingOptions.DataUri}{query.ToString()}";
             try
             {
-                return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);
+                if (filterDefinitions != null && filterDefinitions.Any())
+                {
+                    return httpClient.PostJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri, filterDefinitions);
+                }
+                else
+                {
+                    return httpClient.GetJsonAsync<LazyLoadingDataSetResult<TItem>>(dataUri);
+                }
             }
             catch (Exception ex)
             {

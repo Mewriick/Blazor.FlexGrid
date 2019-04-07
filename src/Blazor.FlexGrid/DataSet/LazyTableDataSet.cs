@@ -19,6 +19,7 @@ namespace Blazor.FlexGrid.DataSet
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
         private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
         private HashSet<object> selectedItems;
+        private IReadOnlyCollection<IFilterDefinition> filterDefinitions;
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
 
@@ -47,7 +48,7 @@ namespace Blazor.FlexGrid.DataSet
         public async Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions, SortingOptions);
+            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions, SortingOptions, filterDefinitions);
             PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
             Items = pagedDataResult.Items;
         }
@@ -148,7 +149,9 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
         {
-            throw new NotImplementedException();
+            filterDefinitions = filters;
+
+            return GoToPage(0);
         }
     }
 }

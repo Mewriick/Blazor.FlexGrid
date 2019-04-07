@@ -39,7 +39,7 @@ namespace Blazor.Components.Demo.FlexGrid
                     }
                 }).ToList();
 
-            Forecasts = Enumerable.Range(1, 100)
+            Forecasts = Enumerable.Range(1, 10000)
                 .Select(index => new WeatherForecast
                 {
                     Id = index,

@@ -1,7 +1,9 @@
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Demo.Shared;
+using Blazor.FlexGrid.Filters;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -35,7 +37,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         {
             var rng = new Random();
             return Task.FromResult(staticRepositoryCollections.Forecasts
-                .Take(20)
+                //.Take(20)
                 .Select(kv => kv.Value)
                 .ToArray()
             );
@@ -44,7 +46,8 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         public Task<LazyLoadingDataSetResult<WeatherForecast>> GetTablePageData(
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
-            ISortingOptions sortingOptions)
+            ISortingOptions sortingOptions,
+            IReadOnlyCollection<IFilterDefinition> filters = null)
         {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -15,6 +16,7 @@ namespace Blazor.FlexGrid.DataSet
         private readonly IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder;
 
         private IQueryable<TItem> source;
+        private Expression<Func<TItem, bool>> filterExpression;
         private HashSet<object> selectedItems;
         private HashSet<object> deletedItems;
 
@@ -44,7 +46,7 @@ namespace Blazor.FlexGrid.DataSet
         public Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            ApplyFiltersToQueryableSource(source);
+            ApplyFiltersToQueryableSource(filterExpression is null ? source : source.Where(filterExpression));
 
             return Task.CompletedTask;
         }
@@ -68,11 +70,13 @@ namespace Blazor.FlexGrid.DataSet
         {
             if (!filters.Any())
             {
+                filterExpression = null;
                 return GoToPage(0);
             }
 
             PageableOptions.CurrentPage = 0;
-            ApplyFiltersToQueryableSource(source.Where(filterExpressionTreeBuilder.BuildExpressionTree(filters)));
+            filterExpression = filterExpressionTreeBuilder.BuildExpressionTree(filters);
+            ApplyFiltersToQueryableSource(source.Where(filterExpression));
 
             return Task.CompletedTask;
         }

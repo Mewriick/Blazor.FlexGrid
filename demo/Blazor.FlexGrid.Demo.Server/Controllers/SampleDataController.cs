@@ -58,6 +58,33 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             });
         }
 
+        [HttpPost("[action]")]
+        public IActionResult WeatherForecasts(
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
+            [FromQuery] SortingParams sortingParams,
+            [FromBody] IEnumerable<FilterDefinition> filters)
+        {
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
+
+            var sortExp = sortingParams?.SortExpression;
+            if (!string.IsNullOrEmpty(sortExp))
+            {
+                if (sortingParams.SortDescending)
+                {
+                    sortExp += " descending";
+                }
+                items = items.OrderBy(sortExp);
+            }
+
+            return Ok(new
+            {
+                Items = items.Skip(pageSize * pageNumber).Take(pageSize),
+                TotalCount = staticRepositoryCollections.Forecasts.Count
+            });
+        }
+
+
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecastsSimple()
         {
