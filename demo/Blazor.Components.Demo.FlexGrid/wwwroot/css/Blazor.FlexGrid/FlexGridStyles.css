@@ -84,10 +84,25 @@
     flex-direction: row-reverse;
 }
 
+.table-info-text {    
+    color: rgba(224, 224, 224, 1);
+    font-size: 2.5rem;
+    height: 200px;
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.table-info-text-small {
+    height: 75px;
+    padding-top: 5px;
+}
+
 .pagination-wrapper {
     font-size: 0.75rem;
     float: right;
-}
+}     
 
 .pagination-wrapper-inner {
     height: 56px;
@@ -488,23 +503,84 @@
     }
 
 .filter-wrapper {
-    width: 201px;
-    height: 151px;
     overflow: hidden;
-    top: 344.156px;
-    z-index: 10002;
-    left: 645.031px;
+    width: 195px;
+    z-index: 2;
     box-sizing: content-box;
     display: none;
     position: absolute;
+    right: 10px;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
 
 .filter-wrapper-open {
-    width: 201px;
-    height: 151px;
     overflow: visible;
-    z-index: 10002; 
-    box-sizing: content-box;
     display: block;
-    position: absolute;
 }
+
+.filter-wrapper select {
+    margin: 5px;
+    padding: 5px 35px 5px 5px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 5px 5px;
+    height: 34px;
+    -moz-appearance: none;
+    background: #eee;
+    width: 185px;
+}
+
+.filter-buttons {
+    border-color: #f0f0f0;
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+
+.filter-buttons-clear {
+    width: 95%;
+    margin: 5px 5px 2px 0;
+}
+
+.edit-text-field-filter {
+    width: 80%;
+    margin-left: 10%;
+    padding: unset;
+    margin-bottom: 5px;
+}
+
+.edit-date-field-filter {
+    width: 90%;
+    margin-left: 5px;
+    border: 1px solid #c4c4c4;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+}
+    /* CAUTION: IE hackery ahead */
+    select::-ms-expand {
+        display: none; /* remove default arrow on ie10 and ie11 */
+    }
+
+/* target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width:0\0) {
+    select {
+        background: none\9;
+        padding: 5px\9;
+    }
+}
+
+[type="date"] {
+    background: #fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png) 97% 50% no-repeat;
+}
+
+    [type="date"]::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    [type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0;
+    }
+

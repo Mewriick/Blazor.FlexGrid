@@ -104,33 +104,24 @@ namespace Blazor.FlexGrid.Components.Filters
                 .OpenElement(HtmlTagNames.I, "fas fa-filter")
                 .CloseElement()
                 .CloseElement()
-                .CloseElement()
-                .OpenElement(HtmlTagNames.Div, filterDefinitionOpened ? "filter-wrapper filter-wrapper-open" : "filter-wrapper");
+                .CloseElement();
+
+
+            rendererBuilder.OpenElement(HtmlTagNames.Div, filterDefinitionOpened ? "filter-wrapper filter-wrapper-open" : "filter-wrapper");
 
             BuildRendererTreeForFilterOperations(rendererBuilder);
+            BuildRendererTreeForInputs(rendererBuilder);
 
-            rendererBuilder
-                .OpenElement(HtmlTagNames.Input)
-                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(filterIsApplied ? actualFilterValue.ToString() : string.Empty))
-                .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
-                {
-                    parser(__value, out actualFilterValue);
-                    filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
-                    filterIsApplied = true;
-                    filterDefinitionOpened = false;
-                    CacheActualState();
-
-                }, actualFilterValue?.ToString() ?? string.Empty))
-                .CloseElement()
-                .OpenElement(HtmlTagNames.Button)
+            rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
+            rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
                 .AddOnClickEvent(() =>
                     BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                     {
-                        filterContext.RemoveFilter(ColumnName);
-                        filterIsApplied = false;
-                        stateCache.Remove(ColumnName);
+                        ClearFilter();
                     })
                 )
+                .AddContent("Clear")
+                .CloseElement()
                 .CloseElement()
                 .CloseElement();
         }
@@ -140,6 +131,23 @@ namespace Blazor.FlexGrid.Components.Filters
             base.OnInit();
 
             filterContext = CascadeFlexGridContext.FilterContext;
+        }
+
+        private void FilterValueChanged(string value)
+        {
+            parser(value, out actualFilterValue);
+            filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+            filterIsApplied = true;
+            filterDefinitionOpened = false;
+            CacheActualState();
+        }
+
+        private void ClearFilter()
+        {
+            filterContext.RemoveFilter(ColumnName);
+            filterIsApplied = false;
+            filterDefinitionOpened = false;
+            stateCache.Remove(ColumnName);
         }
 
         private void LoadStateIfExists()
@@ -163,6 +171,33 @@ namespace Blazor.FlexGrid.Components.Filters
             {
                 stateCache[ColumnName] = filterState;
             }
+        }
+
+        private void BuildRendererTreeForInputs(BlazorRendererTreeBuilder rendererBuilder)
+        {
+            if (parser == TryParseDateTime || parser == TryParseDateTimeOffset)
+            {
+                rendererBuilder
+                    .OpenElement(HtmlTagNames.Input, "edit-text-field edit-date-field-filter")
+                    .AddAttribute(HtmlAttributes.Type, HtmlAttributes.TypeDate)
+                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(FormatDateAsString(actualFilterValue)))
+                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
+                    {
+                        FilterValueChanged(__value);
+                    }, FormatDateAsString(actualFilterValue)))
+                    .CloseElement();
+
+                return;
+            }
+
+            rendererBuilder
+                .OpenElement(HtmlTagNames.Input, "edit-text-field edit-text-field-filter")
+                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(filterIsApplied ? actualFilterValue.ToString() : string.Empty))
+                .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
+                {
+                    FilterValueChanged(__value);
+                }, actualFilterValue?.ToString() ?? string.Empty))
+                .CloseElement();
         }
 
         private void BuildRendererTreeForFilterOperations(BlazorRendererTreeBuilder rendererBuilder)
@@ -207,6 +242,19 @@ namespace Blazor.FlexGrid.Components.Filters
             }
 
             rendererBuilder.CloseElement();
+        }
+
+        private string FormatDateAsString(TValue value)
+        {
+            switch (value)
+            {
+                case DateTime dateTimeValue:
+                    return dateTimeValue.ToString(FlexGridContext.DateFormat);
+                case DateTimeOffset dateTimeOffsetValue:
+                    return dateTimeOffsetValue.ToString(FlexGridContext.DateFormat);
+                default:
+                    return string.Empty;
+            }
         }
 
         static bool TryParseString(string value, out TValue result)

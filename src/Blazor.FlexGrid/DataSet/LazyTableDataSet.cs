@@ -31,6 +31,8 @@ namespace Blazor.FlexGrid.DataSet
 
         public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
 
+        public bool FilterIsApplied => filterDefinitions.Any();
+
         /// <summary>
         /// Gets or sets the items for the current page.
         /// </summary>

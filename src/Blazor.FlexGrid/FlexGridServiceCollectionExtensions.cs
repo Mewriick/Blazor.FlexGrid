@@ -119,8 +119,8 @@ namespace Blazor.FlexGrid
 
                 var gridRenderer = new GridMesurablePartRenderer(
                         new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
-                    .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
                     .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
+                    .AddRenderer(new GridEmptyItemsRenderer())
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
                     .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
 
@@ -150,8 +150,8 @@ namespace Blazor.FlexGrid
 
                 var gridRenderer = new GridMesurablePartRenderer(
                         new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
-                    .AddRenderer(new GridLoadingRenderer(), RendererType.BeforeTag)
                     .AddRenderer(new GridMesurablePartRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()), measurableLogger))
+                    .AddRenderer(new GridEmptyItemsRenderer())
                     .AddRenderer(new GridMesurablePartRenderer(gridBodyRenderer, measurableLogger))
                     .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
 

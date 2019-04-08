@@ -27,13 +27,15 @@ namespace Blazor.FlexGrid.DataSet
         public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
 
         public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
+
+        public bool FilterIsApplied => filterExpression != null;
+
         /// <summary>
         /// Gets or sets the items for the current page.
         /// </summary>
         public IList<TItem> Items { get; set; } = new List<TItem>();
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
-
 
         public TableDataSet(IQueryable<TItem> source, IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
         {

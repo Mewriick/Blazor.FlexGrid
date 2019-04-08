@@ -6,7 +6,7 @@ namespace Blazor.FlexGrid.Filters
 {
     public class FilterConverter
     {
-        private static readonly MethodInfo ContainsMethod = typeof(string).GetMethod("Contains", BindingFlags.Public);
+        private static readonly MethodInfo ContainsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
         private static readonly MethodInfo StartsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) });
         private static readonly MethodInfo EndsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
 

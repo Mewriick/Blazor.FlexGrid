@@ -6,6 +6,8 @@ namespace Blazor.FlexGrid.DataSet
 {
     public interface IFilterableDataSet : IBaseTableDataSet
     {
+        bool FilterIsApplied { get; }
+
         Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters);
     }
 }

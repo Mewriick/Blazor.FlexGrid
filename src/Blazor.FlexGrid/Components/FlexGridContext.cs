@@ -5,6 +5,8 @@ namespace Blazor.FlexGrid.Components
 {
     public class FlexGridContext
     {
+        public static readonly string DateFormat = "yyyy-MM-dd"; // Compatible with HTML date inputs
+
         public FilterContext FilterContext { get; }
 
         public Action RequestRerenderTableRowsNotification { get; private set; }

@@ -50,7 +50,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.TableDataSet.HasItems();
+            => rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied;
 
         private void RenderColumnHeader(GridRendererContext rendererContext, PropertyInfo property)
         {
@@ -64,6 +64,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             {
                 rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
                 rendererContext.AddFilterComponent(property);
+                rendererContext.CloseElement();
                 rendererContext.CloseElement();
 
                 return;

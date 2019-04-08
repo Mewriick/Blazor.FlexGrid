@@ -31,9 +31,12 @@ namespace Blazor.FlexGrid.DataSet
 
         public GridViewEvents GridViewEvents => tableDataSet.GridViewEvents;
 
+        public bool FilterIsApplied => tableDataSet.FilterIsApplied;
+
         public IList<TItem> Items => tableDataSet.Items as List<TItem>;
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
+
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,
