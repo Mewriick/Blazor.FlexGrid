@@ -245,6 +245,17 @@ builder.Property(c => c.Email)
     .HasBlazorComponentValueRender(customerEmailComponent);
 ```
 
+# Filtering
+You can define which column can be filtered.
+
+```cs
+builder.Property(e => e.TemperatureF)
+    .IsFilterable();    
+```
+
+For filter exists two modes, for standard **TableDataSet** is filtering done on clinet side across whole collection of items.
+For **LazyTableDataSet** is filter object sended to the server. More info how it is works is here https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet.  
+
 # Create item form
 You can have very easily **Create item form** for your models. You can configure even different type of model for create item form
 than is used for rendering in **FlexGrid**. You can also specify the return type from your Api which can be different than input.
