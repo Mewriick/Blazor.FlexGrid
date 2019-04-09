@@ -10,10 +10,10 @@ GridView component for Blazor
 
 **Known issues after support Blazor 0.9.0**
 > Blazor.Extensions.Logging cannot be used for now  
-> Styles are not properly loaded when using Razor Components
+> Styles are not properly loaded when using Razor Components, you must include CSS style mannualy into index filex
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.6.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.7.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
