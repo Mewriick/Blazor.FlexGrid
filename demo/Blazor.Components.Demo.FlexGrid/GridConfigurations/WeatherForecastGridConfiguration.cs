@@ -28,10 +28,15 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
                 .HasCompositeValueFormatter(f => $"{f.Summary} <button>{f.TemperatureC}</button> {f.TemperatureF}");
 
             builder.Property(e => e.TemperatureC)
+                .IsFilterable()
                 .IsSortable();
 
             builder.Property(e => e.TemperatureF)
+                .IsFilterable()
                 .IsSortable();
+
+            builder.Property(e => e.RainyDay)
+                .IsFilterable();
         }
     }
 }

@@ -35,10 +35,15 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
 
             builder.Property(e => e.TemperatureC)
                 .HasValueFormatter(p => $"{p} C°")
+                .IsFilterable()
                 .IsSortable();
 
             builder.Property(e => e.TemperatureF)
+                .IsFilterable()
                 .IsSortable();
+
+            builder.Property(e => e.RainyDay)
+                .IsFilterable();
 
             builder.AppendCssClasses(conf =>
             {

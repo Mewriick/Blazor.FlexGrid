@@ -12,6 +12,9 @@ namespace Blazor.FlexGrid.Components.Filters
     {
         private static Dictionary<string, ColumnFilterState> stateCache = new Dictionary<string, ColumnFilterState>();
 
+        private const string WrapperCssClass = "filter-wrapper";
+        private const string WrapperCssCheckboxClass = "filter-wrapper-checkbox";
+
         private const FilterOperation StringFilterOperations = FilterOperation.Contains | FilterOperation.EndsWith | FilterOperation.StartsWith | FilterOperation.NotEqual | FilterOperation.Equal;
         private const FilterOperation NumberFilterOperations = FilterOperation.GreaterThan | FilterOperation.GreaterThanOrEqual | FilterOperation.LessThan |
             FilterOperation.LessThanOrEqual | FilterOperation.Equal | FilterOperation.NotEqual;
@@ -107,23 +110,39 @@ namespace Blazor.FlexGrid.Components.Filters
                 .CloseElement();
 
 
-            rendererBuilder.OpenElement(HtmlTagNames.Div, filterDefinitionOpened ? "filter-wrapper filter-wrapper-open" : "filter-wrapper");
+            rendererBuilder.OpenElement(HtmlTagNames.Div,
+                filterDefinitionOpened
+                ? parser != TryParseBool
+                        ? $"{WrapperCssClass} {WrapperCssClass}-open"
+                        : $"{WrapperCssClass} {WrapperCssClass}-open {WrapperCssCheckboxClass}"
+                : $"{WrapperCssClass}");
 
-            BuildRendererTreeForFilterOperations(rendererBuilder);
-            BuildRendererTreeForInputs(rendererBuilder);
+            if (parser == TryParseBool)
+            {
+                BuildRendererTreeForCheckbox(rendererBuilder);
+            }
+            else
+            {
+                BuildRendererTreeForFilterOperations(rendererBuilder);
+                BuildRendererTreeForInputs(rendererBuilder);
+            }
 
-            rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
-            rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
-                .AddOnClickEvent(() =>
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    {
-                        ClearFilter();
-                    })
-                )
-                .AddContent("Clear")
-                .CloseElement()
-                .CloseElement()
-                .CloseElement();
+            if (parser != TryParseBool)
+            {
+                rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
+                rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
+                    .AddOnClickEvent(() =>
+                        BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                        {
+                            ClearFilter();
+                        })
+                    )
+                    .AddContent("Clear")
+                    .CloseElement()
+                    .CloseElement();
+            }
+
+            rendererBuilder.CloseElement();
         }
 
         protected override void OnInit()
@@ -136,9 +155,21 @@ namespace Blazor.FlexGrid.Components.Filters
         private void FilterValueChanged(string value)
         {
             parser(value, out actualFilterValue);
+            AddFilterDefinition();
+            filterDefinitionOpened = false;
+        }
+
+        private void FilterBoolValueChanged(bool value)
+        {
+            actualFilterValue = (TValue)(object)value;
+            selectedFilterOperation = FilterOperation.Equal;
+            AddFilterDefinition();
+        }
+
+        private void AddFilterDefinition()
+        {
             filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
             filterIsApplied = true;
-            filterDefinitionOpened = false;
             CacheActualState();
         }
 
@@ -197,6 +228,23 @@ namespace Blazor.FlexGrid.Components.Filters
                 {
                     FilterValueChanged(__value);
                 }, actualFilterValue?.ToString() ?? string.Empty))
+                .CloseElement();
+        }
+
+        private void BuildRendererTreeForCheckbox(BlazorRendererTreeBuilder rendererBuilder)
+        {
+            rendererBuilder
+                .OpenElement(HtmlTagNames.Label, "switch")
+                .OpenElement(HtmlTagNames.Input)
+                .AddAttribute(HtmlAttributes.Type, HtmlAttributes.Checkbox)
+                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(actualFilterValue))
+                .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (bool __value)
+                {
+                    FilterBoolValueChanged(__value);
+                }, (bool)(object)actualFilterValue))
+                .CloseElement()
+                .OpenElement(HtmlTagNames.Span, "slider round")
+                .CloseElement()
                 .CloseElement();
         }
 

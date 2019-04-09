@@ -63,7 +63,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             if (columnConfiguration == null)
             {
                 rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
-                rendererContext.AddFilterComponent(property);
                 rendererContext.CloseElement();
                 rendererContext.CloseElement();
 
@@ -79,7 +78,11 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.AddContent(GetColumnCaption(columnConfiguration, property));
             }
 
-            rendererContext.AddFilterComponent(property);
+            if (columnConfiguration.IsFilterable)
+            {
+                rendererContext.AddFilterComponent(property);
+            }
+
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }

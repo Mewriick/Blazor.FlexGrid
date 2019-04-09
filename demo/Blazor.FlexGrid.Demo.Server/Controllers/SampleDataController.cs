@@ -51,9 +51,11 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
                 items = items.OrderBy(sortExp);
             }
 
+            var result = items.Skip(pageSize * pageNumber).Take(pageSize).ToList();
+
             return Ok(new
             {
-                Items = items.Skip(pageSize * pageNumber).Take(pageSize),
+                Items = result,
                 TotalCount = staticRepositoryCollections.Forecasts.Count
             });
         }

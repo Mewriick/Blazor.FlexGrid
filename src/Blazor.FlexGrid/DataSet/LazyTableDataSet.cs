@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.DataSet
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
         private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
         private HashSet<object> selectedItems;
-        private IReadOnlyCollection<IFilterDefinition> filterDefinitions;
+        private IReadOnlyCollection<IFilterDefinition> filterDefinitions = new List<IFilterDefinition>();
 
         public IPagingOptions PageableOptions { get; set; } = new PageableOptions();
 

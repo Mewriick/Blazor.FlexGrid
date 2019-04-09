@@ -57,6 +57,8 @@ namespace Blazor.FlexGrid.Components
         {
             base.BuildRenderTree(builder);
 
+            Console.WriteLine("Render");
+
             var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
 

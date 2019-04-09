@@ -17,6 +17,8 @@ namespace Blazor.FlexGrid.Demo.Shared
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
+        public bool RainyDay { get; set; }
+
         public override string ToString()
         {
             return $"Id: {Id}, Temp: {TemperatureC}, {TemperatureF}. Summary: {Summary}";
