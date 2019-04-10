@@ -72,7 +72,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             });
         }
 
-		public Task<LazyLoadingDataSetResult<GroupItem<WeatherForecast>>> GetGroupedTablePageData(
+		public Task<LazyLoadingDataSetResult<WeatherForecast>> GetGroupedTablePageData(
             ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, 
             ISortingOptions sortingOptions, IGroupingOptions groupingOptions)
         {
@@ -119,9 +119,9 @@ namespace Blazor.Components.Demo.FlexGrid.Services
                     groupedItemsAfterSorting = groupedItemsAfterPaging.ToList();
 
 
-                return Task.FromResult(new LazyLoadingDataSetResult<GroupItem<WeatherForecast>>()
+                return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast>()
                 {
-                    Items = groupedItemsAfterSorting,
+                    Items = groupedItemsAfterSorting.SelectMany(grp => grp.Items).ToList(),
                     TotalCount = groupedItems.Count()
                 });
 

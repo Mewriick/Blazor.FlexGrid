@@ -35,7 +35,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
                 }).ToList();
         }
 
-        public Task<LazyLoadingDataSetResult<GroupItem<Order>>> GetGroupedTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions, IGroupingOptions groupingOptions)
+        public Task<LazyLoadingDataSetResult<Order>> GetGroupedTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions, IGroupingOptions groupingOptions)
         {
             throw new NotImplementedException();
         }
