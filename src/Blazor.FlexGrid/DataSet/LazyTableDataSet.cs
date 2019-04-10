@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -42,6 +43,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public IEnumerable<GroupItem> GroupedItems { get; set; }
 
+
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
@@ -61,10 +63,19 @@ namespace Blazor.FlexGrid.DataSet
             }
             else
             {
-                var pagedDataResult = await lazyDataSetLoader.GetGroupedTablePageData(LazyLoadingOptions, 
-                    PageableOptions, SortingOptions, GroupingOptions);
-                GroupedItems = pagedDataResult.Items.AsQueryable().RetrieveGroupItemsIfCollapsedValues(this.GroupedItems);
-                PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+                try
+                {
+
+                    var pagedDataResult = await lazyDataSetLoader.GetGroupedTablePageData(LazyLoadingOptions,
+                        PageableOptions, SortingOptions, GroupingOptions);
+                    GroupedItems = this.GroupItems(pagedDataResult.Items.AsQueryable())
+                        .RetrieveGroupItemsIfCollapsedValues(this.GroupedItems);
+                    PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
             }
 
         }

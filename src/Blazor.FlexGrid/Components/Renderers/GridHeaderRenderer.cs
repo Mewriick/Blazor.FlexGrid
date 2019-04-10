@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
-            var canRenderCreateItemButton = rendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed && permissionContext.HasCreateItemPermission;
+            var canRenderCreateItemButton = rendererContext.CreateItemIsAllowed() && permissionContext.HasCreateItemPermission;
 
             rendererContext.OpenElement(HtmlTagNames.TableHead, rendererContext.CssClasses.TableHeader);
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableHeaderRow);
@@ -40,7 +40,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 BuildCreateItemButtonRendererTree(rendererContext, permissionContext);
             }
 
-            if (rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed && !canRenderCreateItemButton)
+            if (rendererContext.InlineEditItemIsAllowed() && !canRenderCreateItemButton)
             {
                 RenderEmptyColumnHeader(rendererContext);
             }

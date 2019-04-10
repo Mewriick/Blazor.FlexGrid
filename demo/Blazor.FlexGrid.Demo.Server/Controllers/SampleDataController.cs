@@ -1,8 +1,11 @@
-﻿using Blazor.FlexGrid.Demo.Shared;
+﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Demo.Shared;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Demo.Server.Controllers
 {
@@ -33,7 +36,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             return NotFound();
         }
 
-        [HttpGet("[action]")]
+        //[HttpGet("[action]")]
         public IActionResult WeatherForecasts(
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize,
@@ -56,6 +59,60 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
                 Items = items.Skip(pageSize * pageNumber).Take(pageSize),
                 TotalCount = staticRepositoryCollections.Forecasts.Count
             });
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult WeatherForecasts(
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
+            [FromQuery] SortingParams sortingParams,
+            [FromQuery] string groupExpression)
+        {
+            var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
+
+            if (string.IsNullOrEmpty(groupExpression))
+                return WeatherForecasts(pageNumber, pageSize, sortingParams);
+            else
+            {
+                var param = Expression.Parameter(typeof(WeatherForecast));
+                var property = Expression.PropertyOrField(param, groupExpression);
+
+                var keyPropertyConstructors = typeof(KeyProperty).GetConstructors();
+                var newExpr = Expression.New(keyPropertyConstructors.FirstOrDefault(c => c.GetParameters()[0].ParameterType == property.Type)
+                    , property);
+                var lambda = Expression.Lambda<Func<WeatherForecast, KeyProperty>>(newExpr, param);
+                var groupedItemsAfterGrouping = items.GroupBy(lambda)
+                        .Select(grp => new GroupItem<WeatherForecast>(grp.Key.Key, grp.ToList()));
+
+                var groupedItemsAfterPaging = groupedItemsAfterGrouping
+                    .Skip(pageSize * pageNumber)
+                    .Take(pageSize);
+
+                var groupedItemsAfterSorting = new List<GroupItem<WeatherForecast>>();
+                var sortExp = sortingParams?.SortExpression;
+                if (!string.IsNullOrEmpty(sortExp))
+                {
+                    if (sortingParams.SortDescending)
+                    {
+                        sortExp += " descending";
+                    }
+
+                    foreach (var groupItem in groupedItemsAfterPaging)
+                    {
+                        groupedItemsAfterSorting.Add(new GroupItem<WeatherForecast>(groupItem.Key,
+                            groupItem.Items.AsQueryable().OrderBy(sortExp)));
+                    }
+                }
+                else
+                    groupedItemsAfterSorting = groupedItemsAfterPaging.ToList();
+
+
+                return Ok(new
+                {
+                    Items = groupedItemsAfterSorting.SelectMany(grp => grp.Items),
+                    TotalCount = groupedItemsAfterGrouping.Count()
+                });
+            }
         }
 
         [HttpGet("[action]")]

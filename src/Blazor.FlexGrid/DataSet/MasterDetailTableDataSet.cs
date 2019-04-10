@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -26,6 +27,7 @@ namespace Blazor.FlexGrid.DataSet
         public IPagingOptions PageableOptions => tableDataSet.PageableOptions;
 
         public ISortingOptions SortingOptions => tableDataSet.SortingOptions;
+
         public IRowEditOptions RowEditOptions => tableDataSet.RowEditOptions;
 
         public GridViewEvents GridViewEvents => tableDataSet.GridViewEvents;
@@ -33,7 +35,6 @@ namespace Blazor.FlexGrid.DataSet
         public IList<TItem> Items => tableDataSet.Items as List<TItem>;
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
-
 
         public IGroupingOptions GroupingOptions => tableDataSet.GroupingOptions;
 
@@ -48,6 +49,8 @@ namespace Blazor.FlexGrid.DataSet
                 tableDataSet.GroupedItems = value;
             }
         }
+
+
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,

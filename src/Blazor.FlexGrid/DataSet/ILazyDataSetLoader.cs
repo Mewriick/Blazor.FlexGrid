@@ -10,7 +10,7 @@ namespace Blazor.FlexGrid.DataSet
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions);
 
-        Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(
+        Task<LazyLoadingDataSetResult<TItem>> GetGroupedTablePageData(
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,

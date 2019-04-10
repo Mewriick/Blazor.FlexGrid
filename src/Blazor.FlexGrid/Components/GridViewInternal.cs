@@ -78,7 +78,7 @@ namespace Blazor.FlexGrid.Components
                 .AddAttribute(RenderTreeBuilder.ChildContent, grid)
                 .CloseComponent();
 
-            if (gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions.IsCreateItemAllowed)
+            if (gridContexts.ImutableRendererContext.CreateItemIsAllowed())
             {
                 rendererTreeBuilder
                       .OpenComponent(typeof(CreateItemModal))

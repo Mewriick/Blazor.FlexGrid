@@ -10,6 +10,7 @@ GridView component for Blazor
 
 **Known issues after support Blazor 0.9.0**
 > Blazor.Extensions.Logging cannot be used for now  
+> Styles are not properly loaded when using Razor Components
 
 # Instalation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.6.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
@@ -51,13 +52,28 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-# Setup ServerSide Blazor App
+# Setup Blazor App as RazorComponents AKA ServerSide Blazor App
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddFlexGridServerSide();
 }
 ```
+
+For properly working of **LazyLoaded** functionallity some services must be registered in IoC. Because in web scenario **FlexGrid** uses **Http** services which are provided in IoC
+by default, but in server side scenario you have to provide these services.
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{    
+	services.TryAddScoped(typeof(ILazyDataSetLoader<>), typeof(NullLazyDataSetLoader<>));
+    services.TryAddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(NullLazyDataSetItemManipulator<>));
+    services.TryAddScoped(typeof(ICreateItemHandle<,>), typeof(NullCreateItemHandler<,>));
+}
+```
+
+These services are registered by defaul in IoC if you want for your grid use funtionality like lazy loading data, inlinde editing or create item form
+you have to provide these services for your models.
 
 In your Blazor component add Tag helper and required usings
 ```cs

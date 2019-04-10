@@ -6,10 +6,10 @@ namespace Blazor.FlexGrid.DataSet.Http
 {
     public class NullLazyDataSetLoader<TItem> : ILazyDataSetLoader<TItem> where TItem : class
     {
-        public Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions, IGroupingOptions groupingOptions)
-            => Task.FromResult(new LazyLoadingDataSetResult<GroupItem<TItem>>()
+        public Task<LazyLoadingDataSetResult<TItem>> GetGroupedTablePageData(ILazyLoadingOptions lazyLoadingOptions, IPagingOptions pageableOptions, ISortingOptions sortingOptions, IGroupingOptions groupingOptions)
+            => Task.FromResult(new LazyLoadingDataSetResult<TItem>()
             {
-                Items = new List<GroupItem<TItem>>(),
+                Items = new List<TItem>(),
                 TotalCount = 0
             });
 

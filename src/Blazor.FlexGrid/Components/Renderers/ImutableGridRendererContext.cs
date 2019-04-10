@@ -11,7 +11,6 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class ImutableGridRendererContext
     {
-        private readonly ICurrentUserPermission currentUserPermission;
         private Dictionary<string, IValueFormatter> valueFormatters;
         private Dictionary<string, IRenderFragmentAdapter> specialColumnValues;
 

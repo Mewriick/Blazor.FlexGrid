@@ -23,7 +23,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
-        
+
         public MasterDetailOptions MasterDetailOptions
         {
             get
@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 var masterDetailOptions = annotations[GridViewAnnotationNames.MasterDetailOptions];
                 if (masterDetailOptions is NullAnotationValue)
                 {
-                    return new NullMasterDetailOptions();
+                    return NullMasterDetailOptions.Instance;
                 }
 
                 return (MasterDetailOptions)masterDetailOptions;
@@ -109,6 +109,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 return (GlobalGroupingOptions)groupingOptions;
             }
         }
+
 
         public GridAnotations(IEntityType entityType)
         {
