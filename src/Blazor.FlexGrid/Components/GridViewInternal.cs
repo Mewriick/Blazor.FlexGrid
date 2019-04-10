@@ -10,7 +10,6 @@ using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
-using Microsoft.JSInterop;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,35 +34,23 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ConventionsSet ConventionsSet { get; set; }
 
-
-
         [Parameter] ITableDataAdapter DataAdapter { get; set; }
-
 
         [Parameter] ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
-
         [Parameter] int PageSize { get; set; }
-
 
         [Parameter] Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
-
         [Parameter] Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
-
 
         [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
 
         [Parameter] Action<ItemClickedArgs> OnItemClicked { get; set; }
 
-        
-
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-
-            Console.WriteLine("Render");
 
             var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
             var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
@@ -78,7 +65,6 @@ namespace Blazor.FlexGrid.Components
             RenderFragment flexGridFragment = delegate (RenderTreeBuilder interalBuilder)
             {
                 var internalRendererTreeBuilder = new BlazorRendererTreeBuilder(interalBuilder);
-
                 internalRendererTreeBuilder
                     .OpenComponent(typeof(GridViewTable))
                     .AddAttribute(nameof(ImutableGridRendererContext), gridContexts.ImutableRendererContext)
@@ -131,8 +117,6 @@ namespace Blazor.FlexGrid.Components
             }
         }
 
-
-
         private ITableDataSet GetTableDataSet()
         {
             var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
@@ -145,7 +129,6 @@ namespace Blazor.FlexGrid.Components
                     DeleteOperationFinished = this.DeleteOperationFinished,
                     NewItemCreated = this.NewItemCreated,
                     OnItemClicked = this.OnItemClicked
-                                    
                 };
             });
 

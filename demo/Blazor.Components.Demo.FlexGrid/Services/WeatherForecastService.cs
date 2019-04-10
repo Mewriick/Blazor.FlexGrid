@@ -1,4 +1,5 @@
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Demo.Shared;
 using Blazor.FlexGrid.Filters;
@@ -44,18 +45,15 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         }
 
         public Task<LazyLoadingDataSetResult<WeatherForecast>> GetTablePageData(
-            ILazyLoadingOptions lazyLoadingOptions,
-            IPagingOptions pageableOptions,
-            ISortingOptions sortingOptions,
-            IGroupingOptions groupingOptions,
+            RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filters = null)
         {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
-            var sortExp = sortingOptions?.SortExpression;
+            var sortExp = requestOptions.SortingOptions?.SortExpression;
             if (!string.IsNullOrEmpty(sortExp))
             {
-                if (sortingOptions.SortDescending)
+                if (requestOptions.SortingOptions.SortDescending)
                 {
                     sortExp += " descending";
                 }
@@ -63,8 +61,8 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             }
 
             items = items
-                .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
-                .Take(pageableOptions.PageSize);
+                .Skip(requestOptions.PageableOptions.PageSize * requestOptions.PageableOptions.CurrentPage)
+                .Take(requestOptions.PageableOptions.PageSize);
 
             return Task.FromResult(new LazyLoadingDataSetResult<WeatherForecast>
             {

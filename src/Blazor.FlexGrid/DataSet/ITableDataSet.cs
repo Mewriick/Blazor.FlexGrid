@@ -1,6 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Events;
-using Blazor.FlexGrid.Components.Renderers;
-using System;
 
 namespace Blazor.FlexGrid.DataSet
 {
@@ -11,9 +9,5 @@ namespace Blazor.FlexGrid.DataSet
     public interface ITableDataSet : IPageableTableDataSet, ISortableTableDataSet, ISelectableDataSet, IRowEditableDataSet, IFilterableDataSet, IGroupableTableDataSet
     {
         GridViewEvents GridViewEvents { get; }
-
-        
-
-
     }
 }

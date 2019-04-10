@@ -103,9 +103,9 @@ namespace Blazor.FlexGrid.DataSet
                     return source.GroupBy(keyExpression)
                                 .Select(grp => new GroupItem<TItem>(grp.Key, grp));
 
-                    
+
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -130,7 +130,7 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        public static IQueryable<GroupItem<TItem>> RetrieveGroupItemsIfCollapsedValues<TItem>(this IQueryable<GroupItem<TItem>> newGroupedItems, 
+        public static IQueryable<GroupItem<TItem>> RetrieveGroupItemsIfCollapsedValues<TItem>(this IQueryable<GroupItem<TItem>> newGroupedItems,
                                                         IEnumerable<GroupItem> oldGroupedItems)
         {
             if (oldGroupedItems == null)
@@ -156,16 +156,8 @@ namespace Blazor.FlexGrid.DataSet
         public static void ToggleGroupRow<TItem>(this ITableDataSet tableDataSet, object groupItemKey)
         {
             var keyEqualityComparer = new GroupingKeyEqualityComparer();
-            var groupItemToToggle = tableDataSet.GroupedItems.FirstOrDefault(item => keyEqualityComparer.Equals(item.Key, groupItemKey) );
+            var groupItemToToggle = tableDataSet.GroupedItems.FirstOrDefault(item => keyEqualityComparer.Equals(item.Key, groupItemKey));
             groupItemToToggle.IsCollapsed = !groupItemToToggle.IsCollapsed;
-
-            tableDataSet.GroupedItems = tableDataSet.GroupedItems.Select(item => !keyEqualityComparer.Equals(((GroupItem<TItem>)item).Key, groupItemKey)
-                                                                ? item
-                                                                : groupItemToToggle);
         }
-
-
-
-
     }
 }

@@ -1,11 +1,8 @@
-﻿using Blazor.FlexGrid.DataSet;
-using Blazor.FlexGrid.Demo.Shared;
+﻿using Blazor.FlexGrid.Demo.Shared;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Demo.Server.Controllers
 {
@@ -36,7 +33,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             return NotFound();
         }
 
-        //[HttpGet("[action]")]
+        [HttpGet("[action]")]
         public IActionResult WeatherForecasts(
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize,

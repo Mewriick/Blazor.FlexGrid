@@ -2,7 +2,6 @@
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
-using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Filters;
@@ -10,7 +9,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -41,18 +39,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public IGroupingOptions GroupingOptions => tableDataSet.GroupingOptions;
 
-        public IEnumerable<GroupItem> GroupedItems
-        {
-            get
-            {
-                return tableDataSet.GroupedItems;
-            }
-            set
-            {
-                tableDataSet.GroupedItems = value;
-            }
-        }
-
+        public IList<GroupItem> GroupedItems => tableDataSet.GroupedItems;
 
         public MasterDetailTableDataSet(
             ITableDataSet tableDataSet,

@@ -1,8 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Blazor.FlexGrid.DataSet.Options
 {
@@ -12,7 +10,7 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         IList<PropertyInfo> GroupableProperties { get; set; }
 
-        bool IsGroupingActive { get;  }
+        bool IsGroupingActive { get; }
 
         bool IsGroupingEnabled { get; set; }
 
@@ -21,7 +19,5 @@ namespace Blazor.FlexGrid.DataSet.Options
         void DeactivateGrouping();
 
         void SetConfiguration(GlobalGroupingOptions globalGroupingOptions);
-
-
     }
 }

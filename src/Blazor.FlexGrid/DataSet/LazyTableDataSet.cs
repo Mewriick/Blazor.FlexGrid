@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Filters;
 using System;
@@ -43,7 +44,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
 
-        public IEnumerable<GroupItem> GroupedItems { get; set; }
+        public IList<GroupItem> GroupedItems { get; private set; }
 
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
@@ -56,7 +57,7 @@ namespace Blazor.FlexGrid.DataSet
         public async Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions, SortingOptions, GroupingOptions, filterDefinitions);
+            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(new RequestOptions(LazyLoadingOptions, PageableOptions, SortingOptions, GroupingOptions), filterDefinitions);
             Items = pagedDataResult.Items;
             PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
         }

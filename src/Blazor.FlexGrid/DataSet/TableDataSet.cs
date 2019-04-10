@@ -39,8 +39,7 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-
-        public IEnumerable<GroupItem> GroupedItems { get; set; }
+        public IList<GroupItem> GroupedItems { get; private set; }
 
         public TableDataSet(IQueryable<TItem> source, IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
         {
@@ -164,14 +163,15 @@ namespace Blazor.FlexGrid.DataSet
 
         private void ApplyFiltersToQueryableSource(IQueryable<TItem> source)
         {
-            PageableOptions.TotalItemsCount = ApplyDeletedConditionToQueryable(source).Count();
+            var sourceWithoutDeleted = ApplyDeletedConditionToQueryable(source);
             if (!GroupingOptions.IsGroupingActive)
             {
-                Items = ApplyFiltersToQueryable(source).ToList();
+                PageableOptions.TotalItemsCount = sourceWithoutDeleted.Count();
+                Items = ApplyFiltersToQueryable(sourceWithoutDeleted).ToList();
             }
             else
             {
-                GroupedItems = ApplyFiltersWithGroupingToQueryable(source);
+                GroupedItems = ApplyFiltersWithGroupingToQueryable(sourceWithoutDeleted).OfType<GroupItem>().ToList();
             }
         }
 
@@ -180,8 +180,8 @@ namespace Blazor.FlexGrid.DataSet
             try
             {
                 var groupedItems = this.GroupItems<TItem>(source);
-                groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
                 groupedItems = ApplySortingToGroupedQueryable(groupedItems);
+                groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
 
                 groupedItems = groupedItems.RetrieveGroupItemsIfCollapsedValues<TItem>(this.GroupedItems);
                 return groupedItems;
@@ -209,7 +209,6 @@ namespace Blazor.FlexGrid.DataSet
                     return SortingOptions.SortDescending
                         ? queryable.OrderByDescending(x => x.Key).AsQueryable()
                         : queryable.OrderBy(x => x.Key).AsQueryable();
-
             }
             else
             {
@@ -225,26 +224,18 @@ namespace Blazor.FlexGrid.DataSet
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
         {
-            queryable = ApplyDeletedConditionToQueryable(queryable);
             queryable = ApplySortingToQueryable(queryable);
             queryable = ApplyPagingToQueryable(queryable);
 
             return queryable;
         }
 
-        private IQueryable<TItem> ApplyPagingToQueryable(IQueryable<TItem> queryable)
-        {
-            return ApplyPagingToQueryable<TItem>(queryable);
-        }
-
         private IQueryable<T> ApplyPagingToQueryable<T>(IQueryable<T> queryable)
         {
-
             return PageableOptions != null && PageableOptions.PageSize > 0
                 ? queryable.Skip(PageableOptions.PageSize * PageableOptions.CurrentPage)
                     .Take(PageableOptions.PageSize)
                 : queryable;
-
         }
 
         private IQueryable<TItem> ApplyDeletedConditionToQueryable(IQueryable<TItem> queryable)

@@ -1,5 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
-using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.Demo.Shared;
 using Blazor.FlexGrid.Filters;
 using System;
@@ -37,17 +37,14 @@ namespace Blazor.Components.Demo.FlexGrid.Services
         }
 
         public Task<LazyLoadingDataSetResult<Order>> GetTablePageData(
-            ILazyLoadingOptions lazyLoadingOptions,
-            IPagingOptions pageableOptions,
-            ISortingOptions sortingOptions,
-            IGroupingOptions groupingOptions,
+            RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
-            var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams.First(e => e.Key == "CustomerId").Value);
+            var customerId = Convert.ToInt32(requestOptions.LazyLoadingOptions.RequestParams.First(e => e.Key == "CustomerId").Value);
             var customerOrders = orders.Where(o => o.CustomerId == customerId);
             var pageableCustomerOrders = customerOrders
-                .Skip(pageableOptions.PageSize * pageableOptions.CurrentPage)
-                .Take(pageableOptions.PageSize)
+                .Skip(requestOptions.PageableOptions.PageSize * requestOptions.PageableOptions.CurrentPage)
+                .Take(requestOptions.PageableOptions.PageSize)
                 .ToList();
 
             return Task.FromResult(new LazyLoadingDataSetResult<Order>
