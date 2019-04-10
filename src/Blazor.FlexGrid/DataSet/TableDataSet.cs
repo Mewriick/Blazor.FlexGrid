@@ -26,6 +26,8 @@ namespace Blazor.FlexGrid.DataSet
 
         public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
 
+        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+
         public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
 
         public bool FilterIsApplied => filterExpression != null;
@@ -36,6 +38,9 @@ namespace Blazor.FlexGrid.DataSet
         public IList<TItem> Items { get; set; } = new List<TItem>();
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
+
+
+        public IEnumerable<GroupItem> GroupedItems { get; set; }
 
         public TableDataSet(IQueryable<TItem> source, IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
         {
@@ -152,10 +157,70 @@ namespace Blazor.FlexGrid.DataSet
         public void CancelEditation()
             => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            this.ToggleGroupRow<TItem>(groupItemKey);
+        }
+
         private void ApplyFiltersToQueryableSource(IQueryable<TItem> source)
         {
             PageableOptions.TotalItemsCount = ApplyDeletedConditionToQueryable(source).Count();
-            Items = ApplyFiltersToQueryable(source).ToList();
+            if (!GroupingOptions.IsGroupingActive)
+            {
+                Items = ApplyFiltersToQueryable(source).ToList();
+            }
+            else
+            {
+                GroupedItems = ApplyFiltersWithGroupingToQueryable(source);
+            }
+        }
+
+        private IQueryable<GroupItem<TItem>> ApplyFiltersWithGroupingToQueryable(IQueryable<TItem> source)
+        {
+            try
+            {
+                var groupedItems = this.GroupItems<TItem>(source);
+                groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
+                groupedItems = ApplySortingToGroupedQueryable(groupedItems);
+
+                groupedItems = groupedItems.RetrieveGroupItemsIfCollapsedValues<TItem>(this.GroupedItems);
+                return groupedItems;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private IQueryable<GroupItem<TItem>> ApplySortingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
+        {
+            if (!string.IsNullOrEmpty(SortingOptions?.SortExpression))
+            {
+                if (SortingOptions.SortExpression != GroupingOptions.GroupedProperty.Name)
+                {
+                    var query = queryable
+                        .Select(x => new GroupItem<TItem>(x.Key,
+                                SortingOptions.SortDescending ? x.AsQueryable().OrderByDescending(SortingOptions.SortExpression)
+                                                              : x.AsQueryable().OrderBy(SortingOptions.SortExpression)));
+                    return query;
+                }
+                else
+                    return SortingOptions.SortDescending
+                        ? queryable.OrderByDescending(x => x.Key).AsQueryable()
+                        : queryable.OrderBy(x => x.Key).AsQueryable();
+
+            }
+            else
+            {
+                return queryable;
+            }
+        }
+
+        private IQueryable<GroupItem<TItem>> ApplyPagingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
+        {
+            PageableOptions.TotalItemsCount = queryable.Count();
+            return ApplyPagingToQueryable<GroupItem<TItem>>(queryable);
         }
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)
@@ -169,10 +234,17 @@ namespace Blazor.FlexGrid.DataSet
 
         private IQueryable<TItem> ApplyPagingToQueryable(IQueryable<TItem> queryable)
         {
+            return ApplyPagingToQueryable<TItem>(queryable);
+        }
+
+        private IQueryable<T> ApplyPagingToQueryable<T>(IQueryable<T> queryable)
+        {
+
             return PageableOptions != null && PageableOptions.PageSize > 0
                 ? queryable.Skip(PageableOptions.PageSize * PageableOptions.CurrentPage)
                     .Take(PageableOptions.PageSize)
                 : queryable;
+
         }
 
         private IQueryable<TItem> ApplyDeletedConditionToQueryable(IQueryable<TItem> queryable)

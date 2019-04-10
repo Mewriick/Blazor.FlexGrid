@@ -22,6 +22,8 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
             builder.Property(c => c.Email)
                 .HasReadPermissionRestriction(perm => perm.IsInRole("Read"))
                 .HasWritePermissionRestriction(perm => perm.IsInRole("Write"));
+
+            builder.EnableGrouping();
         }
     }
 }

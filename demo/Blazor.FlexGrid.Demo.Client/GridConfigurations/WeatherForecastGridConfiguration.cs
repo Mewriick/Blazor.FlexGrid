@@ -49,6 +49,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             {
                 conf.CreateFormCssClasses.ModalSize = "modal-lg";
             });
+
+            builder.EnableGrouping();
         }
     }
 }

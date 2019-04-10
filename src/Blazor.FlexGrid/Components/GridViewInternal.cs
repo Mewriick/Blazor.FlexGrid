@@ -10,6 +10,7 @@ using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.JSInterop;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ namespace Blazor.FlexGrid.Components
         private ConventionsSet ConventionsSet { get; set; }
 
 
+
         [Parameter] ITableDataAdapter DataAdapter { get; set; }
 
 
@@ -51,6 +53,10 @@ namespace Blazor.FlexGrid.Components
 
 
         [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
+
+        [Parameter] Action<ItemClickedArgs> OnItemClicked { get; set; }
+
+        
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -125,6 +131,8 @@ namespace Blazor.FlexGrid.Components
             }
         }
 
+
+
         private ITableDataSet GetTableDataSet()
         {
             var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
@@ -135,7 +143,9 @@ namespace Blazor.FlexGrid.Components
                 {
                     SaveOperationFinished = this.SaveOperationFinished,
                     DeleteOperationFinished = this.DeleteOperationFinished,
-                    NewItemCreated = this.NewItemCreated
+                    NewItemCreated = this.NewItemCreated,
+                    OnItemClicked = this.OnItemClicked
+                                    
                 };
             });
 
@@ -146,6 +156,7 @@ namespace Blazor.FlexGrid.Components
 
             tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
             fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
+
 
             return tableDataSet;
         }

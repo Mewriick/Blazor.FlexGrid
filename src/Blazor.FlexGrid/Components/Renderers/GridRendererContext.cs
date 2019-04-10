@@ -77,6 +77,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             CssClasses = imutableGridRendererContext.CssClasses;
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
 
+            TableDataSet.GroupingOptions.SetConfiguration(GridConfiguration?.GroupingOptions);
+            TableDataSet.GroupingOptions.GroupableProperties = this.GridItemProperties.ToList();
+
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
             this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
@@ -98,6 +101,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
             => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
+
+        public void AddOnChangeEvent(Func<MulticastDelegate> onClickBindMethod)
+            => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, onClickBindMethod());
 
         public void AddContent(string content)
             => RendererTreeBuilder.AddContent(content);

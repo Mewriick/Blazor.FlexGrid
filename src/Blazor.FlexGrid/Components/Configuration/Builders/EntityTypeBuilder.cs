@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.DataSet.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -50,6 +51,27 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public virtual EntityTypeBuilder<TEntity> OnlyShowExplicitProperties()
+        {
+            Builder.OnlyShowExplicitProperties();
+
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> EnableGrouping()
+        {
+            Builder.EnableGrouping();
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> EnableGrouping(Action<GlobalGroupingOptions> confGroupingOptions)
+        {
+            var groupingOptions = new GlobalGroupingOptions();
+            confGroupingOptions?.Invoke(groupingOptions);
+            Builder.EnableGrouping(groupingOptions);
+            return this;
+        }
+
         public virtual EntityTypeBuilder<TEntity> IsMasterTable(Action<MasterDetailOptions> configureMasterDetails)
         {
             var masterDetails = new MasterDetailOptions();
@@ -65,6 +87,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+
 
         public virtual EntityTypeBuilder<TEntity> AllowInlineEdit(Action<InlineEditOptions> configureInlineEdit)
         {

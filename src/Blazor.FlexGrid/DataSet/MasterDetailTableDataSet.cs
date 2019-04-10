@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Filters;
@@ -9,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -36,6 +38,20 @@ namespace Blazor.FlexGrid.DataSet
         public IList<TItem> Items => tableDataSet.Items as List<TItem>;
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
+
+        public IGroupingOptions GroupingOptions => tableDataSet.GroupingOptions;
+
+        public IEnumerable<GroupItem> GroupedItems
+        {
+            get
+            {
+                return tableDataSet.GroupedItems;
+            }
+            set
+            {
+                tableDataSet.GroupedItems = value;
+            }
+        }
 
 
         public MasterDetailTableDataSet(
@@ -125,5 +141,10 @@ namespace Blazor.FlexGrid.DataSet
 
         public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
             => tableDataSet.ApplyFilters(filters);
+
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            this.ToggleGroupRow<TItem>(groupItemKey);
+        }
     }
 }

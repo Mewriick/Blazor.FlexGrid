@@ -47,6 +47,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,
+            IGroupingOptions groupingOptions,
             IReadOnlyCollection<IFilterDefinition> filters = null)
         {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
@@ -91,6 +92,48 @@ namespace Blazor.Components.Demo.FlexGrid.Services
 
             // Conflict
             return Task.FromResult(default(WeatherForecast));
+        }
+
+
+    }
+
+    public class KeyProperty : IEquatable<KeyProperty>
+    {
+        public object Key { get; set; }
+
+        public KeyProperty(object key)
+        {
+            this.Key = (object)key;
+        }
+
+        public KeyProperty(int key)
+        {
+            this.Key = (object)key;
+        }
+
+        public KeyProperty(String key)
+        {
+            this.Key = (object)key;
+        }
+
+        public KeyProperty(DateTime key)
+        {
+            this.Key = (object)key;
+        }
+
+        public bool Equals(KeyProperty other)
+        {
+            return this.Key == other.Key;
+        }
+
+        public override bool Equals(object other)
+        {
+            return this.Key == ((KeyProperty)other).Key;
+        }
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
         }
     }
 }

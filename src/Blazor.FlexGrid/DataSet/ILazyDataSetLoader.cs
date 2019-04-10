@@ -11,6 +11,7 @@ namespace Blazor.FlexGrid.DataSet
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,
+            IGroupingOptions groupingOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null);
     }
 }

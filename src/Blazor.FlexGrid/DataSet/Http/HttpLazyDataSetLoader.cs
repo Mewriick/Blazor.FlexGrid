@@ -24,10 +24,12 @@ namespace Blazor.FlexGrid.DataSet
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+
         public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,
+            IGroupingOptions groupingOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
             if (string.IsNullOrWhiteSpace(lazyLoadingOptions.DataUri))
@@ -39,6 +41,7 @@ namespace Blazor.FlexGrid.DataSet
             var query = new QueryBuilder(lazyLoadingOptions.RequestParams);
             PagingParams(query, pageableOptions);
             SortingParams(query, sortingOptions);
+            GroupingParams(query, groupingOptions);
 
             var dataUri = $"{lazyLoadingOptions.DataUri}{query.ToString()}";
             try
@@ -63,6 +66,12 @@ namespace Blazor.FlexGrid.DataSet
 
                 return Task.FromResult(emptyResult);
             }
+        }
+
+        private void GroupingParams(QueryBuilder builder, IGroupingOptions groupingOptions)
+        {
+            builder.Add("groupExpression", groupingOptions.GroupedProperty.Name);
+
         }
 
         private void PagingParams(QueryBuilder builder, IPagingOptions pagingOptions)

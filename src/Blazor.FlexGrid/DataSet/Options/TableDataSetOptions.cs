@@ -10,6 +10,8 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         public SortingOptions SortingOptions { get; set; } = new SortingOptions();
 
+        public GroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+
         public GridViewEvents GridViewEvents { get; set; }
     }
 }

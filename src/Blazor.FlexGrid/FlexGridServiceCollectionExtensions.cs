@@ -114,8 +114,12 @@ namespace Blazor.FlexGrid
                     .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
                     .AddRenderer(new GridActionButtonsRenderer());
 
-                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                var gridGroupRowRenderer = new GridGroupRowRenderer()
                     .AddRenderer(gridRowRenderer);
+
+                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                    .AddRenderer(gridRowRenderer)
+                    .AddRenderer(gridGroupRowRenderer);
 
                 var gridRenderer = new GridMesurablePartRenderer(
                         new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)
@@ -145,8 +149,12 @@ namespace Blazor.FlexGrid
                     .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
                     .AddRenderer(new GridActionButtonsRenderer());
 
-                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                var gridGroupRowRenderer = new GridGroupRowRenderer()
                     .AddRenderer(gridRowRenderer);
+
+                var gridBodyRenderer = new GridBodyRenderer(provider.GetRequiredService<ILogger<GridBodyRenderer>>())
+                    .AddRenderer(gridRowRenderer)
+                    .AddRenderer(gridGroupRowRenderer);
 
                 var gridRenderer = new GridMesurablePartRenderer(
                         new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>()), measurableLogger)

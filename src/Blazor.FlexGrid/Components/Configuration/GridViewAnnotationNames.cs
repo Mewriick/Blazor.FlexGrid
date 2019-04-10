@@ -13,7 +13,8 @@
         public const string InlineEditOptions = "InlineEditOptions";
         public const string CreateItemOptions = "CreateItemOptions";
         public const string MasterDetailOptions = "MasterDetailOptions";
-        public const string FilteringIsEnabled = "FilteringIsEnabled";
+        public const string OnlyShowExplicitProperties = "OnlyShowExplicitProperties";
+        public const string GroupingOptions = "GroupingOptions";
 
         public const string ColumnHeaderStyle = "GridColumnHeaderStyle";
         public const string ColumnCaption = "GridColumnCaption";

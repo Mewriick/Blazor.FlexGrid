@@ -9,5 +9,7 @@ namespace Blazor.FlexGrid.Components.Events
         public Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
 
         public Action<ItemCreatedArgs> NewItemCreated { get; set; }
+
+        public Action<ItemClickedArgs> OnItemClicked { get; set; }
     }
 }

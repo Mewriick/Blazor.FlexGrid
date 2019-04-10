@@ -11,11 +11,12 @@ namespace Blazor.FlexGrid.DataSet.Http
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,
-            IReadOnlyCollection<IFilterDefinition> filters = null)
-            => Task.FromResult(new LazyLoadingDataSetResult<TItem>()
-            {
-                Items = new List<TItem>(),
-                TotalCount = 0
-            });
+            IGroupingOptions groupingOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
+                => Task.FromResult(new LazyLoadingDataSetResult<TItem>()
+                {
+                    Items = new List<TItem>(),
+                    TotalCount = 0
+                });
     }
 }

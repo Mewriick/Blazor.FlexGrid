@@ -20,6 +20,7 @@ namespace Blazor.FlexGrid.DataAdapters
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
+
         public CollectionTableDataAdapter(ICollection<TItem> items)
         {
             this.items = items ?? throw new ArgumentNullException(nameof(items));
@@ -34,7 +35,8 @@ namespace Blazor.FlexGrid.DataAdapters
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = new SortingOptions(),
-                GridViewEvents = tableDataSetOptions.GridViewEvents
+                GridViewEvents = tableDataSetOptions.GridViewEvents,
+                GroupingOptions = new GroupingOptions()
             };
 
             return tableDataSet;

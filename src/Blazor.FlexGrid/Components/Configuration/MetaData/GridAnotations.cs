@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.DataSet.Options;
+using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -80,6 +81,34 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+
+
+        public bool OnlyShowExplicitProperties
+        {
+            get
+            {
+                var onlyShowExplicitProperties = annotations[GridViewAnnotationNames.OnlyShowExplicitProperties];
+                if (onlyShowExplicitProperties is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)onlyShowExplicitProperties;
+            }
+        }
+
+        public GlobalGroupingOptions GroupingOptions
+        {
+            get
+            {
+                var groupingOptions = annotations[GridViewAnnotationNames.GroupingOptions];
+                if (groupingOptions is NullAnotationValue)
+                {
+                    return new NullGlobalGroupingOptions();
+                }
+                return (GlobalGroupingOptions)groupingOptions;
+            }
+        }
 
 
         public GridAnotations(IEntityType entityType)

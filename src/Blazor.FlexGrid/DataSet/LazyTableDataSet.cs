@@ -40,6 +40,12 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
+
+        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+
+        public IEnumerable<GroupItem> GroupedItems { get; set; }
+
+
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
@@ -50,9 +56,9 @@ namespace Blazor.FlexGrid.DataSet
         public async Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions, SortingOptions, filterDefinitions);
-            PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(LazyLoadingOptions, PageableOptions, SortingOptions, GroupingOptions, filterDefinitions);
             Items = pagedDataResult.Items;
+            PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
         }
 
         public Task SetSortExpression(string expression)
@@ -154,6 +160,11 @@ namespace Blazor.FlexGrid.DataSet
             filterDefinitions = filters;
 
             return GoToPage(0);
+        }
+
+        public void ToggleGroupRow(object groupItemKey)
+        {
+            this.ToggleGroupRow<TItem>(groupItemKey);
         }
     }
 }

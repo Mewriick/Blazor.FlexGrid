@@ -16,6 +16,10 @@
 
         public string TableHeaderCell { get; set; } = string.Empty;
 
+        public string TableGroupRow { get; set; } = string.Empty;
+
+        public string TableGroupRowCell { get; set; } = string.Empty;
+
         public GridFooterCssClasses FooterCssClasses { get; set; } = NullFooterCssClasses.Instance;
 
         public CreateFormCssClasses CreateFormCssClasses { get; set; } = NullCreateFormCssClasses.Instance;
@@ -29,6 +33,8 @@
             TableHeaderCell = $"{defaultCssClasses.TableHeaderCell} {TableHeaderCell}".TrimEnd();
             TableHeaderRow = $"{defaultCssClasses.TableHeaderRow} {TableHeaderRow}".TrimEnd();
             TableHeader = $"{defaultCssClasses.TableHeader} {TableHeader}".TrimEnd();
+            TableGroupRow = $"{defaultCssClasses.TableGroupRow} {TableGroupRow}".TrimEnd();
+            TableGroupRowCell = $"{defaultCssClasses.TableGroupRowCell} {TableGroupRowCell}".TrimEnd();
         }
 
         internal void AppendDefaultFooterCssClasses(DefaultFooterCssClasses defaultFooterClasses)
@@ -37,7 +43,8 @@
             {
                 FooterWrapper = $"{defaultFooterClasses.FooterWrapper} {FooterCssClasses.FooterWrapper}".TrimEnd(),
                 PaginationButton = $"{defaultFooterClasses.PaginationButton} {FooterCssClasses.PaginationButton}".TrimEnd(),
-                PaginationButtonDisabled = $"{defaultFooterClasses.PaginationButtonDisabled} {FooterCssClasses.PaginationButtonDisabled}".TrimEnd()
+                PaginationButtonDisabled = $"{defaultFooterClasses.PaginationButtonDisabled} {FooterCssClasses.PaginationButtonDisabled}".TrimEnd(),
+                GroupingPartWrapper = $"{defaultFooterClasses.GroupingPartWrapper} {FooterCssClasses.GroupingPartWrapper}".TrimEnd()
             };
         }
 
@@ -62,6 +69,8 @@
         public string PaginationButton { get; set; } = string.Empty;
 
         public string PaginationButtonDisabled { get; set; } = string.Empty;
+
+        public string GroupingPartWrapper { get; set; } = string.Empty;
     }
 
     public class CreateFormCssClasses
@@ -91,6 +100,8 @@
             TableHeaderCell = "table-cell-head";
             TableHeaderRow = "table-head-row";
             TableHeader = "table-head";
+            TableGroupRow = "table-group-row";
+            TableGroupRowCell = "table-group-row-cell";
             FooterCssClasses = new DefaultFooterCssClasses();
             CreateFormCssClasses = new DefaultCreateFormCssClasses();
         }
@@ -103,6 +114,7 @@
             FooterWrapper = "pagination-wrapper-inner";
             PaginationButton = "pagination-button";
             PaginationButtonDisabled = "pagination-button pagination-button-disabled";
+            GroupingPartWrapper = "grouping-part-wrapper";
         }
     }
 

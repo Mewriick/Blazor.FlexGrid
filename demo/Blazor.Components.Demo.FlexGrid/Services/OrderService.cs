@@ -40,6 +40,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             ILazyLoadingOptions lazyLoadingOptions,
             IPagingOptions pageableOptions,
             ISortingOptions sortingOptions,
+            IGroupingOptions groupingOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
             var customerId = Convert.ToInt32(lazyLoadingOptions.RequestParams.First(e => e.Key == "CustomerId").Value);

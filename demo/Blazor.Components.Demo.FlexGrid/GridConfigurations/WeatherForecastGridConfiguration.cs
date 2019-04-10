@@ -37,6 +37,8 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
 
             builder.Property(e => e.RainyDay)
                 .IsFilterable();
+
+            builder.EnableGrouping();
         }
     }
 }
