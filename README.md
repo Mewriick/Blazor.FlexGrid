@@ -66,16 +66,16 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     app.UseFlexGrid(env.WebRootPath);
 }
 ```
-From your index.(cs)html reference
+From your index.(cs)html add references
 ```cs
-	<link rel="stylesheet" href="Blazor.FlexGrid/FlexGridStyles.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/fontawesome.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/all.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/regular.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/solid.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/svg-with-js.css" />
-	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/v4-shims.css" />
-	<script src="Blazor.FlexGrid/flexGridIntereop.js"></script>
+<link rel="stylesheet" href="Blazor.FlexGrid/FlexGridStyles.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/fontawesome.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/all.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/regular.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/solid.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/svg-with-js.css" />
+<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/v4-shims.css" />
+<script src="Blazor.FlexGrid/flexGridIntereop.js"></script>
 ```
 
 For properly working of **LazyLoaded** functionallity some services must be registered in IoC. Because in web scenario **FlexGrid** uses **Http** services which are provided in IoC
