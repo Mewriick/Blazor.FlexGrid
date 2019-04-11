@@ -59,6 +59,7 @@ namespace Blazor.Components.Demo.FlexGrid
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseFlexGrid(env.WebRootPath);
 
             app.UseRouting(routes =>
             {

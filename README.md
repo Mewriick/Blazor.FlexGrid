@@ -10,7 +10,6 @@ GridView component for Blazor
 
 **Known issues after support Blazor 0.9.0**
 > Blazor.Extensions.Logging cannot be used for now  
-> Styles are not properly loaded when using Razor Components, you must include CSS style mannualy into index filex
 
 # Instalation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.7.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
@@ -58,6 +57,25 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddFlexGridServerSide();
 }
+```
+Note: Add the following line to the Configure(...) method of your Startup.cs file.
+
+```cs
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseFlexGrid(env.WebRootPath);
+}
+```
+From your index.(cs)html reference
+```cs
+	<link rel="stylesheet" href="Blazor.FlexGrid/FlexGridStyles.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/fontawesome.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/all.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/regular.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/solid.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/svg-with-js.css" />
+	<link rel="stylesheet" href="Blazor.FlexGrid/fontawesome/css/v4-shims.css" />
+	<script src="Blazor.FlexGrid/flexGridIntereop.js"></script>
 ```
 
 For properly working of **LazyLoaded** functionallity some services must be registered in IoC. Because in web scenario **FlexGrid** uses **Http** services which are provided in IoC
