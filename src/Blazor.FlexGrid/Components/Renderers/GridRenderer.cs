@@ -21,24 +21,27 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
-            try
+            using (new MeasurableScope(sw => logger.LogInformation($"Grid rendering duration {sw.ElapsedMilliseconds}ms")))
             {
-                gridPartRenderersBefore.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
+                try
+                {
+                    gridPartRenderersBefore.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
-                rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
-                rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
+                    rendererContext.OpenElement(HtmlTagNames.Div, "table-wrapper");
+                    rendererContext.OpenElement(HtmlTagNames.Table, rendererContext.CssClasses.Table);
 
-                gridPartRenderers.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
+                    gridPartRenderers.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
-                rendererContext.CloseElement(); // Close table
+                    rendererContext.CloseElement(); // Close table
 
-                gridPartRenderersAfter.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
+                    gridPartRenderersAfter.ForEach(renderer => renderer.BuildRendererTree(rendererContext, permissionContext));
 
-                rendererContext.CloseElement(); // Close table wrapper                
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Error raised during rendering GridView component. Ex: {ex}");
+                    rendererContext.CloseElement(); // Close table wrapper                
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"Error raised during rendering GridView component. Ex: {ex}");
+                }
             }
         }
     }

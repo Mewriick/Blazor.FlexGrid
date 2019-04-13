@@ -56,6 +56,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public Action RequestRerenderNotification => flexGridContext.RequestRerenderTableRowsNotification;
 
+        public bool IsTableForItemsGroup => flexGridContext.IsTableForItemsGroup;
+
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
             IRendererTreeBuilder rendererTreeBuilder,
@@ -186,6 +188,14 @@ namespace Blazor.FlexGrid.Components.Renderers
                 });
 
             AddEventAttributes();
+            RendererTreeBuilder.CloseComponent();
+        }
+
+        public void AddGridViewComponent(ITableDataAdapter tableDataAdapter)
+        {
+            RendererTreeBuilder.OpenComponent(typeof(GridViewGroup<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
+            RendererTreeBuilder.AddAttribute("DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), 20);
             RendererTreeBuilder.CloseComponent();
         }
 

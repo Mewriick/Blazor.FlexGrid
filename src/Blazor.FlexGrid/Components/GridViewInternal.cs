@@ -22,18 +22,13 @@ namespace Blazor.FlexGrid.Components
         private bool dataAdapterWasEmptyInOnInit;
         private FlexGridContext fixedFlexGridContext;
 
+        [Inject] IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
 
-        [Inject]
-        private IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
+        [Inject] GridContextsFactory RendererContextFactory { get; set; }
 
-        [Inject]
-        private GridContextsFactory RendererContextFactory { get; set; }
+        [Inject] IMasterDetailTableDataSetFactory MasterDetailTableDataSetFactory { get; set; }
 
-        [Inject]
-        private IMasterDetailTableDataSetFactory MasterDetailTableDataSetFactory { get; set; }
-
-        [Inject]
-        private ConventionsSet ConventionsSet { get; set; }
+        [Inject] ConventionsSet ConventionsSet { get; set; }
 
         [Parameter] ITableDataAdapter DataAdapter { get; set; }
 
@@ -72,7 +67,8 @@ namespace Blazor.FlexGrid.Components
                     .AddAttribute(RenderTreeBuilder.ChildContent, tableFragment)
                     .CloseComponent();
 
-                if (gridContexts.ImutableRendererContext.CreateItemIsAllowed())
+                if (gridContexts.ImutableRendererContext.CreateItemIsAllowed() &&
+                   !fixedFlexGridContext.IsTableForItemsGroup)
                 {
                     internalRendererTreeBuilder
                           .OpenComponent(typeof(CreateItemModal))
@@ -94,7 +90,7 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnInitAsync()
         {
-            fixedFlexGridContext = new FlexGridContext(new FilterContext());
+            fixedFlexGridContext = CreateFlexGridContext();
 
             dataAdapterWasEmptyInOnInit = DataAdapter == null;
             if (!dataAdapterWasEmptyInOnInit)
@@ -117,6 +113,9 @@ namespace Blazor.FlexGrid.Components
                 await tableDataSet.GoToPage(0);
             }
         }
+
+        protected virtual FlexGridContext CreateFlexGridContext()
+            => new FlexGridContext(new FilterContext());
 
         private ITableDataSet GetTableDataSet()
         {

@@ -77,8 +77,7 @@
 }
 
 .table-group-row-cell {
-    column-span: all;
-    border-style: groove;
+    column-span: all;    
     background-color: rgba(150,00,150,0.01);
     font-family: inherit;
     height: 50px;
@@ -87,13 +86,7 @@
     font-size: 0.75rem;
     font-weight: 500;
     color: dimgrey;
-}
-
-.table-group-row-wrapper-collapsed tr:not(:first-child) {
-    display: none;
-}
-
-.table-group-row-wrapper {
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
 }
 
 .table-cell {

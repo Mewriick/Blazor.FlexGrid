@@ -1,60 +1,35 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
-    public class GridBodyRenderer : GridCompositeRenderer
+    public class GridBodyRenderer : GridPartRenderer
     {
-        private readonly ILogger<GridBodyRenderer> logger;
+        private readonly IGridRendererTreeBuilder simpleBodyRendererTreeBuilder;
+        private readonly IGridRendererTreeBuilder groupedBodyRendererTreeBuilder;
 
-        public GridBodyRenderer(ILogger<GridBodyRenderer> logger)
+        public GridBodyRenderer(
+            IGridRendererTreeBuilder simpleBodyRendererTreeBuilder,
+            IGridRendererTreeBuilder groupedBodyRendererTreeBuilder)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        
-
-        protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
-        {
-            if (!rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
-            {
-                rendererContext.OpenElement(HtmlTagNames.TableBody, rendererContext.CssClasses.TableBody);
-                try
-                {
-                    foreach (var item in rendererContext.TableDataSet.Items)
-                    {
-                        rendererContext.ActualItem = item;
-                        foreach (var renderer in gridPartRenderers)
-                            renderer.BuildRendererTree(rendererContext, permissionContext);
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError($"Error occured during rendering grid view body. Ex: {ex}");
-                }
-
-                rendererContext.CloseElement();
-            }
-            else
-            {
-                if (rendererContext.TableDataSet?.GroupedItems != null)
-                foreach (var item in rendererContext.TableDataSet.GroupedItems)
-                {
-                        rendererContext.ActualItem = item;
-                        foreach (var renderer in gridPartRenderers)
-                            renderer.BuildRendererTree(rendererContext, permissionContext);
-                }
-                
-                
-            }
+            this.simpleBodyRendererTreeBuilder = simpleBodyRendererTreeBuilder ?? throw new ArgumentNullException(nameof(simpleBodyRendererTreeBuilder));
+            this.groupedBodyRendererTreeBuilder = groupedBodyRendererTreeBuilder ?? throw new ArgumentNullException(nameof(groupedBodyRendererTreeBuilder));
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.TableDataSet.HasItems();
+
+        protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
+        {
+            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
+            {
+                groupedBodyRendererTreeBuilder.BuildRendererTree(rendererContext, permissionContext);
+            }
+            else
+            {
+                simpleBodyRendererTreeBuilder.BuildRendererTree(rendererContext, permissionContext);
+            }
+        }
     }
 }

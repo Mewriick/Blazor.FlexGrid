@@ -17,6 +17,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             this.flexGridInterop = flexGridInterop ?? throw new ArgumentNullException(nameof(flexGridInterop));
         }
 
+        public override bool CanRender(GridRendererContext rendererContext)
+            => (rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied) && !rendererContext.IsTableForItemsGroup;
+
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             var canRenderCreateItemButton = rendererContext.CreateItemIsAllowed() && permissionContext.HasCreateItemPermission;
@@ -48,9 +51,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             rendererContext.CloseElement();
         }
-
-        public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied;
 
         private void RenderColumnHeader(GridRendererContext rendererContext, PropertyInfo property)
         {

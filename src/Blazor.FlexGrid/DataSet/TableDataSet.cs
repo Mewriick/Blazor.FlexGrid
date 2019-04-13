@@ -55,7 +55,7 @@ namespace Blazor.FlexGrid.DataSet
         public Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            ApplyFiltersToQueryableSource(filterExpression is null ? source : source.Where(filterExpression));
+            ApplyFiltersToQueryableSource(source);
 
             return Task.CompletedTask;
         }
@@ -85,9 +85,8 @@ namespace Blazor.FlexGrid.DataSet
 
             PageableOptions.CurrentPage = 0;
             filterExpression = filterExpressionTreeBuilder.BuildExpressionTree(filters);
-            ApplyFiltersToQueryableSource(source.Where(filterExpression));
 
-            return Task.CompletedTask;
+            return GoToPage(0);
         }
 
         public void ToggleRowItem(object item)
@@ -166,7 +165,8 @@ namespace Blazor.FlexGrid.DataSet
 
         private void ApplyFiltersToQueryableSource(IQueryable<TItem> source)
         {
-            var sourceWithoutDeleted = ApplyDeletedConditionToQueryable(source);
+            var filteredSource = filterExpression is null ? source : source.Where(filterExpression);
+            var sourceWithoutDeleted = ApplyDeletedConditionToQueryable(filteredSource);
             if (!GroupingOptions.IsGroupingActive)
             {
                 PageableOptions.TotalItemsCount = sourceWithoutDeleted.Count();
@@ -174,61 +174,47 @@ namespace Blazor.FlexGrid.DataSet
             }
             else
             {
-                GroupedItems = ApplyFiltersWithGroupingToQueryable(sourceWithoutDeleted).OfType<GroupItem>().ToList();
+                var newGroupedItems = ApplyFiltersWithGroupingToQueryable(sourceWithoutDeleted).OfType<GroupItem>().ToList();
+                //newGroupedItems.PreserveCollapse(GroupedItems);
+                GroupedItems = newGroupedItems;
             }
         }
 
         private IQueryable<GroupItem<TItem>> ApplyFiltersWithGroupingToQueryable(IQueryable<TItem> source)
         {
-            try
-            {
-                var groupedItems = ApplyGroupingToQueryable(source);
-                groupedItems = ApplySortingToGroupedQueryable(groupedItems);
-                groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
+            var groupedItemsQueryable = ApplyGroupingToQueryable(source);
+            groupedItemsQueryable = ApplySortingToGroupedQueryable(groupedItemsQueryable);
+            PageableOptions.TotalItemsCount = groupedItemsQueryable.Count();
+            groupedItemsQueryable = ApplyPagingToQueryable(groupedItemsQueryable);
 
-                //groupedItems = groupedItems.RetrieveGroupItemsIfCollapsedValues<TItem>(this.GroupedItems);
-                return groupedItems;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return groupedItemsQueryable;
         }
 
         private IQueryable<GroupItem<TItem>> ApplySortingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
         {
-            if (!string.IsNullOrEmpty(SortingOptions?.SortExpression))
-            {
-                if (SortingOptions.SortExpression != GroupingOptions.GroupedProperty.Name)
-                {
-                    var query = queryable
-                        .Select(x => new GroupItem<TItem>(x.Key,
-                                SortingOptions.SortDescending ? x.AsQueryable().OrderByDescending(SortingOptions.SortExpression)
-                                                              : x.AsQueryable().OrderBy(SortingOptions.SortExpression)));
-                    return query;
-                }
-                else
-                    return SortingOptions.SortDescending
-                        ? queryable.OrderByDescending(x => x.Key).AsQueryable()
-                        : queryable.OrderBy(x => x.Key).AsQueryable();
-            }
-            else
+            if (string.IsNullOrEmpty(SortingOptions?.SortExpression))
             {
                 return queryable;
             }
+
+            if (SortingOptions.SortExpression != GroupingOptions.GroupedProperty.Name)
+            {
+                queryable = queryable.Select(x => new GroupItem<TItem>(x.Key,
+                                SortingOptions.SortDescending
+                                    ? x.AsQueryable().OrderByDescending(SortingOptions.SortExpression)
+                                    : x.AsQueryable().OrderBy(SortingOptions.SortExpression)));
+                return queryable;
+            }
+            else
+                return SortingOptions.SortDescending
+                    ? queryable.OrderByDescending(x => x.Key)
+                    : queryable.OrderBy(x => x.Key);
         }
 
         private IQueryable<GroupItem<TItem>> ApplyGroupingToQueryable(IQueryable<TItem> source)
         {
             return source.GroupBy(GroupingOptions.GroupedProperty.Name, "it")
                 .Select<GroupItem<TItem>>(ParsingConfig.Default, "new (it.Key as Key, it as Items)");
-        }
-
-        private IQueryable<GroupItem<TItem>> ApplyPagingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)
-        {
-            PageableOptions.TotalItemsCount = queryable.Count();
-            return ApplyPagingToQueryable<GroupItem<TItem>>(queryable);
         }
 
         private IQueryable<TItem> ApplyFiltersToQueryable(IQueryable<TItem> queryable)

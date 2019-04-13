@@ -10,7 +10,6 @@ namespace Blazor.FlexGrid
         public static Type GetMemberType(this MemberInfo memberInfo)
             => (memberInfo as PropertyInfo)?.PropertyType ?? (memberInfo as FieldInfo)?.FieldType;
 
-
         public static PropertyInfo GetPropertyAccess(this LambdaExpression propertyAccessExpression)
         {
             var parameterExpression = propertyAccessExpression.Parameters.Single();

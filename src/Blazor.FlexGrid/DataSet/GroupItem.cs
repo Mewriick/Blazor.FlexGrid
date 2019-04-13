@@ -11,7 +11,7 @@ namespace Blazor.FlexGrid.DataSet
 
         public override int Count => Items != null ? Items.Count() : 0;
 
-        //Dynamic LINQ requires defaul ctor
+        //Dynamic LINQ requires default ctor
         public GroupItem()
         {
             IsCollapsed = true;
@@ -26,12 +26,12 @@ namespace Blazor.FlexGrid.DataSet
             IsCollapsed = true;
         }
 
-        public IEnumerator<TItem> GetEnumerator()
+        public override IEnumerator GetEnumerator()
         {
             return Items.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator()
         {
             return Items.GetEnumerator();
         }
@@ -46,6 +46,8 @@ namespace Blazor.FlexGrid.DataSet
         public bool IsCollapsed { get; set; }
 
         public abstract int Count { get; }
+
+        public abstract IEnumerator GetEnumerator();
     }
 
     public class GroupingKeyEqualityComparer : IEqualityComparer<object>

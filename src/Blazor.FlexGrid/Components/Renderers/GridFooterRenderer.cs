@@ -1,7 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
-using System;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -12,6 +11,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly string noGroupingOptionText = "(no grouping)";
         private readonly string groupByPlaceholder = "Group by:";
 
+        public override bool CanRender(GridRendererContext rendererContext)
+            => rendererContext.TableDataSet.HasItems();
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
@@ -21,8 +22,11 @@ namespace Blazor.FlexGrid.Components.Renderers
             //rendererContext.OpenElement(HtmlTagNames.Div, "pagination-wrapper");
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
 
-            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled)
+            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled &&
+                !rendererContext.IsTableForItemsGroup)
+            {
                 RenderGroupingFooterPart(rendererContext);
+            }
 
             rendererContext.OpenElement(HtmlTagNames.Div, "pagination-right");
             rendererContext.CloseElement();
@@ -40,9 +44,6 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.CloseElement();
             //rendererContext.CloseElement();
         }
-
-        public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.TableDataSet.HasItems();
 
         private void RenderGroupingFooterPart(GridRendererContext rendererContext)
         {

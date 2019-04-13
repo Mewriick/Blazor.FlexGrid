@@ -9,6 +9,8 @@ namespace Blazor.FlexGrid.Components
 
         public FilterContext FilterContext { get; }
 
+        public bool IsTableForItemsGroup { get; set; }
+
         public Action RequestRerenderTableRowsNotification { get; private set; }
 
         public FlexGridContext(FilterContext filterContext)
