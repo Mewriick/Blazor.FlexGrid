@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -41,7 +42,9 @@ namespace Blazor.FlexGrid.DataSet
 
         public IList<GroupItem> GroupedItems { get; private set; }
 
-        public TableDataSet(IQueryable<TItem> source, IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
+        public TableDataSet(
+            IQueryable<TItem> source,
+            IFilterExpressionTreeBuilder<TItem> filterExpressionTreeBuilder)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
             this.filterExpressionTreeBuilder = filterExpressionTreeBuilder ?? throw new ArgumentNullException(nameof(filterExpressionTreeBuilder));
@@ -179,11 +182,11 @@ namespace Blazor.FlexGrid.DataSet
         {
             try
             {
-                var groupedItems = this.GroupItems<TItem>(source);
+                var groupedItems = ApplyGroupingToQueryable(source);
                 groupedItems = ApplySortingToGroupedQueryable(groupedItems);
                 groupedItems = ApplyPagingToGroupedQueryable(groupedItems);
 
-                groupedItems = groupedItems.RetrieveGroupItemsIfCollapsedValues<TItem>(this.GroupedItems);
+                //groupedItems = groupedItems.RetrieveGroupItemsIfCollapsedValues<TItem>(this.GroupedItems);
                 return groupedItems;
 
             }
@@ -214,6 +217,12 @@ namespace Blazor.FlexGrid.DataSet
             {
                 return queryable;
             }
+        }
+
+        private IQueryable<GroupItem<TItem>> ApplyGroupingToQueryable(IQueryable<TItem> source)
+        {
+            return source.GroupBy(GroupingOptions.GroupedProperty.Name, "it")
+                .Select<GroupItem<TItem>>(ParsingConfig.Default, "new (it.Key as Key, it as Items)");
         }
 
         private IQueryable<GroupItem<TItem>> ApplyPagingToGroupedQueryable(IQueryable<GroupItem<TItem>> queryable)

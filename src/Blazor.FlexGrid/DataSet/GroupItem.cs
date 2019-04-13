@@ -11,12 +11,19 @@ namespace Blazor.FlexGrid.DataSet
 
         public override int Count => Items != null ? Items.Count() : 0;
 
+        //Dynamic LINQ requires defaul ctor
+        public GroupItem()
+        {
+            IsCollapsed = true;
+            ItemType = typeof(TItem);
+        }
+
         public GroupItem(object key, IEnumerable<TItem> items)
         {
-            this.ItemType = typeof(TItem);
-            this.Items = items;
-            this.Key = key;
-            this.IsCollapsed = true;
+            ItemType = typeof(TItem);
+            Items = items;
+            Key = key;
+            IsCollapsed = true;
         }
 
         public IEnumerator<TItem> GetEnumerator()
@@ -34,7 +41,7 @@ namespace Blazor.FlexGrid.DataSet
     {
         public Type ItemType { get; set; }
 
-        public object Key { get; protected set; }
+        public object Key { get; set; }
 
         public bool IsCollapsed { get; set; }
 

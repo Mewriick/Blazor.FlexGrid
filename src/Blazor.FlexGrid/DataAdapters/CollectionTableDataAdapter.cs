@@ -34,9 +34,9 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable(), new FilterExpressionTreeBuilder<TItem>())
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
-                SortingOptions = new SortingOptions(),
+                SortingOptions = tableDataSetOptions.SortingOptions,
                 GridViewEvents = tableDataSetOptions.GridViewEvents,
-                GroupingOptions = new GroupingOptions()
+                GroupingOptions = tableDataSetOptions.GroupingOptions,
             };
 
             return tableDataSet;

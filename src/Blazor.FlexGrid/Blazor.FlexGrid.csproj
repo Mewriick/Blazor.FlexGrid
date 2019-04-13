@@ -41,6 +41,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview3.19153.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0-preview3.19153.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0-preview3.19128.7" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.12" />
   </ItemGroup>
 
 </Project>
