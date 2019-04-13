@@ -22,6 +22,7 @@ namespace Blazor.FlexGrid.Components
         private bool dataAdapterWasEmptyInOnInit;
         private FlexGridContext fixedFlexGridContext;
 
+
         [Inject]
         private IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
 
