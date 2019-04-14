@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -58,12 +57,5 @@ namespace Blazor.FlexGrid.DataSet
 
         public static bool IsItemEdited(this ITableDataSet tableDataSet, object item)
             => tableDataSet.RowEditOptions.ItemInEditMode == item;
-
-        public static void ToggleGroupRow<TItem>(this ITableDataSet tableDataSet, object groupItemKey)
-        {
-            var keyEqualityComparer = new GroupingKeyEqualityComparer();
-            var groupItemToToggle = tableDataSet.GroupedItems.FirstOrDefault(item => keyEqualityComparer.Equals(item.Key, groupItemKey));
-            groupItemToToggle.IsCollapsed = !groupItemToToggle.IsCollapsed;
-        }
     }
 }

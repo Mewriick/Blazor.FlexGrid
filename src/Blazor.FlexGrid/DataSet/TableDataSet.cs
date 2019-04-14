@@ -126,7 +126,6 @@ namespace Blazor.FlexGrid.DataSet
                 GridViewEvents.SaveOperationFinished?.Invoke(new SaveResultArgs { ItemSucessfullySaved = true, Item = RowEditOptions.ItemInEditMode });
 
                 return Task.FromResult(true);
-
             }
             catch (Exception)
             {
@@ -159,9 +158,7 @@ namespace Blazor.FlexGrid.DataSet
             => RowEditOptions.ItemInEditMode = EmptyDataSetItem.Instance;
 
         public void ToggleGroupRow(object groupItemKey)
-        {
-            this.ToggleGroupRow<TItem>(groupItemKey);
-        }
+            => GroupedItems.ToggleGroup(groupItemKey);
 
         private void ApplyFiltersToQueryableSource(IQueryable<TItem> source)
         {
@@ -175,7 +172,7 @@ namespace Blazor.FlexGrid.DataSet
             else
             {
                 var newGroupedItems = ApplyFiltersWithGroupingToQueryable(sourceWithoutDeleted).OfType<GroupItem>().ToList();
-                //newGroupedItems.PreserveCollapse(GroupedItems);
+                newGroupedItems.PreserveGroupCollapsing(GroupedItems);
                 GroupedItems = newGroupedItems;
             }
         }

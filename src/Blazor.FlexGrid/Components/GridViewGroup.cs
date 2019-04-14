@@ -19,5 +19,11 @@ namespace Blazor.FlexGrid.Components
         {
             return base.OnInitAsync();
         }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            tableDataSet = GetTableDataSet();
+            await tableDataSet.GoToPage(0);
+        }
     }
 }

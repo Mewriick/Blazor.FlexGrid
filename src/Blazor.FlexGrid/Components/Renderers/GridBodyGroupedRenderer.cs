@@ -4,16 +4,17 @@ using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridBodyGroupedRenderer : GridCompositeRenderer
     {
+        private readonly ITableDataAdapterProvider tableDataAdapterProvider;
         private readonly ILogger<GridBodyGroupedRenderer> logger;
 
-        public GridBodyGroupedRenderer(ILogger<GridBodyGroupedRenderer> logger)
+        public GridBodyGroupedRenderer(ITableDataAdapterProvider tableDataAdapterProvider, ILogger<GridBodyGroupedRenderer> logger)
         {
+            this.tableDataAdapterProvider = tableDataAdapterProvider ?? throw new ArgumentNullException(nameof(tableDataAdapterProvider));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -31,14 +32,9 @@ namespace Blazor.FlexGrid.Components.Renderers
                     {
                         rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableGroupRow);
                         rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableGroupRowCell);
-
-                        int numberOfColumns = rendererContext.GridItemProperties.Count;
-                        if (rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed)
-                            numberOfColumns++;
-                        if (rendererContext.GridConfiguration.IsMasterTable)
-                            numberOfColumns++;
-                        rendererContext.AddAttribute(HtmlAttributes.Colspan, numberOfColumns);
-                        rendererContext.OpenElement(HtmlTagNames.I, group.IsCollapsed ? "fas fa-plus" : "fas fa-minus");
+                        rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
+                        rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");
+                        rendererContext.OpenElement(HtmlTagNames.I, !group.IsCollapsed ? "fas fa-angle-down" : "fas fa-angle-right");
                         rendererContext.AddOnClickEvent(() =>
                             BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                             {
@@ -46,6 +42,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                                 rendererContext.RequestRerenderNotification?.Invoke();
                             })
                         );
+                        rendererContext.CloseElement();
                         rendererContext.CloseElement();
                         rendererContext.AddMarkupContent($"\t<b>{rendererContext.TableDataSet.GroupingOptions.GroupedProperty.Name}:</b> {group.Key.ToString()}\t");
                         rendererContext.OpenElement(HtmlTagNames.I);
@@ -55,11 +52,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                         if (!group.IsCollapsed)
                         {
-                            var subItemsListType = typeof(List<>).MakeGenericType(rendererContext.TableDataSet.UnderlyingTypeOfItem());
-                            var subItemsList = Activator.CreateInstance(subItemsListType, new object[] { group });
-                            var dataAdapterType = typeof(CollectionTableDataAdapter<>).MakeGenericType(rendererContext.TableDataSet.UnderlyingTypeOfItem());
-                            var dataAdapter = Activator.CreateInstance(dataAdapterType, new object[] { subItemsList }) as ITableDataAdapter;
-
+                            var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.TableDataSet.UnderlyingTypeOfItem(), group);
                             rendererContext.AddGridViewComponent(dataAdapter);
                         }
 
@@ -68,6 +61,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                     }
                     catch (Exception ex)
                     {
+                        logger.LogError($"Error occured during rendering grouped grid view body. Ex: {ex}");
+
                         throw ex;
                     }
                 }

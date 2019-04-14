@@ -1,18 +1,31 @@
-﻿using Blazor.FlexGrid.DataSet;
+﻿using Blazor.FlexGrid.Components.Events;
+using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
-using System.Linq;
+using Microsoft.AspNetCore.Components;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridRowRenderer : GridCompositeRenderer
     {
         public override bool CanRender(GridRendererContext rendererContext)
-            => !(rendererContext.ActualItem is GroupItem 
+            => !(rendererContext.ActualItem is GroupItem
             || rendererContext.GetType().BaseType == typeof(GroupItem));
 
         protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableRow);
+
+            if (!rendererContext.IsActualItemEdited)
+            {
+                rendererContext.AddOnClickEvent(() =>
+                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    {
+                        var localActualItem = rendererContext.ActualItem;
+                        rendererContext.TableDataSet
+                         .GridViewEvents
+                         .OnItemClicked?.Invoke(new ItemClickedArgs { Item = localActualItem });
+                    }));
+            }
 
             foreach (var property in rendererContext.GridItemProperties)
             {

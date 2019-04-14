@@ -6,7 +6,9 @@ namespace Blazor.FlexGrid
 {
     public static class ColletionExtensions
     {
-        public static void PreserveCollapse(this IList<GroupItem> newGroupedItems, IList<GroupItem> oldGroupedItems)
+        private static readonly GroupingKeyEqualityComparer GroupingKeyEqualityComparer = new GroupingKeyEqualityComparer();
+
+        public static void PreserveGroupCollapsing(this IList<GroupItem> newGroupedItems, IList<GroupItem> oldGroupedItems)
         {
             if (oldGroupedItems == null)
             {
@@ -15,11 +17,20 @@ namespace Blazor.FlexGrid
 
             foreach (var group in newGroupedItems)
             {
-                var oldGroup = oldGroupedItems.FirstOrDefault(g => g.Key == group.Key);
+                var oldGroup = oldGroupedItems.FirstOrDefault(g => GroupingKeyEqualityComparer.Equals(g.Key, group.Key));
                 if (oldGroup != null)
                 {
                     group.IsCollapsed = oldGroup.IsCollapsed;
                 }
+            }
+        }
+
+        public static void ToggleGroup(this IList<GroupItem> groupItems, object groupKey)
+        {
+            var group = groupItems.FirstOrDefault(g => GroupingKeyEqualityComparer.Equals(g.Key, groupKey));
+            if (group != null)
+            {
+                group.IsCollapsed = !group.IsCollapsed;
             }
         }
     }

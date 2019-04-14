@@ -1,7 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Events;
-using Blazor.FlexGrid.Components.Renderers.EditInputs;
+﻿using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Components;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -21,18 +19,6 @@ namespace Blazor.FlexGrid.Components.Renderers
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
-
-            if (!rendererContext.IsActualItemEdited)
-            {
-                rendererContext.AddOnClickEvent(() =>
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-                    {
-                        var localActualItem = rendererContext.ActualItem;
-                        rendererContext.TableDataSet
-                         .GridViewEvents
-                         .OnItemClicked?.Invoke(new ItemClickedArgs { Item = localActualItem });
-                    }));
-            }
 
             if (!rendererContext.IsActualItemEdited)
             {

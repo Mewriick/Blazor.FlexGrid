@@ -1,5 +1,4 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
-using System;
+﻿using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -106,6 +105,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 {
                     return new NullGlobalGroupingOptions();
                 }
+
                 return (GlobalGroupingOptions)groupingOptions;
             }
         }

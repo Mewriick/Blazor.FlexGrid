@@ -1,7 +1,7 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
-using System;
 using Microsoft.AspNetCore.Http.Extensions;
+using System;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
@@ -37,6 +37,7 @@ namespace Blazor.FlexGrid.DataAdapters
                 LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = tableDataSetOptions.SortingOptions,
+                GroupingOptions = tableDataSetOptions.GroupingOptions,
                 GridViewEvents = tableDataSetOptions.GridViewEvents
             };
 

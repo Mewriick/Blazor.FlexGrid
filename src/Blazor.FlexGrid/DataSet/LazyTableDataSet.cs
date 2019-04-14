@@ -164,8 +164,6 @@ namespace Blazor.FlexGrid.DataSet
         }
 
         public void ToggleGroupRow(object groupItemKey)
-        {
-            this.ToggleGroupRow<TItem>(groupItemKey);
-        }
+            => GroupedItems.ToggleGroup(groupItemKey);
     }
 }

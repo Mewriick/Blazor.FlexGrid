@@ -18,7 +18,6 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private string firstColumnName;
         private string lastColumnName;
-
         private readonly IEntityType gridEntityConfiguration;
         private readonly IReadOnlyDictionary<string, IValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter> specialColumnValues;
@@ -31,6 +30,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         public bool IsFirstColumn => ActualColumnName.Equals(firstColumnName);
 
         public bool IsLastColumn => ActualColumnName.Equals(lastColumnName);
+
+        public int NumberOfColumns { get; }
 
         public bool IsActualItemEdited => TableDataSet.IsItemEdited(ActualItem);
 
@@ -79,14 +80,14 @@ namespace Blazor.FlexGrid.Components.Renderers
             CssClasses = imutableGridRendererContext.CssClasses;
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
 
-            TableDataSet.GroupingOptions.SetConfiguration(GridConfiguration?.GroupingOptions);
-            TableDataSet.GroupingOptions.GroupableProperties = this.GridItemProperties.ToList();
-
             this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             this.valueFormatters = imutableGridRendererContext.ValueFormatters;
             this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
             this.firstColumnName = GridItemProperties.First().Name;
             this.lastColumnName = GridItemProperties.Last().Name;
+            NumberOfColumns = GridItemProperties.Count +
+                (imutableGridRendererContext.InlineEditItemIsAllowed() || imutableGridRendererContext.CreateItemIsAllowed() ? 1 : 0) +
+                (GridConfiguration.IsMasterTable ? 1 : 0);
         }
 
         public void OpenElement(string elementName)
@@ -162,7 +163,6 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void AddAttribute(string name, Action<UIEventArgs> value)
             => RendererTreeBuilder.AddAttribute(name, value);
-
 
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)
         {

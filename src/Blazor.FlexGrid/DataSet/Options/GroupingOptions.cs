@@ -6,23 +6,24 @@ namespace Blazor.FlexGrid.DataSet.Options
 {
     public class GroupingOptions : GlobalGroupingOptions, IGroupingOptions
     {
-        public PropertyInfo GroupedProperty { get; set; }
+        public PropertyInfo GroupedProperty { get; private set; }
 
-        public IList<PropertyInfo> GroupableProperties { get; set; }
+        public IReadOnlyCollection<PropertyInfo> GroupableProperties { get; private set; }
 
         public bool IsGroupingActive => GroupedProperty != null;
-
 
         public void DeactivateGrouping()
         {
             GroupedProperty = null;
         }
 
-        public void SetConfiguration(GlobalGroupingOptions globalGroupingOptions)
+        public void SetConfiguration(GlobalGroupingOptions globalGroupingOptions, IReadOnlyCollection<PropertyInfo> groupableProperties)
         {
-            this.IsGroupingEnabled = globalGroupingOptions != null
+            IsGroupingEnabled = globalGroupingOptions != null
                 ? globalGroupingOptions.IsGroupingEnabled
                 : false;
+
+            GroupableProperties = groupableProperties;
         }
 
         public bool SetGroupedProperty(string propertyName)

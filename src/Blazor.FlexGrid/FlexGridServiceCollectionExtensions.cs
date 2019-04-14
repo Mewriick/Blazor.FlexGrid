@@ -106,26 +106,7 @@ namespace Blazor.FlexGrid
 
             services.AddSingleton(typeof(IGridRendererTreeBuilder), provider =>
             {
-                var gridRowRenderer = new GridRowRenderer()
-                    .AddRenderer(new GridCellMasterActionRenderer())
-                    .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
-                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
-                    .AddRenderer(new GridActionButtonsRenderer());
-
-                var gridBodySimpleRenderer = new GridBodySimpleRenderer(provider.GetRequiredService<ILogger<GridBodySimpleRenderer>>())
-                    .AddRenderer(gridRowRenderer);
-
-                var gridBodyGroupedRenderer = new GridBodyGroupedRenderer(provider.GetRequiredService<ILogger<GridBodyGroupedRenderer>>())
-                    .AddRenderer(gridRowRenderer);
-
-                var gridBodyRenderer = new GridBodyRenderer(gridBodySimpleRenderer, gridBodyGroupedRenderer);
-                var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>())
-                    .AddRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()))
-                    .AddRenderer(new GridEmptyItemsRenderer())
-                    .AddRenderer(gridBodyRenderer)
-                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
-
-                return gridRenderer;
+                return CreateGridRenderer(provider);
             });
         }
 
@@ -138,27 +119,34 @@ namespace Blazor.FlexGrid
 
             services.AddScoped(typeof(IGridRendererTreeBuilder), provider =>
             {
-                var gridRowRenderer = new GridRowRenderer()
-                    .AddRenderer(new GridCellMasterActionRenderer())
-                    .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
-                    .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
-                    .AddRenderer(new GridActionButtonsRenderer());
-
-                var gridBodySimpleRenderer = new GridBodySimpleRenderer(provider.GetRequiredService<ILogger<GridBodySimpleRenderer>>())
-                    .AddRenderer(gridRowRenderer);
-
-                var gridBodyGroupedRenderer = new GridBodyGroupedRenderer(provider.GetRequiredService<ILogger<GridBodyGroupedRenderer>>())
-                    .AddRenderer(gridRowRenderer);
-
-                var gridBodyRenderer = new GridBodyRenderer(gridBodySimpleRenderer, gridBodyGroupedRenderer);
-                var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>())
-                    .AddRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()))
-                    .AddRenderer(new GridEmptyItemsRenderer())
-                    .AddRenderer(gridBodyRenderer)
-                    .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
-
-                return gridRenderer;
+                return CreateGridRenderer(provider);
             });
+        }
+
+        private static object CreateGridRenderer(IServiceProvider provider)
+        {
+            var gridRowRenderer = new GridRowRenderer()
+                .AddRenderer(new GridCellMasterActionRenderer())
+                .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
+                .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
+                .AddRenderer(new GridActionButtonsRenderer());
+
+            var gridBodySimpleRenderer = new GridBodySimpleRenderer(provider.GetRequiredService<ILogger<GridBodySimpleRenderer>>())
+                .AddRenderer(gridRowRenderer);
+
+            var gridBodyGroupedRenderer = new GridBodyGroupedRenderer(
+                    provider.GetRequiredService<ITableDataAdapterProvider>(),
+                    provider.GetRequiredService<ILogger<GridBodyGroupedRenderer>>())
+                .AddRenderer(gridRowRenderer);
+
+            var gridBodyRenderer = new GridBodyRenderer(gridBodySimpleRenderer, gridBodyGroupedRenderer);
+            var gridRenderer = new GridRenderer(provider.GetRequiredService<ILogger<GridRenderer>>())
+                .AddRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()))
+                .AddRenderer(new GridEmptyItemsRenderer())
+                .AddRenderer(gridBodyRenderer)
+                .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
+
+            return gridRenderer;
         }
     }
 }

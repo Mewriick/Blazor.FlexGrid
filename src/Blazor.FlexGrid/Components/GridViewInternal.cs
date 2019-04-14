@@ -18,9 +18,13 @@ namespace Blazor.FlexGrid.Components
 {
     public class GridViewInternal : ComponentBase
     {
-        private ITableDataSet tableDataSet;
+        private readonly static ITableDataSet EmptyDataSet = new TableDataSet<EmptyDataSetItem>(
+            Enumerable.Empty<EmptyDataSetItem>().AsQueryable(), new FilterExpressionTreeBuilder<EmptyDataSetItem>());
+
         private bool dataAdapterWasEmptyInOnInit;
         private FlexGridContext fixedFlexGridContext;
+        private (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) gridRenderingContexts;
+        protected ITableDataSet tableDataSet;
 
         [Inject] IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
 
@@ -47,15 +51,13 @@ namespace Blazor.FlexGrid.Components
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-
             var rendererTreeBuilder = new BlazorRendererTreeBuilder(builder);
-            var gridContexts = RendererContextFactory.CreateContexts(tableDataSet);
 
             RenderFragment<ImutableGridRendererContext> tableFragment =
                 (ImutableGridRendererContext imutableGridRendererContext) => delegate (RenderTreeBuilder internalBuilder)
             {
                 var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet, fixedFlexGridContext);
-                GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridContexts.PermissionContext);
+                GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridRenderingContexts.PermissionContext);
             };
 
             RenderFragment flexGridFragment = delegate (RenderTreeBuilder interalBuilder)
@@ -63,18 +65,18 @@ namespace Blazor.FlexGrid.Components
                 var internalRendererTreeBuilder = new BlazorRendererTreeBuilder(interalBuilder);
                 internalRendererTreeBuilder
                     .OpenComponent(typeof(GridViewTable))
-                    .AddAttribute(nameof(ImutableGridRendererContext), gridContexts.ImutableRendererContext)
+                    .AddAttribute(nameof(ImutableGridRendererContext), gridRenderingContexts.ImutableRendererContext)
                     .AddAttribute(RenderTreeBuilder.ChildContent, tableFragment)
                     .CloseComponent();
 
-                if (gridContexts.ImutableRendererContext.CreateItemIsAllowed() &&
+                if (gridRenderingContexts.ImutableRendererContext.CreateItemIsAllowed() &&
                    !fixedFlexGridContext.IsTableForItemsGroup)
                 {
                     internalRendererTreeBuilder
                           .OpenComponent(typeof(CreateItemModal))
-                          .AddAttribute(nameof(CreateItemOptions), gridContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
-                          .AddAttribute(nameof(PermissionContext), gridContexts.PermissionContext)
-                          .AddAttribute(nameof(CreateFormCssClasses), gridContexts.ImutableRendererContext.CssClasses.CreateFormCssClasses)
+                          .AddAttribute(nameof(CreateItemOptions), gridRenderingContexts.ImutableRendererContext.GridConfiguration.CreateItemOptions)
+                          .AddAttribute(nameof(PermissionContext), gridRenderingContexts.PermissionContext)
+                          .AddAttribute(nameof(CreateFormCssClasses), gridRenderingContexts.ImutableRendererContext.CssClasses.CreateFormCssClasses)
                           .AddAttribute(nameof(NewItemCreated), NewItemCreated)
                           .CloseComponent();
                 }
@@ -117,7 +119,7 @@ namespace Blazor.FlexGrid.Components
         protected virtual FlexGridContext CreateFlexGridContext()
             => new FlexGridContext(new FilterContext());
 
-        private ITableDataSet GetTableDataSet()
+        protected ITableDataSet GetTableDataSet()
         {
             var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
             {
@@ -134,12 +136,18 @@ namespace Blazor.FlexGrid.Components
 
             if (tableDataSet is null)
             {
-                return new TableDataSet<EmptyDataSetItem>(Enumerable.Empty<EmptyDataSetItem>().AsQueryable(), new FilterExpressionTreeBuilder<EmptyDataSetItem>());
+                tableDataSet = EmptyDataSet;
+            }
+            else
+            {
+                tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
+                fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
             }
 
-            tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
-            fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
-
+            gridRenderingContexts = RendererContextFactory.CreateContexts(tableDataSet);
+            tableDataSet.GroupingOptions.SetConfiguration(
+                gridRenderingContexts.ImutableRendererContext.GridConfiguration.GroupingOptions,
+                gridRenderingContexts.ImutableRendererContext.GridItemProperties);
 
             return tableDataSet;
         }

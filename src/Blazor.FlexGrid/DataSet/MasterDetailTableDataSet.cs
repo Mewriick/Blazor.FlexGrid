@@ -130,8 +130,6 @@ namespace Blazor.FlexGrid.DataSet
             => tableDataSet.ApplyFilters(filters);
 
         public void ToggleGroupRow(object groupItemKey)
-        {
-            this.ToggleGroupRow<TItem>(groupItemKey);
-        }
+            => tableDataSet.ToggleGroupRow(groupItemKey);
     }
 }
