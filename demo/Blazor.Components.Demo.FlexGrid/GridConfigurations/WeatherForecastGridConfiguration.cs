@@ -38,7 +38,10 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
             builder.Property(e => e.RainyDay)
                 .IsFilterable();
 
-            builder.EnableGrouping();
+            builder.EnableGrouping(options =>
+            {
+                options.GroupPageSize = 15;
+            });
         }
     }
 }

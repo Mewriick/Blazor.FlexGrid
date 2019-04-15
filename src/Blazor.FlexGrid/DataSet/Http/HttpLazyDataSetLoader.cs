@@ -21,7 +21,9 @@ namespace Blazor.FlexGrid.DataSet
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(RequestOptions requestOptions, IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
+        public Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(
+            RequestOptions requestOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
             var dataUri = requestOptions.BuildUrl();
             try
@@ -42,6 +44,35 @@ namespace Blazor.FlexGrid.DataSet
                 var emptyResult = new LazyLoadingDataSetResult<TItem>
                 {
                     Items = Enumerable.Empty<TItem>().ToList()
+                };
+
+                return Task.FromResult(emptyResult);
+            }
+        }
+
+        public Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(
+            RequestOptions requestOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
+        {
+            var dataUri = requestOptions.BuildUrl();
+            try
+            {
+                if (filterDefinitions != null && filterDefinitions.Any())
+                {
+                    return httpClient.PostJsonAsync<LazyLoadingDataSetResult<GroupItem<TItem>>>(dataUri, filterDefinitions);
+                }
+                else
+                {
+                    return httpClient.GetJsonAsync<LazyLoadingDataSetResult<GroupItem<TItem>>>(dataUri);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error during fetching data from [{dataUri}]. Ex: {ex}");
+
+                var emptyResult = new LazyLoadingDataSetResult<GroupItem<TItem>>
+                {
+                    Items = Enumerable.Empty<GroupItem<TItem>>().ToList()
                 };
 
                 return Task.FromResult(emptyResult);

@@ -36,6 +36,13 @@ namespace Blazor.Components.Demo.FlexGrid.Services
                 }).ToList();
         }
 
+        public Task<LazyLoadingDataSetResult<GroupItem<Order>>> GetGroupedTablePageData(
+            RequestOptions requestOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<LazyLoadingDataSetResult<Order>> GetTablePageData(
             RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)

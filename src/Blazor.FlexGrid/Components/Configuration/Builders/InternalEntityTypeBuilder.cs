@@ -1,5 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
-using Blazor.FlexGrid.DataSet.Options;
 using System;
 using System.Reflection;
 
@@ -69,11 +68,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return HasAnnotation(GridViewAnnotationNames.OnlyShowExplicitProperties, true);
         }
 
-        public bool EnableGrouping(GlobalGroupingOptions groupingOptions = null)
-        {
-            return HasAnnotation(GridViewAnnotationNames.GroupingOptions,
-                groupingOptions ?? new GlobalGroupingOptions { IsGroupingEnabled = true });
-        }
+        public bool EnableGrouping(GlobalGroupingOptions groupingOptions)
+            => HasAnnotation(GridViewAnnotationNames.GroupingOptions, groupingOptions);
 
         public bool AllowInlineEdit(InlineEditOptions inlineEditOptions)
             => HasAnnotation(GridViewAnnotationNames.InlineEditOptions, inlineEditOptions);
@@ -81,6 +77,6 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public bool AllowCreateItem(CreateItemOptions createItemOptions)
             => HasAnnotation(GridViewAnnotationNames.CreateItemOptions, createItemOptions);
 
-        
+
     }
 }

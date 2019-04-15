@@ -44,6 +44,13 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             );
         }
 
+        public Task<LazyLoadingDataSetResult<GroupItem<WeatherForecast>>> GetGroupedTablePageData(
+            RequestOptions requestOptions,
+            IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<LazyLoadingDataSetResult<WeatherForecast>> GetTablePageData(
             RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filters = null)
@@ -90,48 +97,6 @@ namespace Blazor.Components.Demo.FlexGrid.Services
 
             // Conflict
             return Task.FromResult(default(WeatherForecast));
-        }
-
-
-    }
-
-    public class KeyProperty : IEquatable<KeyProperty>
-    {
-        public object Key { get; set; }
-
-        public KeyProperty(object key)
-        {
-            this.Key = (object)key;
-        }
-
-        public KeyProperty(int key)
-        {
-            this.Key = (object)key;
-        }
-
-        public KeyProperty(String key)
-        {
-            this.Key = (object)key;
-        }
-
-        public KeyProperty(DateTime key)
-        {
-            this.Key = (object)key;
-        }
-
-        public bool Equals(KeyProperty other)
-        {
-            return this.Key == other.Key;
-        }
-
-        public override bool Equals(object other)
-        {
-            return this.Key == ((KeyProperty)other).Key;
-        }
-
-        public override int GetHashCode()
-        {
-            return Key.GetHashCode();
         }
     }
 }

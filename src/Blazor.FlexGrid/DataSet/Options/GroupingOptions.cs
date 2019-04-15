@@ -4,13 +4,15 @@ using System.Reflection;
 
 namespace Blazor.FlexGrid.DataSet.Options
 {
-    public class GroupingOptions : GlobalGroupingOptions, IGroupingOptions
+    public class GroupingOptions : IGroupingOptions
     {
         public PropertyInfo GroupedProperty { get; private set; }
 
         public IReadOnlyCollection<PropertyInfo> GroupableProperties { get; private set; }
 
         public bool IsGroupingActive => GroupedProperty != null;
+
+        public bool IsGroupingEnabled { get; private set; }
 
         public void DeactivateGrouping()
         {
@@ -39,10 +41,5 @@ namespace Blazor.FlexGrid.DataSet.Options
 
             return false;
         }
-    }
-
-    public class NullGroupingOptions : GroupingOptions
-    {
-
     }
 }

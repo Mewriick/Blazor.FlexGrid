@@ -85,7 +85,6 @@
     border-color: snow;
     font-size: 0.75rem;
     font-weight: 500;
-    color: dimgrey;
     border-bottom: 1px solid rgba(224, 224, 224, 1);
 }
 
@@ -114,15 +113,6 @@
 .table-info-text-small {
     height: 75px;
     padding-top: 5px;
-}
-
-
-.grouping-part-wrapper select {
-    border-radius: 10px 10px;
-    width: 180px;
-    height: 40px;
-    border-width: thick;
-    border-color: rgba(0, 0, 0, 0.35);
 }
 
 .pagination-wrapper {
@@ -462,6 +452,26 @@
     float: right;
 }
 
+/* GroupBy Select */
+
+.group-select {
+    font: inherit;
+    border: 0;
+    margin: 0;
+    padding: 6px 0 7px;
+    display: block;
+    min-width: 0;
+    box-sizing: content-box;
+    background: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+    .group-select:focus {
+        outline: none;
+        border-bottom: solid #1976d2;
+    }
+
 /* Checkbox */
 
 .checkbox {
@@ -526,6 +536,8 @@
     .radio label input[type="radio"]:disabled + .cr {
         opacity: .5;
     }
+
+/* Filters */
 
 .filter-wrapper {
     overflow: hidden;
@@ -677,3 +689,5 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
+
+    

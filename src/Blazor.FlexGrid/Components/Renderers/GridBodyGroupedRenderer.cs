@@ -35,8 +35,6 @@ namespace Blazor.FlexGrid.Components.Renderers
                         rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableGroupRowCell);
                         rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
                         rendererContext.OpenElement(HtmlTagNames.Button, "pagination-button");
-                        rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");
-                        rendererContext.OpenElement(HtmlTagNames.I, !group.IsCollapsed ? "fas fa-angle-down" : "fas fa-angle-right");
                         rendererContext.AddOnClickEvent(() =>
                             BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
                             {
@@ -44,6 +42,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                                 rendererContext.RequestRerenderNotification?.Invoke();
                             })
                         );
+                        rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");
+                        rendererContext.OpenElement(HtmlTagNames.I, !group.IsCollapsed ? "fas fa-angle-down" : "fas fa-angle-right");
                         rendererContext.CloseElement();
                         rendererContext.CloseElement();
                         rendererContext.CloseElement();
@@ -58,6 +58,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                             var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.TableDataSet.UnderlyingTypeOfItem(), group);
                             var masterTableFeature = rendererContext.FlexGridContext.Features.Get<IMasterTableFeature>();
                             dataAdapter = tableDataAdapterProvider.CreateMasterTableDataAdapter(dataAdapter, masterTableFeature);
+
                             rendererContext.AddGridViewComponent(dataAdapter);
                         }
 

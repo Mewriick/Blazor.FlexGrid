@@ -12,7 +12,7 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         bool IsGroupingActive { get; }
 
-        bool IsGroupingEnabled { get; set; }
+        bool IsGroupingEnabled { get; }
 
         bool SetGroupedProperty(string propertyName);
 

@@ -1,5 +1,4 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -58,17 +57,12 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
-        public virtual EntityTypeBuilder<TEntity> EnableGrouping()
-        {
-            Builder.EnableGrouping();
-            return this;
-        }
-
-        public virtual EntityTypeBuilder<TEntity> EnableGrouping(Action<GlobalGroupingOptions> confGroupingOptions)
+        public virtual EntityTypeBuilder<TEntity> EnableGrouping(Action<GlobalGroupingOptions> confGroupingOptions = null)
         {
             var groupingOptions = new GlobalGroupingOptions();
             confGroupingOptions?.Invoke(groupingOptions);
             Builder.EnableGrouping(groupingOptions);
+
             return this;
         }
 
@@ -87,8 +81,6 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
-
-
 
         public virtual EntityTypeBuilder<TEntity> AllowInlineEdit(Action<InlineEditOptions> configureInlineEdit)
         {

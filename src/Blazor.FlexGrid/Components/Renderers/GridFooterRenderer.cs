@@ -8,9 +8,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridFooterRenderer : GridPartRenderer
     {
-        private readonly string groupingSelectId = "grouping-select";
-        private readonly string noGroupingOptionText = "(no grouping)";
-        private readonly string groupByPlaceholder = "Group by:";
+        private const string GroupingSelectId = "grouping-select";
+        private const string GroupByPlaceholder = "Group by";
 
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.TableDataSet.HasItems();
@@ -49,35 +48,22 @@ namespace Blazor.FlexGrid.Components.Renderers
         private void RenderGroupingFooterPart(GridRendererContext rendererContext)
         {
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.GroupingPartWrapper);
-            rendererContext.OpenElement(HtmlTagNames.Select);
-            rendererContext.AddAttribute(HtmlAttributes.Id, groupingSelectId);
-
+            rendererContext.OpenElement(HtmlTagNames.Select, "group-select");
+            rendererContext.AddAttribute(HtmlAttributes.Id, GroupingSelectId);
             rendererContext.AddOnChangeEvent(() =>
                 BindMethods.GetEventHandlerValue(async (UIChangeEventArgs e) =>
                 {
-                    string propertyName = e.Value.ToString();
-                    if (propertyName == noGroupingOptionText)
-                        rendererContext.TableDataSet.GroupingOptions.DeactivateGrouping();
-                    else
-                        rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(propertyName);
+                    rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(e.Value.ToString());
                     await rendererContext.TableDataSet.GoToPage(0);
                     rendererContext.RequestRerenderNotification?.Invoke();
                 })
             );
 
-
             if (!rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
             {
                 rendererContext.OpenElement(HtmlTagNames.Option);
                 rendererContext.AddAttribute(HtmlAttributes.Disabled, true);
-                rendererContext.AddContent(groupByPlaceholder);
-                rendererContext.CloseElement();
-            }
-            else
-            {
-                rendererContext.OpenElement(HtmlTagNames.Option);
-                rendererContext.AddAttribute(HtmlAttributes.Value, string.Empty);
-                rendererContext.AddContent(noGroupingOptionText);
+                rendererContext.AddContent(GroupByPlaceholder);
                 rendererContext.CloseElement();
             }
 
@@ -86,19 +72,36 @@ namespace Blazor.FlexGrid.Components.Renderers
                 rendererContext.OpenElement(HtmlTagNames.Option);
 
                 if (groupableProperty == rendererContext.TableDataSet.GroupingOptions.GroupedProperty)
+                {
                     rendererContext.AddAttribute(HtmlAttributes.Selected, true);
+                }
 
                 rendererContext.AddAttribute(HtmlAttributes.Value, groupableProperty.Name);
-                rendererContext.ActualColumnName = groupableProperty.Name;
-                var displayedGroupablePropertyName = rendererContext.ActualColumnConfiguration?.Caption ?? groupableProperty.Name;
-                rendererContext.AddContent(displayedGroupablePropertyName);
+                rendererContext.AddContent(rendererContext.GetColumnCaption(groupableProperty.Name) ?? groupableProperty.Name);
                 rendererContext.CloseElement();
             }
+
             rendererContext.CloseElement();
             rendererContext.CloseElement();
+
+            if (rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
+            {
+                rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+                rendererContext.AddOnClickEvent(() =>
+                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    {
+                        rendererContext.TableDataSet.GroupingOptions.DeactivateGrouping();
+                        rendererContext.RequestRerenderNotification?.Invoke();
+                    })
+                );
+
+                rendererContext.OpenElement(HtmlTagNames.Span, "action-button-span");
+                rendererContext.OpenElement(HtmlTagNames.I, "fas fa-times");
+                rendererContext.CloseElement();
+                rendererContext.CloseElement();
+                rendererContext.CloseElement();
+            }
         }
-
-
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)
         {

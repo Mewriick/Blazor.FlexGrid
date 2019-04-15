@@ -103,7 +103,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 var groupingOptions = annotations[GridViewAnnotationNames.GroupingOptions];
                 if (groupingOptions is NullAnotationValue)
                 {
-                    return new NullGlobalGroupingOptions();
+                    return NullGlobalGroupingOptions.Instance;
                 }
 
                 return (GlobalGroupingOptions)groupingOptions;

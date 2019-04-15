@@ -57,9 +57,22 @@ namespace Blazor.FlexGrid.DataSet
         public async Task GoToPage(int index)
         {
             PageableOptions.CurrentPage = index;
-            var pagedDataResult = await lazyDataSetLoader.GetTablePageData(new RequestOptions(LazyLoadingOptions, PageableOptions, SortingOptions, GroupingOptions), filterDefinitions);
-            Items = pagedDataResult.Items;
-            PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+            var requestOptions = new RequestOptions(LazyLoadingOptions, PageableOptions, SortingOptions, GroupingOptions);
+
+            if (!GroupingOptions.IsGroupingActive)
+            {
+                var pagedDataResult = await lazyDataSetLoader.GetTablePageData(requestOptions, filterDefinitions);
+                Items = pagedDataResult.Items;
+                PageableOptions.TotalItemsCount = pagedDataResult.TotalCount;
+            }
+            else
+            {
+                var groupedDataResult = await lazyDataSetLoader.GetGroupedTablePageData(requestOptions, filterDefinitions);
+                var newGroupedItems = groupedDataResult.Items.AsQueryable().OfType<GroupItem>().ToList();
+                newGroupedItems.PreserveGroupCollapsing(GroupedItems);
+                GroupedItems = newGroupedItems;
+                PageableOptions.TotalItemsCount = groupedDataResult.TotalCount;
+            }
         }
 
         public Task SetSortExpression(string expression)

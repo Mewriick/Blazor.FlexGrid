@@ -135,7 +135,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             RendererTreeBuilder.AddContent(new MarkupString(
                valueFormatter.FormatValue(inputForColumnValueFormatter))
-             );
+            );
         }
 
         public void AddDisabled(bool disabled)
@@ -194,7 +194,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             RendererTreeBuilder.OpenComponent(typeof(GridViewGroup<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
             RendererTreeBuilder.AddAttribute("DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
-            RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), 20);
+            RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), GridConfiguration.GroupingOptions.GroupPageSize);
             RendererTreeBuilder.CloseComponent();
         }
 
@@ -211,6 +211,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public void SetActualItemColumnValue(string columnName, object value)
             => PropertyValueAccessor.SetValue(ActualItem, columnName, value);
+
+        public string GetColumnCaption(string columnName)
+            => gridEntityConfiguration.FindColumnConfiguration(columnName)?.Caption;
 
         private void AddEventAttributes()
         {
