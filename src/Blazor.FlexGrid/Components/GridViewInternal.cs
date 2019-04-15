@@ -6,11 +6,13 @@ using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
+using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +26,7 @@ namespace Blazor.FlexGrid.Components
         private bool dataAdapterWasEmptyInOnInit;
         private FlexGridContext fixedFlexGridContext;
         private (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) gridRenderingContexts;
+        protected IEnumerable<IFeature> features;
         protected ITableDataSet tableDataSet;
 
         [Inject] IGridRendererTreeBuilder GridRendererTreeBuilder { get; set; }
@@ -48,6 +51,16 @@ namespace Blazor.FlexGrid.Components
 
         [Parameter] Action<ItemClickedArgs> OnItemClicked { get; set; }
 
+        public GridViewInternal()
+            : this(DefaultFeatureCollection.AllFeatures)
+        {
+        }
+
+        protected GridViewInternal(IEnumerable<IFeature> features)
+        {
+            this.features = features ?? throw new ArgumentNullException(nameof(features));
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
@@ -70,7 +83,7 @@ namespace Blazor.FlexGrid.Components
                     .CloseComponent();
 
                 if (gridRenderingContexts.ImutableRendererContext.CreateItemIsAllowed() &&
-                   !fixedFlexGridContext.IsTableForItemsGroup)
+                    fixedFlexGridContext.IsFeatureActive<CreateItemFeature>())
                 {
                     internalRendererTreeBuilder
                           .OpenComponent(typeof(CreateItemModal))
@@ -117,7 +130,7 @@ namespace Blazor.FlexGrid.Components
         }
 
         protected virtual FlexGridContext CreateFlexGridContext()
-            => new FlexGridContext(new FilterContext());
+            => new FlexGridContext(new FilterContext(), new FeatureCollection(features));
 
         protected ITableDataSet GetTableDataSet()
         {
@@ -127,10 +140,10 @@ namespace Blazor.FlexGrid.Components
                 conf.PageableOptions.PageSize = PageSize;
                 conf.GridViewEvents = new GridViewEvents
                 {
-                    SaveOperationFinished = this.SaveOperationFinished,
-                    DeleteOperationFinished = this.DeleteOperationFinished,
-                    NewItemCreated = this.NewItemCreated,
-                    OnItemClicked = this.OnItemClicked
+                    SaveOperationFinished = SaveOperationFinished,
+                    DeleteOperationFinished = DeleteOperationFinished,
+                    NewItemCreated = NewItemCreated,
+                    OnItemClicked = OnItemClicked
                 };
             });
 
@@ -141,13 +154,24 @@ namespace Blazor.FlexGrid.Components
             else
             {
                 tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
-                fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
+                if (fixedFlexGridContext.IsFeatureActive<FilteringFeature>())
+                {
+                    fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
+                }
             }
 
             gridRenderingContexts = RendererContextFactory.CreateContexts(tableDataSet);
-            tableDataSet.GroupingOptions.SetConfiguration(
-                gridRenderingContexts.ImutableRendererContext.GridConfiguration.GroupingOptions,
-                gridRenderingContexts.ImutableRendererContext.GridItemProperties);
+            if (fixedFlexGridContext.IsFeatureActive<GroupingFeature>())
+            {
+                tableDataSet.GroupingOptions.SetConfiguration(
+                    gridRenderingContexts.ImutableRendererContext.GridConfiguration.GroupingOptions,
+                    gridRenderingContexts.ImutableRendererContext.GridItemProperties);
+            }
+
+            if (tableDataSet is IMasterTableDataSet)
+            {
+                fixedFlexGridContext.Features.Set<IMasterTableFeature>(new MasterTableFeature(DataAdapter));
+            }
 
             return tableDataSet;
         }

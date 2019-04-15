@@ -21,7 +21,6 @@ namespace Blazor.FlexGrid.Components.Renderers
         private readonly IEntityType gridEntityConfiguration;
         private readonly IReadOnlyDictionary<string, IValueFormatter> valueFormatters;
         private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter> specialColumnValues;
-        private readonly FlexGridContext flexGridContext;
 
         public string ActualColumnName { get; set; } = string.Empty;
 
@@ -55,9 +54,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IRendererTreeBuilder RendererTreeBuilder { get; }
 
-        public Action RequestRerenderNotification => flexGridContext.RequestRerenderTableRowsNotification;
+        public FlexGridContext FlexGridContext { get; }
 
-        public bool IsTableForItemsGroup => flexGridContext.IsTableForItemsGroup;
+        public Action RequestRerenderNotification => FlexGridContext.RequestRerenderTableRowsNotification;
 
         public GridRendererContext(
             ImutableGridRendererContext imutableGridRendererContext,
@@ -72,7 +71,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             RendererTreeBuilder = rendererTreeBuilder ?? throw new ArgumentNullException(nameof(RendererTreeBuilder));
             TableDataSet = tableDataSet ?? throw new ArgumentNullException(nameof(tableDataSet));
-            this.flexGridContext = flexGridContext ?? throw new ArgumentNullException(nameof(flexGridContext));
+            FlexGridContext = flexGridContext ?? throw new ArgumentNullException(nameof(flexGridContext));
 
             GridConfiguration = imutableGridRendererContext.GridConfiguration;
             GridItemProperties = imutableGridRendererContext.GridItemProperties;

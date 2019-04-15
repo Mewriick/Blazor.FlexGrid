@@ -1,4 +1,4 @@
-﻿using Blazor.FlexGrid.Components.Filters;
+﻿using Blazor.FlexGrid.Features;
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 
@@ -12,8 +12,10 @@ namespace Blazor.FlexGrid.Components
     [Route("/gridviewgroup")]
     internal class GridViewGroup<T> : GridViewInternal
     {
-        protected override FlexGridContext CreateFlexGridContext()
-            => new FlexGridContext(new FilterContext()) { IsTableForItemsGroup = true };
+        public GridViewGroup()
+            : base(DefaultFeatureCollection.GroupedItemsFeatures)
+        {
+        }
 
         protected override Task OnInitAsync()
         {

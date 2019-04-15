@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.Components.Filters;
+using Blazor.FlexGrid.Features;
 using System;
 
 namespace Blazor.FlexGrid.Components
@@ -9,13 +10,14 @@ namespace Blazor.FlexGrid.Components
 
         public FilterContext FilterContext { get; }
 
-        public bool IsTableForItemsGroup { get; set; }
-
         public Action RequestRerenderTableRowsNotification { get; private set; }
 
-        public FlexGridContext(FilterContext filterContext)
+        public IFeatureCollection Features { get; }
+
+        public FlexGridContext(FilterContext filterContext, IFeatureCollection features)
         {
             FilterContext = filterContext ?? throw new ArgumentNullException(nameof(filterContext));
+            Features = features ?? throw new ArgumentNullException(nameof(features));
         }
 
         public void SetRequestRendererNotification(Action requestRendererNotification)
@@ -27,5 +29,8 @@ namespace Blazor.FlexGrid.Components
 
             RequestRerenderTableRowsNotification = requestRendererNotification ?? throw new ArgumentNullException(nameof(requestRendererNotification));
         }
+
+        public bool IsFeatureActive<TFeature>() where TFeature : IFeature
+            => Features.Contains<TFeature>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                         rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableGroupRow);
                         rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableGroupRowCell);
                         rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
+                        rendererContext.OpenElement(HtmlTagNames.Button, "pagination-button");
                         rendererContext.OpenElement(HtmlTagNames.Span, "pagination-button-arrow");
                         rendererContext.OpenElement(HtmlTagNames.I, !group.IsCollapsed ? "fas fa-angle-down" : "fas fa-angle-right");
                         rendererContext.AddOnClickEvent(() =>
@@ -44,6 +46,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                         );
                         rendererContext.CloseElement();
                         rendererContext.CloseElement();
+                        rendererContext.CloseElement();
                         rendererContext.AddMarkupContent($"\t<b>{rendererContext.TableDataSet.GroupingOptions.GroupedProperty.Name}:</b> {group.Key.ToString()}\t");
                         rendererContext.OpenElement(HtmlTagNames.I);
                         rendererContext.AddContent($"({group.Count})");
@@ -53,6 +56,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                         if (!group.IsCollapsed)
                         {
                             var dataAdapter = tableDataAdapterProvider.CreateCollectionTableDataAdapter(rendererContext.TableDataSet.UnderlyingTypeOfItem(), group);
+                            var masterTableFeature = rendererContext.FlexGridContext.Features.Get<IMasterTableFeature>();
+                            dataAdapter = tableDataAdapterProvider.CreateMasterTableDataAdapter(dataAdapter, masterTableFeature);
                             rendererContext.AddGridViewComponent(dataAdapter);
                         }
 
@@ -72,3 +77,4 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
     }
 }
+

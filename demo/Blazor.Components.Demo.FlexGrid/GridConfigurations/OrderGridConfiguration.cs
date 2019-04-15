@@ -13,6 +13,8 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
             builder.IsMasterTable();
             builder.HasDetailRelationship(o => o.OrderItems)
                 .HasCaption("Order products");
+
+            builder.EnableGrouping();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -18,7 +19,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
-            => (rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied) && !rendererContext.IsTableForItemsGroup;
+            => (rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied) &&
+                rendererContext.FlexGridContext.IsFeatureActive<TableHeaderFeature>();
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {

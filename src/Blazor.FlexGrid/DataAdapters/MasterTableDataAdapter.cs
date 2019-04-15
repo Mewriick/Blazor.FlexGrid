@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Blazor.FlexGrid.DataAdapters
 {
-    public sealed class MasterTableDataAdapter<TItem> : BaseTableDataAdapter where TItem : class
+    public sealed class MasterTableDataAdapter<TItem> : BaseTableDataAdapter, IMasterTableDataAdapter where TItem : class
     {
         private readonly ITableDataAdapter mainTableDataAdapter;
         private readonly IGridConfigurationProvider gridConfigurationProvider;
@@ -14,6 +14,8 @@ namespace Blazor.FlexGrid.DataAdapters
         private readonly List<ITableDataAdapter> detailTableDataAdapters;
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
+
+        public IReadOnlyCollection<ITableDataAdapter> DetailTableDataAdapters => detailTableDataAdapters;
 
         public MasterTableDataAdapter(
             CollectionTableDataAdapter<TItem> mainTableDataAdapter,
@@ -29,7 +31,6 @@ namespace Blazor.FlexGrid.DataAdapters
             ITableDataAdapterProvider tableDataAdapterProvider)
             : this(gridConfigurationProvider, tableDataAdapterProvider, mainTableDataAdapter)
         {
-
         }
 
         internal MasterTableDataAdapter(

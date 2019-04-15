@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.FooterWrapper);
 
             if (rendererContext.TableDataSet.GroupingOptions.IsGroupingEnabled &&
-                !rendererContext.IsTableForItemsGroup)
+                rendererContext.FlexGridContext.IsFeatureActive<GroupingFeature>())
             {
                 RenderGroupingFooterPart(rendererContext);
             }
