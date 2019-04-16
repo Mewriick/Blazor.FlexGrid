@@ -223,6 +223,27 @@ namespace Blazor.FlexGrid.Components.Renderers
                     nameof(ITableDataSet.GridViewEvents.SaveOperationFinished),
                     RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.SaveOperationFinished));
             }
+
+            if (TableDataSet.GridViewEvents.NewItemCreated != null)
+            {
+                RendererTreeBuilder.AddAttribute(
+                    nameof(ITableDataSet.GridViewEvents.NewItemCreated),
+                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.NewItemCreated));
+            }
+
+            if (TableDataSet.GridViewEvents.OnItemClicked != null)
+            {
+                RendererTreeBuilder.AddAttribute(
+                    nameof(ITableDataSet.GridViewEvents.OnItemClicked),
+                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.OnItemClicked));
+            }
+
+            if (TableDataSet.GridViewEvents.DeleteOperationFinished != null)
+            {
+                RendererTreeBuilder.AddAttribute(
+                    nameof(ITableDataSet.GridViewEvents.DeleteOperationFinished),
+                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.DeleteOperationFinished));
+            }
         }
     }
 }

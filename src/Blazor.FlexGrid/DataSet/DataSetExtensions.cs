@@ -9,7 +9,10 @@ namespace Blazor.FlexGrid.DataSet
             => tableDataSet.GetType().GenericTypeArguments[0];
 
         public static bool HasItems(this ITableDataSet tableDataSet)
-            => !(tableDataSet.Items == null || tableDataSet.Items.Count <= 0);
+            => tableDataSet.Items != null && tableDataSet.Items.Count > 0;
+
+        public static bool HasGroupedItems(this ITableDataSet tableDataSet)
+            => tableDataSet.Items != null && tableDataSet.Items.Count > 0;
 
         public static Task GoToNextPage(this ITableDataSet tableDataSet)
         {

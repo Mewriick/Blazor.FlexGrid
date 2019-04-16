@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet;
+using Blazor.FlexGrid.DataSet.Http.Dto;
 using Blazor.FlexGrid.Demo.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -35,37 +36,33 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult WeatherForecasts(
-            [FromQuery] int pageNumber,
-            [FromQuery] int pageSize,
-            [FromQuery] SortingParams sortingParams,
-            [FromQuery] string groupExpression)
+        public IActionResult WeatherForecasts([FromQuery] FlexGridQueryDto queryParams)
         {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
-            if (!string.IsNullOrEmpty(groupExpression))
+            if (!string.IsNullOrEmpty(queryParams.GroupExpression))
             {
-                var groupedItems = items.GroupBy(groupExpression, "it")
+                var groupedItems = items.GroupBy(queryParams.GroupExpression, "it")
                  .Select<GroupItem<WeatherForecast>>(ParsingConfig.Default, "new (it.Key as Key, it as Items)");
 
                 return Ok(new
                 {
-                    Items = groupedItems,
+                    Items = groupedItems.ToDictionary(g => g.Key, g => g.Items),
                     TotalCount = groupedItems.Count()
                 });
             }
 
-            var sortExp = sortingParams?.SortExpression;
+            var sortExp = queryParams?.SortExpression;
             if (!string.IsNullOrEmpty(sortExp))
             {
-                if (sortingParams.SortDescending)
+                if (queryParams.SortDescending)
                 {
                     sortExp += " descending";
                 }
                 items = items.OrderBy(sortExp);
             }
 
-            var result = items.Skip(pageSize * pageNumber).Take(pageSize).ToList();
+            var result = items.Skip(queryParams.PageSize * queryParams.PageNumber).Take(queryParams.PageSize).ToList();
 
             return Ok(new
             {

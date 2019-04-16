@@ -1,4 +1,5 @@
 ﻿using Blazor.FlexGrid.DataSet.Http;
+using Blazor.FlexGrid.DataSet.Http.Dto;
 using Blazor.FlexGrid.Filters;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
@@ -50,7 +51,7 @@ namespace Blazor.FlexGrid.DataSet
             }
         }
 
-        public Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(
+        public async Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(
             RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
@@ -59,11 +60,15 @@ namespace Blazor.FlexGrid.DataSet
             {
                 if (filterDefinitions != null && filterDefinitions.Any())
                 {
-                    return httpClient.PostJsonAsync<LazyLoadingDataSetResult<GroupItem<TItem>>>(dataUri, filterDefinitions);
+                    var response = await httpClient.PostJsonAsync<GroupedItemsDto<TItem>>(dataUri, filterDefinitions);
+
+                    return ConvertGroupedItemsDtoToGroupedResult(response);
                 }
                 else
                 {
-                    return httpClient.GetJsonAsync<LazyLoadingDataSetResult<GroupItem<TItem>>>(dataUri);
+                    var response = await httpClient.GetJsonAsync<GroupedItemsDto<TItem>>(dataUri);
+
+                    return ConvertGroupedItemsDtoToGroupedResult(response);
                 }
             }
             catch (Exception ex)
@@ -75,8 +80,22 @@ namespace Blazor.FlexGrid.DataSet
                     Items = Enumerable.Empty<GroupItem<TItem>>().ToList()
                 };
 
-                return Task.FromResult(emptyResult);
+                return emptyResult;
             }
+        }
+
+        private LazyLoadingDataSetResult<GroupItem<TItem>> ConvertGroupedItemsDtoToGroupedResult(GroupedItemsDto<TItem> groupedItemsDto)
+        {
+            var result = new LazyLoadingDataSetResult<GroupItem<TItem>>();
+            result.Items = new List<GroupItem<TItem>>();
+            result.TotalCount = groupedItemsDto.TotalCount;
+
+            foreach (var pair in groupedItemsDto.Items)
+            {
+                result.Items.Add(new GroupItem<TItem>(pair.Key, pair.Value));
+            }
+
+            return result;
         }
     }
 }

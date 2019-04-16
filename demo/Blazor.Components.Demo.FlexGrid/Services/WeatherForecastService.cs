@@ -48,7 +48,12 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
-            throw new NotImplementedException();
+            var emptyResult = new LazyLoadingDataSetResult<GroupItem<WeatherForecast>>
+            {
+                Items = Enumerable.Empty<GroupItem<WeatherForecast>>().ToList()
+            };
+
+            return Task.FromResult(emptyResult);
         }
 
         public Task<LazyLoadingDataSetResult<WeatherForecast>> GetTablePageData(

@@ -20,7 +20,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
-            => rendererContext.TableDataSet.GroupedItems != null;
+            => rendererContext.TableDataSet.HasGroupedItems();
 
         protected override void BuildRenderTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {

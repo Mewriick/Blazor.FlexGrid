@@ -40,7 +40,12 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             RequestOptions requestOptions,
             IReadOnlyCollection<IFilterDefinition> filterDefinitions = null)
         {
-            throw new NotImplementedException();
+            var emptyResult = new LazyLoadingDataSetResult<GroupItem<Order>>
+            {
+                Items = Enumerable.Empty<GroupItem<Order>>().ToList()
+            };
+
+            return Task.FromResult(emptyResult);
         }
 
         public Task<LazyLoadingDataSetResult<Order>> GetTablePageData(
