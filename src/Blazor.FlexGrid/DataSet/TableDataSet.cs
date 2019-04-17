@@ -40,7 +40,7 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-        public IList<GroupItem> GroupedItems { get; private set; }
+        public IList<GroupItem> GroupedItems { get; private set; } = new List<GroupItem>();
 
         public TableDataSet(
             IQueryable<TItem> source,

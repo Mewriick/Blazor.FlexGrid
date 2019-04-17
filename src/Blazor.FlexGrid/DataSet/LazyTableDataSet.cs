@@ -30,6 +30,8 @@ namespace Blazor.FlexGrid.DataSet
 
         public IRowEditOptions RowEditOptions { get; set; } = new RowEditOptions();
 
+        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
+
         public GridViewEvents GridViewEvents { get; set; } = new GridViewEvents();
 
         public bool FilterIsApplied => filterDefinitions.Any();
@@ -41,11 +43,7 @@ namespace Blazor.FlexGrid.DataSet
 
         IList IBaseTableDataSet.Items => Items is List<TItem> list ? list : Items.ToList();
 
-
-        public IGroupingOptions GroupingOptions { get; set; } = new GroupingOptions();
-
-        public IList<GroupItem> GroupedItems { get; private set; }
-
+        public IList<GroupItem> GroupedItems { get; private set; } = new List<GroupItem>();
 
         public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {

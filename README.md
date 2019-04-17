@@ -3,7 +3,7 @@ GridView component for Blazor
 
 > Easy way for displaying lits of items in table
 
-<img src="/docs/table_gif.gif" alt="table_gif"/>
+<img src="/docs/ReadmeImages/table_gif.gif" alt="table_gif"/>
 
 ## IMPORTANT!
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
@@ -122,7 +122,7 @@ In your Blazor component add Tag helper and required usings
 ```
 
 Result 
-<img src="/docs/flextable.png" alt="table"/>
+<img src="/docs/ReadmeImages/flextable.png" alt="table"/>
 
 # Configuration
 You do not need define informations about columns and component will render columns by **properties** of object type which is associated
