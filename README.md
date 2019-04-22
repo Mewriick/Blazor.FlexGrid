@@ -271,8 +271,20 @@ builder.Property(e => e.TemperatureF)
     .IsFilterable();    
 ```
 
-For filter exists two modes, for standard **TableDataSet** is filtering done on clinet side across whole collection of items.
-For **LazyTableDataSet** is filter object sended to the server. More info how it is works is here https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet.  
+For filter exists two modes, for standard **TableDataSet** is filtering done on client side across whole collection of items.
+For **LazyTableDataSet** is filter object sended to the server. More info how it is works is [here](https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet---Client-Side-Blazor#filtering)
+
+# Grouping
+You can enable dynamic grouping functinallity for table
+```cs
+builder.EnableGrouping(options =>
+{
+    options.GroupPageSize = 15;
+});
+```
+
+You can define page size for grouped items. Grouping works in two modes, for standard **TableDataSet** is grouping done on client side across whole collection of items.
+For **LazyTableDataSet** is **GroupExpression** sended to the server. More info how it is works is [here](https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet---Client-Side-Blazor#grouping)
 
 # Create item form
 You can have very easily **Create item form** for your models. You can configure even different type of model for create item form

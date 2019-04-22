@@ -72,18 +72,14 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult WeatherForecasts(
-            [FromQuery] int pageNumber,
-            [FromQuery] int pageSize,
-            [FromQuery] SortingParams sortingParams,
-            [FromBody] IEnumerable<FilterDefinition> filters)
+        public IActionResult WeatherForecasts(FlexGridQueryDto queryParams, [FromBody] IEnumerable<FilterDefinition> filters)
         {
             var items = staticRepositoryCollections.Forecasts.Values.AsQueryable();
 
-            var sortExp = sortingParams?.SortExpression;
+            var sortExp = queryParams.SortExpression;
             if (!string.IsNullOrEmpty(sortExp))
             {
-                if (sortingParams.SortDescending)
+                if (queryParams.SortDescending)
                 {
                     sortExp += " descending";
                 }
@@ -92,7 +88,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
 
             return Ok(new
             {
-                Items = items.Skip(pageSize * pageNumber).Take(pageSize),
+                Items = items.Skip(queryParams.PageSize * queryParams.PageNumber).Take(queryParams.PageSize).ToList(),
                 TotalCount = staticRepositoryCollections.Forecasts.Count
             });
         }
