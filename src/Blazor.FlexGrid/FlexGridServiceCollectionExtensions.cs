@@ -45,7 +45,9 @@ namespace Blazor.FlexGrid
                 services.TryAddScoped(typeof(ILazyDataSetLoader<>), typeof(NullLazyDataSetLoader<>));
                 services.TryAddScoped(typeof(ILazyDataSetItemManipulator<>), typeof(NullLazyDataSetItemManipulator<>));
                 services.TryAddScoped(typeof(ICreateItemHandle<,>), typeof(NullCreateItemHandler<,>));
+                services.TryAddScoped(typeof(ILazyGroupableDataSetLoader<>), typeof(NullLazyGroupableDataSetLoader<>));
                 services.AddScoped<FlexGridInterop>();
+                services.AddScoped(typeof(LazyLoadedTableDataAdapter<>));
                 RegisterRendererTreeBuildersScoped(services);
             }
             else
@@ -67,14 +69,15 @@ namespace Blazor.FlexGrid
                 services.AddSingleton(typeof(ILazyDataSetLoader<>), typeof(HttpLazyDataSetLoader<>));
                 services.AddSingleton(typeof(ILazyDataSetItemManipulator<>), typeof(HttpLazyDataSetItemManipulator<>));
                 services.AddSingleton(typeof(ICreateItemHandle<,>), typeof(HttpCreateItemHandler<,>));
+                services.AddSingleton(typeof(ILazyGroupableDataSetLoader<>), typeof(HttpLazyGroupableDataSetLoader<>));
                 services.AddSingleton<FlexGridInterop>();
+                services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
                 RegisterRendererTreeBuilders(services);
             }
 
             services.TryAddSingleton<IAuthorizationService, NullAuthorizationService>();
             services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));
-            services.AddSingleton(typeof(LazyLoadedTableDataAdapter<>));
             services.AddSingleton(typeof(IGridConfigurationProvider), new GridConfigurationProvider(modelBuilder.Model));
             services.AddSingleton<IMasterDetailTableDataSetFactory, MasterDetailTableDataSetFactory>();
             services.AddSingleton<ConventionsSet>();

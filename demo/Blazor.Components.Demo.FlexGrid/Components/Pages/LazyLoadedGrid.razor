@@ -4,6 +4,7 @@
 @using Blazor.FlexGrid.Components.Events
 @using Blazor.Components.Demo.FlexGrid.Services
 @inject WeatherForecastService WeatherService
+@inject LazyLoadedTableDataAdapter<WeatherForecast> LazyLoadedTableDataAdapter
 @page "/lazyloadedgrid"
 
 
@@ -12,19 +13,12 @@
 <p>This component demonstrates fetching data from the server.</p>
 
 
-<GridView DataAdapter="@lazyLoadedTableDataAdapter"
+<GridView DataAdapter="@LazyLoadedTableDataAdapter"
           PageSize="10"
           SaveOperationFinished="@ItemSavedOperationFinished">
 </GridView>
 
 @functions {
-    LazyLoadedTableDataAdapter<WeatherForecast> lazyLoadedTableDataAdapter;
-
-    protected override void OnInit()
-    {
-
-        lazyLoadedTableDataAdapter = new LazyLoadedTableDataAdapter<WeatherForecast>(WeatherService, WeatherService);
-    }
 
     public void ItemSavedOperationFinished(SaveResultArgs saveResultArgs)
     {

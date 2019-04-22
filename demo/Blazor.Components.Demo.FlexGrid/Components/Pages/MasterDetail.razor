@@ -3,7 +3,7 @@
 @using Blazor.FlexGrid.DataAdapters
 @page "/masterdetailgrid"
 @inject CustomerService CustomerService
-@inject OrderService OrderService
+@inject LazyLoadedTableDataAdapter<Order> OrdersLazyLoadedTableDataAdapter
 @inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
 
 <h1>Customers</h1>
@@ -11,24 +11,24 @@
 <GridView DataAdapter="@customersMasterDataAdapter" PageSize="5"></GridView>
 
 @functions
-{
+        {
     CollectionTableDataAdapter<Customer> customerDataAdapter;
     CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
-    LazyLoadedTableDataAdapter<Order> ordersDataAdapter;
     MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
     protected override void OnInit()
     {
         var customers = CustomerService.Customers();
         var customersAddresses = CustomerService.CustomersAddresses();
-        customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
-        ordersDataAdapter = new LazyLoadedTableDataAdapter<Order>(OrderService, NullLazyDataSetItemSaver<Order>.Instance);
-        customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
+        customerDataAdapter = new CollectionTableDataAdapter<Customer>
+            (customers);
+        customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>
+            (customersAddresses);
 
         customersMasterDataAdapter = MasterAdapterBuilder
-            .MasterTableDataAdapter(customerDataAdapter)
-            .WithDetailTableDataAdapter(ordersDataAdapter)
-            .WithDetailTableDataAdapter(customerAddressesDataAdapter)
-            .Build();
+        .MasterTableDataAdapter(customerDataAdapter)
+        .WithDetailTableDataAdapter(OrdersLazyLoadedTableDataAdapter)
+        .WithDetailTableDataAdapter(customerAddressesDataAdapter)
+        .Build();
     }
 }

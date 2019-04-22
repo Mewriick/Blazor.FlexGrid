@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.Components.Demo.FlexGrid.Services
 {
-    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>, ILazyDataSetItemManipulator<WeatherForecast>
+    public class WeatherForecastService : ILazyDataSetLoader<WeatherForecast>, ILazyDataSetItemManipulator<WeatherForecast>, ILazyGroupableDataSetLoader<WeatherForecast>
     {
         private static string[] Summaries = new[]
         {

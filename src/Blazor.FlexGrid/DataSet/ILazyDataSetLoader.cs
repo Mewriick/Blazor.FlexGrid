@@ -9,6 +9,5 @@ namespace Blazor.FlexGrid.DataSet
     {
         Task<LazyLoadingDataSetResult<TItem>> GetTablePageData(RequestOptions requestOptions, IReadOnlyCollection<IFilterDefinition> filterDefinitions = null);
 
-        Task<LazyLoadingDataSetResult<GroupItem<TItem>>> GetGroupedTablePageData(RequestOptions requestOptions, IReadOnlyCollection<IFilterDefinition> filterDefinitions = null);
     }
 }

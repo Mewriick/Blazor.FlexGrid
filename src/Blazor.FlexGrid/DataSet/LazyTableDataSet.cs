@@ -18,6 +18,7 @@ namespace Blazor.FlexGrid.DataSet
     public class LazyTableDataSet<TItem> : ILazyTableDataSet, IBaseTableDataSet<TItem> where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
+        private readonly ILazyGroupableDataSetLoader<TItem> lazyGroupableDataSetLoader;
         private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
         private HashSet<object> selectedItems;
         private IReadOnlyCollection<IFilterDefinition> filterDefinitions = new List<IFilterDefinition>();
@@ -45,9 +46,13 @@ namespace Blazor.FlexGrid.DataSet
 
         public IList<GroupItem> GroupedItems { get; private set; } = new List<GroupItem>();
 
-        public LazyTableDataSet(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
+        public LazyTableDataSet(
+            ILazyDataSetLoader<TItem> lazyDataSetLoader,
+            ILazyGroupableDataSetLoader<TItem> lazyGroupableDataSetLoader,
+            ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
+            this.lazyGroupableDataSetLoader = lazyGroupableDataSetLoader ?? throw new ArgumentNullException(nameof(lazyGroupableDataSetLoader));
             this.lazyDataSetItemSaver = lazyDataSetItemSaver ?? throw new ArgumentNullException(nameof(lazyDataSetItemSaver));
             this.selectedItems = new HashSet<object>();
         }
@@ -65,7 +70,7 @@ namespace Blazor.FlexGrid.DataSet
             }
             else
             {
-                var groupedDataResult = await lazyDataSetLoader.GetGroupedTablePageData(requestOptions, filterDefinitions);
+                var groupedDataResult = await lazyGroupableDataSetLoader.GetGroupedTablePageData(requestOptions, filterDefinitions);
                 var newGroupedItems = groupedDataResult.Items.AsQueryable().OfType<GroupItem>().ToList();
                 newGroupedItems.PreserveGroupCollapsing(GroupedItems);
                 GroupedItems = newGroupedItems;

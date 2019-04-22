@@ -12,15 +12,20 @@ namespace Blazor.FlexGrid.DataAdapters
     public class LazyLoadedTableDataAdapter<TItem> : BaseTableDataAdapter, ILazyLoadedTableDataAdapter where TItem : class
     {
         private readonly ILazyDataSetLoader<TItem> lazyDataSetLoader;
+        private readonly ILazyGroupableDataSetLoader<TItem> lazyGroupableDataSetLoader;
         private readonly ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver;
 
         public override Type UnderlyingTypeOfItem => typeof(TItem);
 
         public Action<QueryBuilder> AddRequestParamsAction { get; set; }
 
-        public LazyLoadedTableDataAdapter(ILazyDataSetLoader<TItem> lazyDataSetLoader, ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
+        public LazyLoadedTableDataAdapter(
+            ILazyDataSetLoader<TItem> lazyDataSetLoader,
+            ILazyGroupableDataSetLoader<TItem> lazyGroupableDataSetLoader,
+            ILazyDataSetItemManipulator<TItem> lazyDataSetItemSaver)
         {
             this.lazyDataSetLoader = lazyDataSetLoader ?? throw new ArgumentNullException(nameof(lazyDataSetLoader));
+            this.lazyGroupableDataSetLoader = lazyGroupableDataSetLoader ?? throw new ArgumentNullException(nameof(lazyGroupableDataSetLoader));
             this.lazyDataSetItemSaver = lazyDataSetItemSaver ?? throw new ArgumentNullException(nameof(lazyDataSetItemSaver));
         }
 
@@ -32,7 +37,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions;
             AddRequestParamsAction?.Invoke(lazyLoadingOptions.RequestParams);
 
-            var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyDataSetItemSaver)
+            var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyGroupableDataSetLoader, lazyDataSetItemSaver)
             {
                 LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
@@ -45,7 +50,7 @@ namespace Blazor.FlexGrid.DataAdapters
         }
 
         public override object Clone()
-            => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader, lazyDataSetItemSaver);
+            => new LazyLoadedTableDataAdapter<TItem>(lazyDataSetLoader, lazyGroupableDataSetLoader, lazyDataSetItemSaver);
     }
 
     /// <summary>

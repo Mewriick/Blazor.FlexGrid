@@ -37,7 +37,10 @@ namespace Blazor.Components.Demo.FlexGrid
                 }
             );
 
+            services.AddScoped<ILazyDataSetLoader<Order>, OrderService>();
+
             services.AddScoped<ILazyDataSetLoader<WeatherForecast>, WeatherForecastService>();
+            services.AddScoped<ILazyGroupableDataSetLoader<WeatherForecast>, WeatherForecastService>();
             services.AddScoped<ILazyDataSetItemManipulator<WeatherForecast>, WeatherForecastService>();
 
             services.AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>();
