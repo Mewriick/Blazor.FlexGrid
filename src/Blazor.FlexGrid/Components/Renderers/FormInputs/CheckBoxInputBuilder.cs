@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.FormInputs
 {
@@ -15,15 +14,12 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             this.eventCallbackFactory = new EventCallbackFactory();
         }
 
-        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class
+        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
 
-            var valueExpression = Expression.Lambda<Func<bool>>(
-                 Expression.Property(
-                     Expression.Constant(actualItemContext.ActualItem),
-                    field));
+            var valueExpression = GetValueExpression(actualItemContext.ActualItem, field);
 
             return builder =>
             {
@@ -34,20 +30,54 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", string.Empty)
                     .AddAttribute("Value", value)
-                    .AddAttribute("ValueExpression", valueExpression)
-                    .AddAttribute("ValueChanged", eventCallbackFactory.Create<bool>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                    .AddAttribute("ValueExpression", valueExpression);
+
+                if (field.IsNullable)
+                {
+                    builder.AddAttribute("ValueChanged", eventCallbackFactory.Create<bool?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)));
+                }
+                else
+                {
+                    builder.AddAttribute("ValueChanged", eventCallbackFactory.Create<bool>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)));
+                }
+
+                builder
                     .CloseComponent()
                     .OpenElement(HtmlTagNames.Span, "cr")
                     .OpenElement(HtmlTagNames.I, "cr-icon fa fa-check")
                     .CloseElement()
                     .CloseElement()
                     .CloseElement()
-                    .CloseElement()
-                    .AddValidationMessage<bool>(valueExpression);
+                    .CloseElement();
+
+                if (field.IsNullable)
+                {
+                    builder.AddValidationMessage<bool?>(valueExpression);
+                }
+                else
+                {
+                    builder.AddValidationMessage<bool>(valueExpression);
+                }
             };
         }
 
         public bool IsSupportedDateType(Type type)
             => type == typeof(bool);
+
+        private LambdaExpression GetValueExpression(object actualItem, FormField field)
+        {
+            if (field.IsNullable)
+            {
+                return Expression.Lambda<Func<bool?>>(
+                 Expression.Property(
+                     Expression.Constant(actualItem),
+                    field.Info));
+            }
+
+            return Expression.Lambda<Func<bool>>(
+                 Expression.Property(
+                     Expression.Constant(actualItem),
+                    field.Info));
+        }
     }
 }

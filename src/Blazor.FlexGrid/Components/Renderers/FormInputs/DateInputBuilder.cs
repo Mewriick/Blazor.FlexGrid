@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.FormInputs
 {
@@ -15,12 +14,12 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             this.eventCallbackFactory = new EventCallbackFactory();
         }
 
-        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class
+        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
 
-            var valueExpression = GetValueExpression(value, actualItemContext.ActualItem, field);
+            var valueExpression = GetValueExpression(actualItemContext.ActualItem, field);
             var convertedValue = ConvertToDateTime(value);
             actualItemContext.SetActualItemColumnValue(localColumnName, convertedValue);
 
@@ -28,25 +27,45 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             {
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
-                    .OpenComponent(typeof(InputDate<>).MakeGenericType(field.GetMemberType()))
+                    .OpenComponent(typeof(InputDate<>).MakeGenericType(field.Type))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
                     .AddAttribute("Value", convertedValue)
                     .AddAttribute("ValueExpression", valueExpression);
 
-                if (value is DateTime)
+                if (field.UnderlyneType == typeof(DateTime))
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTime>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                    if (field.IsNullable)
+                    {
+                        builder
+                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTime?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
                         .CloseComponent()
-                        .AddValidationMessage<DateTime>(valueExpression);
+                        .AddValidationMessage<DateTime?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTime>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<DateTime>(valueExpression);
+                    }
                 }
                 else
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTimeOffset>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                    if (field.IsNullable)
+                    {
+                        builder
+                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTimeOffset?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
                         .CloseComponent()
-                        .AddValidationMessage<DateTimeOffset>(valueExpression);
+                        .AddValidationMessage<DateTimeOffset?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<DateTimeOffset>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<DateTimeOffset>(valueExpression);
+                    }
                 }
 
                 builder.CloseElement();
@@ -56,24 +75,45 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
         public bool IsSupportedDateType(Type type)
              => type == typeof(DateTime) || type == typeof(DateTimeOffset);
 
-        private LambdaExpression GetValueExpression(object value, object actualItem, PropertyInfo field)
+        private LambdaExpression GetValueExpression(object actualItem, FormField field)
         {
-            if (value is DateTime)
+            if (field.UnderlyneType == typeof(DateTime))
             {
-                return Expression.Lambda<Func<DateTime>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<DateTime?>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
+                else
+                {
+                    return Expression.Lambda<Func<DateTime>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
-            else if (value is DateTimeOffset)
+            else if (field.UnderlyneType == typeof(DateTimeOffset))
             {
-                return Expression.Lambda<Func<DateTimeOffset>>(
-                     Expression.Property(
-                         System.Linq.Expressions.Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<DateTimeOffset?>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
+                else
+
+                {
+                    return Expression.Lambda<Func<DateTimeOffset>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
 
-            throw new ArgumentException($"{nameof(DateInputBuilder)} does not support type {value.GetType()}");
+            throw new ArgumentException($"{nameof(DateInputBuilder)} does not support type {field.UnderlyneType}");
         }
 
         private DateTime ConvertToDateTime(object value)

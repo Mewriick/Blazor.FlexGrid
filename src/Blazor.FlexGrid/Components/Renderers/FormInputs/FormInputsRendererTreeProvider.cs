@@ -13,12 +13,12 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             this.formInputRendererBuilders = formInputRendererBuilders ?? throw new ArgumentException(nameof(formInputRendererBuilders));
         }
 
-        public IFormInputRendererBuilder GetFormInputRendererTreeBuilder(Type filedType)
+        public IFormInputRendererBuilder GetFormInputRendererTreeBuilder(FormField formField)
         {
-            var builder = formInputRendererBuilders.FirstOrDefault(b => b.IsSupportedDateType(filedType));
+            var builder = formInputRendererBuilders.FirstOrDefault(b => b.IsSupportedDateType(formField.UnderlyneType));
             if (builder is null)
             {
-                throw new InvalidOperationException($"Type {filedType.FullName} is not supported in edit forms");
+                throw new InvalidOperationException($"Type {formField.Type.FullName} is not supported in edit forms");
             }
 
             return builder;

@@ -21,22 +21,22 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             valueChangedMethodInfo = typeof(SelectInputBuilder).GetMethod(nameof(SelectInputBuilder.ValueChanged));
         }
 
-        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class
+        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var localValue = actualItemContext.GetActualItemColumnValue(localColumnName);
 
-            var valueExpression = Expression.Lambda(Expression.Property(Expression.Constant(actualItemContext.ActualItem), field));
+            var valueExpression = Expression.Lambda(Expression.Property(Expression.Constant(actualItemContext.ActualItem), field.Info));
             var optionsFragment = CreateOptionsFragment(localValue);
-            var valueChanged = CreateValueChangedCallback(field);
+            var valueChanged = CreateValueChangedCallback(field.Info);
 
-            InitializeSelectInputContext(actualItemContext, field, localColumnName);
+            InitializeSelectInputContext(actualItemContext, field.Info, localColumnName);
 
             return builder =>
             {
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
-                    .OpenComponent(typeof(InputSelect<>).MakeGenericType(field.GetMemberType()))
+                    .OpenComponent(typeof(InputSelect<>).MakeGenericType(field.UnderlyneType))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
                     .AddAttribute("Value", localValue)
@@ -44,7 +44,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .AddAttribute(RenderTreeBuilder.ChildContent, optionsFragment)
                     .AddAttribute("ValueChanged", valueChanged)
                     .CloseComponent()
-                    .OpenComponent(typeof(ValidationMessage<>).MakeGenericType(field.GetMemberType()))
+                    .OpenComponent(typeof(ValidationMessage<>).MakeGenericType(field.UnderlyneType))
                     .AddAttribute("For", valueExpression)
                     .CloseComponent()
                     .CloseElement();

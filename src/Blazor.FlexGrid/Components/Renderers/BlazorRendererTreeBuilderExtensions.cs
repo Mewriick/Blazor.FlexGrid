@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Blazor.FlexGrid.Components.Renderers.FormInputs;
+using Microsoft.AspNetCore.Components.Forms;
 using System.Linq.Expressions;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -25,6 +26,16 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererTreeBuilder
                 .OpenComponent(typeof(ValidationMessage<>).MakeGenericType(typeof(T)))
+                .AddAttribute("For", lambdaExpression)
+                .CloseComponent();
+
+            return rendererTreeBuilder;
+        }
+
+        public static IRendererTreeBuilder AddValidationMessage(this IRendererTreeBuilder rendererTreeBuilder, FormField field, LambdaExpression lambdaExpression)
+        {
+            rendererTreeBuilder
+                .OpenComponent(typeof(ValidationMessage<>).MakeGenericType(field.Type))
                 .AddAttribute("For", lambdaExpression)
                 .CloseComponent();
 

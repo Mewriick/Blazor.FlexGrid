@@ -1,4 +1,4 @@
-﻿@addTagHelper *, Blazor.FlexGrid
+﻿@using Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.Components.Events
@@ -21,8 +21,8 @@
 
     protected override async Task OnInitAsync()
     {
-        var customers = await Http.GetJsonAsync<Customer[]>("/api/Customer/Customers");
-        var customersAddresses = await Http.GetJsonAsync<CustomerAddress[]>("/api/Customer/CustomersAddresses");
+        var customers = await Http.GetJsonAsync<Customer[]>("api/Customer/Customers");
+        var customersAddresses = await Http.GetJsonAsync<CustomerAddress[]>("api/Customer/CustomersAddresses");
         customerDataAdapter = new CollectionTableDataAdapter<Customer>(customers);
         customerAddressesDataAdapter = new CollectionTableDataAdapter<CustomerAddress>(customersAddresses);
 

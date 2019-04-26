@@ -108,7 +108,7 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
             var weatherForecast = new WeatherForecast
             {
                 Id = id,
-                Date = model.Date,
+                Date = model.Date.Value,
                 Summary = model.Summary,
                 TemperatureC = model.TemperatureC
             };

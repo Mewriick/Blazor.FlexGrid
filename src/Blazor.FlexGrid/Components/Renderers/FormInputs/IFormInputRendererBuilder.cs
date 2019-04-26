@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.FormInputs
 {
@@ -7,6 +6,6 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
     {
         bool IsSupportedDateType(Type type);
 
-        Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class;
+        Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class;
     }
 }

@@ -11,7 +11,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             builder.AllowCreateItem<WeatherForecastCreateModel, WeatherForecast>(conf =>
             {
                 conf.CreatePermissionRestriction = p => p.IsInRole("TestRole");
-                conf.CreateUri = "/api/SampleData/WeatherForecast";
+                conf.CreateUri = "api/SampleData/WeatherForecast";
             });
 
             builder.AllowInlineEdit(conf =>

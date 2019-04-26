@@ -27,7 +27,7 @@ namespace Blazor.FlexGrid.Demo.Shared
 
     public class WeatherForecastCreateModel
     {
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public int TemperatureC { get; set; }
 

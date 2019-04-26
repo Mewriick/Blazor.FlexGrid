@@ -1,4 +1,3 @@
-using Blazor.Components.Demo.FlexGrid.Components;
 using Blazor.Components.Demo.FlexGrid.GridConfigurations;
 using Blazor.Components.Demo.FlexGrid.Services;
 using Blazor.FlexGrid;
@@ -21,7 +20,7 @@ namespace Blazor.Components.Demo.FlexGrid
             services.AddMvc()
                 .AddNewtonsoftJson();
 
-            services.AddRazorComponents();
+            services.AddServerSideBlazor();
 
             // Since Blazor is running on the server, we can use an application service
             // to read the forecast data.
@@ -64,10 +63,12 @@ namespace Blazor.Components.Demo.FlexGrid
             app.UseStaticFiles();
             app.UseFlexGrid(env.WebRootPath);
 
-            app.UseRouting(routes =>
+            app.UseRouting();
+            app.UseEndpoints(routes =>
             {
                 routes.MapRazorPages();
-                routes.MapComponentHub<App>("app");
+                routes.MapFallbackToPage("/_Host");
+                routes.MapBlazorHub();
             });
         }
     }

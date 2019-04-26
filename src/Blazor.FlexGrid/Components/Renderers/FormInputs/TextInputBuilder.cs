@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.FormInputs
 {
@@ -15,7 +14,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             this.eventCallbackFactory = new EventCallbackFactory();
         }
 
-        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class
+        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
@@ -23,7 +22,7 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             var valueExpression = Expression.Lambda<Func<string>>(
                  Expression.Property(
                      Expression.Constant(actualItemContext.ActualItem),
-                    field));
+                    field.Info));
 
             return builder =>
             {

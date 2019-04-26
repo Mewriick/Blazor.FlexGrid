@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Blazor.FlexGrid.Components.Renderers.FormInputs
 {
@@ -15,61 +14,110 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
             this.eventCallbackFactory = new EventCallbackFactory();
         }
 
-        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, PropertyInfo field) where TItem : class
+        public Action<IRendererTreeBuilder> BuildRendererTree<TItem>(IActualItemContext<TItem> actualItemContext, FormField field) where TItem : class
         {
             var localColumnName = actualItemContext.ActualColumnName;
             var value = actualItemContext.GetActualItemColumnValue(localColumnName);
 
-            var valueExpression = GetValueExpression(value, actualItemContext.ActualItem, field);
+            var valueExpression = GetValueExpression(actualItemContext.ActualItem, field);
 
             return builder =>
             {
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
-                    .OpenComponent(typeof(InputNumber<>).MakeGenericType(field.GetMemberType()))
+                    .OpenComponent(typeof(InputNumber<>).MakeGenericType(field.Type))
                     .AddAttribute("Id", $"create-form-{localColumnName}")
                     .AddAttribute("Class", "edit-text-field")
                     .AddAttribute("Value", value)
                     .AddAttribute("ValueExpression", valueExpression);
 
-                if (value is int)
+                if (field.UnderlyneType == typeof(int))
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<int>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
-                        .CloseComponent()
-                        .AddValidationMessage<int>(valueExpression);
+                    if (field.IsNullable)
+                    {
+                        builder
+                          .AddAttribute("ValueChanged", eventCallbackFactory.Create<int?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                          .CloseComponent()
+                          .AddValidationMessage<int?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<int>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<int>(valueExpression);
+                    }
 
                 }
-                else if (value is long)
+                else if (field.UnderlyneType == typeof(long))
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<long>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
-                        .CloseComponent()
-                        .AddValidationMessage<long>(valueExpression);
+                    if (field.IsNullable)
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<long?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<long?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                           .AddAttribute("ValueChanged", eventCallbackFactory.Create<long>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                           .CloseComponent()
+                           .AddValidationMessage<long>(valueExpression);
+                    }
 
                 }
-                else if (value is decimal)
+                else if (field.UnderlyneType == typeof(decimal))
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<decimal>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                    if (field.IsNullable)
+                    {
+                        builder
+                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<decimal?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
                         .CloseComponent()
-                        .AddValidationMessage<decimal>(valueExpression);
+                        .AddValidationMessage<decimal?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<decimal>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<decimal>(valueExpression);
+                    }
+                }
+                else if (field.UnderlyneType == typeof(double))
+                {
+                    if (field.IsNullable)
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<double?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<double?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<double>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<double>(valueExpression);
+                    }
 
                 }
-                else if (value is double)
+                else if (field.UnderlyneType == typeof(float))
                 {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<double>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
-                        .CloseComponent()
-                        .AddValidationMessage<double>(valueExpression);
-
-                }
-                else if (value is float)
-                {
-                    builder
-                        .AddAttribute("ValueChanged", eventCallbackFactory.Create<float>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
-                        .CloseComponent()
-                        .AddValidationMessage<float>(valueExpression);
+                    if (field.IsNullable)
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<float?>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<float?>(valueExpression);
+                    }
+                    else
+                    {
+                        builder
+                            .AddAttribute("ValueChanged", eventCallbackFactory.Create<float>(this, v => actualItemContext.SetActualItemColumnValue(localColumnName, v)))
+                            .CloseComponent()
+                            .AddValidationMessage<float>(valueExpression);
+                    }
                 }
 
                 builder.CloseElement();
@@ -80,45 +128,96 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
         public bool IsSupportedDateType(Type type)
             => type == typeof(int) || type == typeof(long) || type == typeof(decimal) || type == typeof(double) || type == typeof(float);
 
-        private LambdaExpression GetValueExpression(object value, object actualItem, PropertyInfo field)
+        private LambdaExpression GetValueExpression(object actualItem, FormField field)
         {
-            if (value is int)
+            if (field.UnderlyneType == typeof(int))
             {
-                return Expression.Lambda<Func<int>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<int?>>(
+                            Expression.Property(
+                                Expression.Constant(actualItem),
+                               field.Info));
+                }
+                else
+                {
+
+                    return Expression.Lambda<Func<int>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
-            else if (value is long)
+            else if (field.UnderlyneType == typeof(long))
             {
-                return Expression.Lambda<Func<long>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<long?>>(
+                       Expression.Property(
+                           Expression.Constant(actualItem),
+                          field.Info));
+                }
+                else
+                {
+                    return Expression.Lambda<Func<long>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
-            else if (value is decimal)
+            else if (field.UnderlyneType == typeof(decimal))
             {
-                return Expression.Lambda<Func<decimal>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<decimal?>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
+                else
+                {
+                    return Expression.Lambda<Func<decimal>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
-            else if (value is double)
+            else if (field.UnderlyneType == typeof(double))
             {
-                return Expression.Lambda<Func<double>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<double?>>(
+                       Expression.Property(
+                           Expression.Constant(actualItem),
+                          field.Info));
+                }
+                else
+                {
+                    return Expression.Lambda<Func<double>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
-            else if (value is float)
+            else if (field.UnderlyneType == typeof(float))
             {
-                return Expression.Lambda<Func<float>>(
-                     Expression.Property(
-                         Expression.Constant(actualItem),
-                        field));
+                if (field.IsNullable)
+                {
+                    return Expression.Lambda<Func<float?>>(
+                       Expression.Property(
+                           Expression.Constant(actualItem),
+                          field.Info));
+                }
+                else
+                {
+                    return Expression.Lambda<Func<float>>(
+                         Expression.Property(
+                             Expression.Constant(actualItem),
+                            field.Info));
+                }
             }
 
-            throw new ArgumentException($"{nameof(NumberInputBuilder)} does not support type {value.GetType()}");
+            throw new ArgumentException($"{nameof(NumberInputBuilder)} does not support type {field.UnderlyneType}");
         }
     }
 }

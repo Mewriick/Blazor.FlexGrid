@@ -1,6 +1,4 @@
-﻿@addTagHelper *, Blazor.FlexGrid
-@addTagHelper *, BlazorStrap
-@using Blazor.FlexGrid.Demo.Shared
+﻿@using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.Components.Configuration
 @inject HttpClient Http
@@ -22,7 +20,7 @@ Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
 
     protected override async Task OnInitAsync()
     {
-        var forecast = await Http.GetJsonAsync<WeatherForecast[]>("/api/SampleData/WeatherForecastsSimple");
+        var forecast = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecastsSimple");
         dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
     }
 }

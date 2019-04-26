@@ -1,7 +1,7 @@
 ﻿
 @page "/lazyloadedgrid"
 
-@addTagHelper *, Blazor.FlexGrid
+@using Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.DataSet.Options
@@ -19,9 +19,9 @@
 
 <GridView DataAdapter="@forecastAdapter"
           LazyLoadingOptions="@(new LazyLoadingOptions() {
-                                    DataUri = "/api/SampleData/WeatherForecasts",
-                                    PutDataUri = "/api/SampleData/UpdateWeatherForecast",
-                                    DeleteUri = "/api/SampleData/Delete/{Id}" })"
+                                    DataUri = "api/SampleData/WeatherForecasts",
+                                    PutDataUri = "api/SampleData/UpdateWeatherForecast",
+                                    DeleteUri = "api/SampleData/Delete/{Id}" })"
           PageSize="10"
           SaveOperationFinished="@ItemSavedOperationFinished"
           DeleteOperationFinished="@ItemDeletedOperationFinished"

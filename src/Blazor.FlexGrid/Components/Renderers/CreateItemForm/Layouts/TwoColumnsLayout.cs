@@ -49,7 +49,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
                     .AddContent(field.Name)
                     .CloseElement();
 
-                formInputRendererBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
+                formInputRendererBuilder.BuildRendererTree(createItemRendererContext, new FormField(field))?.Invoke(builder);
 
                 builder.CloseElement();
             };

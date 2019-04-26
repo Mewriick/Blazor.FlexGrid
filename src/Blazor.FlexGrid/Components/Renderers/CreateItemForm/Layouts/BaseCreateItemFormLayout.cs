@@ -33,7 +33,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
             IFormInputRendererTreeProvider formInputRendererTreeProvider)
         {
             createItemRendererContext.ActualColumnName = field.Name;
-            var inputBuilder = formInputRendererTreeProvider.GetFormInputRendererTreeBuilder(field.GetMemberType());
+            var inputBuilder = formInputRendererTreeProvider.GetFormInputRendererTreeBuilder(new FormField(field));
 
             return builder =>
             {
@@ -54,7 +54,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts
                     .AddContent(field.Name)
                     .CloseElement();
 
-                formInputRendererBuilder.BuildRendererTree(createItemRendererContext, field)?.Invoke(builder);
+                formInputRendererBuilder.BuildRendererTree(createItemRendererContext, new FormField(field))?.Invoke(builder);
 
                 builder.CloseElement();
             };
