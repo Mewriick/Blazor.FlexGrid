@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -112,6 +113,27 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             createItemOptions.OutputDtoType = typeof(TOutputDto);
 
             Builder.AllowCreateItem(createItemOptions);
+
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> EnableSortingForAllProperties()
+        {
+            foreach (var property in typeof(TEntity).GetProperties())
+            {
+                var configuredProperty = Builder.Metadata.FindProperty(property.Name);
+                if (configuredProperty is null)
+                {
+                    Builder
+                        .Property(property)
+                        .IsSortable(true);
+                }
+                else
+                {
+                    new InternalPropertyBuilder(configuredProperty as Property, Builder.ModelBuilder)
+                        .IsSortable(true);
+                }
+            }
 
             return this;
         }

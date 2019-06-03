@@ -10,6 +10,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
         {
             builder.AllowCreateItem<WeatherForecastCreateModel, WeatherForecast>(conf =>
             {
+                conf.CloseAfterSuccessfullySaved = true;
                 conf.CreatePermissionRestriction = p => p.IsInRole("TestRole");
                 conf.CreateUri = "api/SampleData/WeatherForecast";
             });

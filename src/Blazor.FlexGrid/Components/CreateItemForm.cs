@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm;
 using Blazor.FlexGrid.Components.Renderers.CreateItemForm.Layouts;
@@ -27,8 +28,10 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private ICreateItemHandle<TModel, TOutputDto> CreateItemHandle { get; set; }
 
-        [Parameter] CreateItemContext CreateItemContext { get; set; }
+        [Inject]
+        private FlexGridInterop FlexGridInterop { get; set; }
 
+        [Parameter] CreateItemContext CreateItemContext { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -50,6 +53,12 @@ namespace Blazor.FlexGrid.Components
                     var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
                     CreateItemContext.NotifyItemCreated(dto);
                     createItemFormViewModel.ClearModel();
+
+                    if (CreateItemContext.CreateItemOptions.CloseAfterSuccessfullySaved)
+                    {
+                        await FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName);
+                    }
+
                     StateHasChanged();
                 };
             }
