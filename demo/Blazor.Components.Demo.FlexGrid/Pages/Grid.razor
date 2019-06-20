@@ -20,13 +20,15 @@
     }*@
 
 
-@functions{
-    CollectionTableDataAdapter<WeatherForecast> dataAdapter;
+@code {
+    CollectionTableDataAdapter<WeatherForecast>
+    dataAdapter;
 
     protected override async Task OnInitAsync()
     {
         var forecast = await WeatherService.GetForecastAsync(DateTime.Now);
-        dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
+        dataAdapter = new CollectionTableDataAdapter<WeatherForecast>
+            (forecast);
 
     }
 }

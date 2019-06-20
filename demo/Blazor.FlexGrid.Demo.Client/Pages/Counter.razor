@@ -4,14 +4,14 @@
 
 <p>Current count: @currentCount</p>
 
-<button class="btn btn-primary" onclick="@IncrementCount">Click me</button>
-<button class="btn btn-primary" onclick="@DecrementCount" disabled="@currentCount % 2">Click me</button>
-<button onclick=@((UIMouseEventArgs e) => Console.WriteLine("Inline:Button Clicked"))>Inline Event Binding</button>
+<button class="btn btn-primary" @onclick="@IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="@DecrementCount" disabled="@currentCount % 2">Click me</button>
+<button @onclick=@((UIMouseEventArgs e) => Console.WriteLine("Inline:Button Clicked"))>Inline Event Binding</button>
 <input type="date" bind=date format-value="yyyy-MM-dd" />
 
  Enter your name: <input type="text" bind="@Name" /><br />
 
-@functions {
+@code {
     int currentCount = 0;
     DateTime date = DateTime.Now;
     string Name = string.Empty;

@@ -15,7 +15,7 @@
 Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
 }
 
-@functions{
+@code{
     CollectionTableDataAdapter<WeatherForecast> dataAdapter;
 
     protected override async Task OnInitAsync()
