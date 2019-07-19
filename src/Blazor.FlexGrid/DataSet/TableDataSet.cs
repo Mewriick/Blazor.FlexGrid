@@ -148,8 +148,10 @@ namespace Blazor.FlexGrid.DataSet
                 GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = true, Item = item });
                 await GoToPage(PageableOptions.CurrentPage);
             }
-
-            GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = false, Item = item });
+            else
+            {
+                GridViewEvents.DeleteOperationFinished?.Invoke(new DeleteResultArgs { ItemSuccesfullyDeleted = false, Item = item });
+            }
 
             return removeResult;
         }
