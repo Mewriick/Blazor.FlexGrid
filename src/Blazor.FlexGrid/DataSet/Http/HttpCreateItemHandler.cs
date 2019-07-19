@@ -25,11 +25,6 @@ namespace Blazor.FlexGrid.DataSet.Http
 
         public async Task<TOutputDto> CreateItem(TModel model, CreateItemOptions createItemOptions, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(createItemOptions.CreateUri))
-            {
-                throw new ArgumentException("If you want use create item feature, you must provide Api endpoint url");
-            }
-
             try
             {
                 var response = await httpClient.PostJsonAsync<TOutputDto>(createItemOptions.CreateUri, model);
