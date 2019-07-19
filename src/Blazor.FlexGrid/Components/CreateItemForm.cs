@@ -50,8 +50,15 @@ namespace Blazor.FlexGrid.Components
                 createItemFormViewModel = new CreateItemFormViewModel<TModel>(CreateItemContext.CreateItemOptions);
                 createItemFormViewModel.SaveAction = async model =>
                 {
-                    var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
-                    CreateItemContext.NotifyItemCreated(dto);
+                    if (string.IsNullOrEmpty(CreateItemContext.CreateItemOptions.CreateUri))
+                    {
+                        CreateItemContext.NotifyItemCreated(model);
+                    }
+                    else
+                    {
+                        var dto = await CreateItemHandle.CreateItem(model, CreateItemContext.CreateItemOptions, CancellationToken.None);
+                        CreateItemContext.NotifyItemCreated(dto);
+                    }
                     createItemFormViewModel.ClearModel();
 
                     if (CreateItemContext.CreateItemOptions.CloseAfterSuccessfullySaved)
