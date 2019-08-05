@@ -123,6 +123,21 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
                 return specialColumnValue as IRenderFragmentAdapter;
             }
         }
+
+        public Func<EditColumnContext, IRenderFragmentAdapter> ColumnEditComponentBuilder
+        {
+            get
+            {
+                var edcitComponentFragmentBuilder = Annotations[GridViewAnnotationNames.ColumnEditBlazorComponentBuilder];
+                if (edcitComponentFragmentBuilder is NullAnotationValue)
+                {
+                    return null;
+                }
+
+                return edcitComponentFragmentBuilder as Func<EditColumnContext, IRenderFragmentAdapter>;
+            }
+        }
+
         public Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc
         {
             get
@@ -152,7 +167,6 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         }
 
         protected IAnnotatable Annotations { get; }
-
 
         public GridColumnAnotations(IProperty property)
         {

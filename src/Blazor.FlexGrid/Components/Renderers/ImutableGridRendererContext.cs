@@ -12,7 +12,8 @@ namespace Blazor.FlexGrid.Components.Renderers
     public class ImutableGridRendererContext
     {
         private Dictionary<string, IValueFormatter> valueFormatters;
-        private Dictionary<string, IRenderFragmentAdapter> specialColumnValues;
+        private Dictionary<string, IRenderFragmentAdapter> columnRendererFragments;
+        private Dictionary<string, Func<EditColumnContext, IRenderFragmentAdapter>> columnEditRendererBuilders;
 
         public IEntityType GridEntityConfiguration { get; }
 
@@ -24,7 +25,9 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         public IReadOnlyDictionary<string, IValueFormatter> ValueFormatters => valueFormatters;
 
-        public IReadOnlyDictionary<string, IRenderFragmentAdapter> SpecialColumnValues => specialColumnValues;
+        public IReadOnlyDictionary<string, IRenderFragmentAdapter> ColumnRendererFragments => columnRendererFragments;
+
+        public IReadOnlyDictionary<string, Func<EditColumnContext, IRenderFragmentAdapter>> ColumnEditRendererBuilders => columnEditRendererBuilders;
 
         public GridCssClasses CssClasses { get; }
 
@@ -36,7 +39,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             ICurrentUserPermission currentUserPermission)
         {
             valueFormatters = new Dictionary<string, IValueFormatter>();
-            specialColumnValues = new Dictionary<string, IRenderFragmentAdapter>();
+            columnRendererFragments = new Dictionary<string, IRenderFragmentAdapter>();
+            columnEditRendererBuilders = new Dictionary<string, Func<EditColumnContext, IRenderFragmentAdapter>>();
 
             GridEntityConfiguration = gridEntityConfiguration ?? throw new ArgumentNullException(nameof(gridEntityConfiguration));
             GetPropertyValueAccessor = propertyValueAccessor ?? throw new ArgumentNullException(nameof(propertyValueAccessor));
@@ -84,7 +88,12 @@ namespace Blazor.FlexGrid.Components.Renderers
 
                 if (columnConfig?.SpecialColumnValue != null)
                 {
-                    specialColumnValues.Add(property.Name, columnConfig.SpecialColumnValue);
+                    columnRendererFragments.Add(property.Name, columnConfig.SpecialColumnValue);
+                }
+
+                if (columnConfig?.ColumnEditComponentBuilder != null)
+                {
+                    columnEditRendererBuilders.Add(property.Name, columnConfig.ColumnEditComponentBuilder);
                 }
             }
 

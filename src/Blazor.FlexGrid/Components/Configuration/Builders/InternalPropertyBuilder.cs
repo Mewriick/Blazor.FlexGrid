@@ -43,7 +43,30 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             => HasAnnotation(GridViewAnnotationNames.ColumnValueFormatter, new ValueFormatter<TInputValue>(valueFormatterExpression, ValueFormatterType.WholeRowObject));
 
         public bool HasBlazorComponentValue<TInputValue>(RenderFragment<TInputValue> renderFragment)
-            => HasAnnotation(GridViewAnnotationNames.ColumnValueBlazorComponent, new RenderFragmentAdapter<TInputValue>(renderFragment));
+        {
+            if (Metadata.FindAnnotation(GridViewAnnotationNames.ColumnValueBlazorComponent) is NullAnnotation)
+            {
+                return HasAnnotation(GridViewAnnotationNames.ColumnValueBlazorComponent, new RenderFragmentAdapter<TInputValue>(renderFragment));
+            }
+
+            return false;
+        }
+
+        public bool HasBlazorEditComponent<TInputValue>(Func<EditColumnContext, RenderFragment<TInputValue>> renderFragmentBuilder)
+        {
+            if (Metadata.FindAnnotation(GridViewAnnotationNames.ColumnEditBlazorComponentBuilder) is NullAnnotation)
+            {
+                Func<EditColumnContext, IRenderFragmentAdapter> builder
+                    = context =>
+                    {
+                        return new RenderFragmentAdapter<TInputValue>(renderFragmentBuilder.Invoke(context));
+                    };
+
+                return HasAnnotation(GridViewAnnotationNames.ColumnEditBlazorComponentBuilder, builder);
+            }
+
+            return false;
+        }
 
         public bool HasReadPermissionRestriction(Func<ICurrentUserPermission, bool> permissionRestrictionFunc)
             => HasAnnotation(GridViewAnnotationNames.ColumnReadPermission, permissionRestrictionFunc);

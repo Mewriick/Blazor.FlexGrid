@@ -77,6 +77,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public PropertyBuilder<TProperty, TEntity> HasBlazorEditComponent<TInputValue>(Func<EditColumnContext, RenderFragment<TInputValue>> renderFragmentBuilder)
+        {
+            Builder.HasBlazorEditComponent(renderFragmentBuilder);
+
+            return this;
+        }
+
         public PropertyBuilder<TProperty, TEntity> HasCompositeValueFormatter(Expression<Func<TEntity, string>> valueFormatterExpression)
         {
             Builder.HasCompositeValueFormatter(valueFormatterExpression);

@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components.Configuration.MetaData;
 using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
 using Blazor.FlexGrid.Components.Filters;
+using Blazor.FlexGrid.Components.Renderers.EditInputs;
 using Blazor.FlexGrid.DataAdapters;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
@@ -20,7 +21,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         private string lastColumnName;
         private readonly IEntityType gridEntityConfiguration;
         private readonly IReadOnlyDictionary<string, IValueFormatter> valueFormatters;
-        private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter> specialColumnValues;
+        private readonly IReadOnlyDictionary<string, IRenderFragmentAdapter> columnRendererFragments;
+        private readonly IReadOnlyDictionary<string, Func<EditColumnContext, IRenderFragmentAdapter>> columnEditRendererBuilders;
 
         public string ActualColumnName { get; set; } = string.Empty;
 
@@ -79,11 +81,12 @@ namespace Blazor.FlexGrid.Components.Renderers
             CssClasses = imutableGridRendererContext.CssClasses;
             PropertyValueAccessor = imutableGridRendererContext.GetPropertyValueAccessor;
 
-            this.gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
-            this.valueFormatters = imutableGridRendererContext.ValueFormatters;
-            this.specialColumnValues = imutableGridRendererContext.SpecialColumnValues;
-            this.firstColumnName = GridItemProperties.First().Name;
-            this.lastColumnName = GridItemProperties.Last().Name;
+            gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
+            valueFormatters = imutableGridRendererContext.ValueFormatters;
+            columnRendererFragments = imutableGridRendererContext.ColumnRendererFragments;
+            columnEditRendererBuilders = imutableGridRendererContext.ColumnEditRendererBuilders;
+            firstColumnName = GridItemProperties.First().Name;
+            lastColumnName = GridItemProperties.Last().Name;
             NumberOfColumns = GridItemProperties.Count +
                 (imutableGridRendererContext.InlineEditItemIsAllowed() || imutableGridRendererContext.CreateItemIsAllowed() ? 1 : 0) +
                 (GridConfiguration.IsMasterTable ? 1 : 0);
@@ -121,7 +124,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            if (specialColumnValues.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
+            if (columnRendererFragments.TryGetValue(ActualColumnName, out var rendererFragmentAdapter))
             {
                 var fragment = rendererFragmentAdapter.GetColumnFragment(ActualItem);
                 RendererTreeBuilder.AddContent(fragment);
@@ -136,6 +139,33 @@ namespace Blazor.FlexGrid.Components.Renderers
             RendererTreeBuilder.AddContent(new MarkupString(
                valueFormatter.FormatValue(inputForColumnValueFormatter))
             );
+        }
+
+        public void AddEditField(EditInputRendererTree editInputRendererTree, PermissionContext permissionContext)
+        {
+            if (!ActualColumnPropertyCanBeEdited ||
+                !permissionContext.HasCurrentUserWritePermission(ActualColumnName))
+            {
+                AddActualColumnValue(permissionContext);
+
+                return;
+            }
+
+            if (columnEditRendererBuilders.TryGetValue(ActualColumnName, out var builder))
+            {
+                var editColumnContext = new EditColumnContext(ActualColumnName, TableDataSet.EditItemProperty);
+                var rendererFragmentAdapter = builder.Invoke(editColumnContext);
+                var fragment = rendererFragmentAdapter.GetColumnFragment(ActualItem);
+                RendererTreeBuilder.AddContent(fragment);
+
+                return;
+            }
+
+            editInputRendererTree.BuildInputRendererTree(
+                RendererTreeBuilder,
+                this,
+                TableDataSet.EditItemProperty);
+
         }
 
         public void AddDisabled(bool disabled)

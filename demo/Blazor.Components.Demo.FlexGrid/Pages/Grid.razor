@@ -19,6 +19,18 @@
     Collection.AddColumnValueRenderFunction(w => w.Summary, weatherTemp);
     }*@
 
+@{
+    Func<EditColumnContext, RenderFragment<WeatherForecast>> editWeatherSummary = context =>
+    {
+        RenderFragment<WeatherForecast> editFragment = (weather) => @<input value=@weather.Summary @onchange=@((UIChangeEventArgs e) => context.NotifyValueHasChanged(e.Value)) />;
+
+
+return editFragment;
+};
+Collection.AddColumnEditValueRenderer(w => w.Summary, editWeatherSummary);
+
+}
+
 
 @code {
     CollectionTableDataAdapter<WeatherForecast>
