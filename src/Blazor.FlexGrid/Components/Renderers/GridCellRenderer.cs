@@ -28,18 +28,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 return;
             }
 
-            if (rendererContext.ActualColumnPropertyCanBeEdited && permissionContext.HasCurrentUserWritePermission(rendererContext.ActualColumnName))
-            {
-                editInputRendererTree.BuildInputRendererTree(
-                    rendererContext.RendererTreeBuilder,
-                    rendererContext,
-                    rendererContext.TableDataSet.EditItemProperty);
-            }
-            else
-            {
-                rendererContext.AddActualColumnValue(permissionContext);
-            }
-
+            rendererContext.AddEditField(editInputRendererTree, permissionContext);
             rendererContext.CloseElement();
         }
     }

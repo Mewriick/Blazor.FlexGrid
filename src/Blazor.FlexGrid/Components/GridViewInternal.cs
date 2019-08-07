@@ -23,7 +23,8 @@ namespace Blazor.FlexGrid.Components
         private readonly static ITableDataSet EmptyDataSet = new TableDataSet<EmptyDataSetItem>(
             Enumerable.Empty<EmptyDataSetItem>().AsQueryable(), new FilterExpressionTreeBuilder<EmptyDataSetItem>());
 
-        private bool dataAdapterWasEmptyInOnInit;
+        private bool tableDataSetInitialized;
+
         private FlexGridContext fixedFlexGridContext;
         private (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) gridRenderingContexts;
         protected IEnumerable<IFeature> features;
@@ -107,8 +108,7 @@ namespace Blazor.FlexGrid.Components
         {
             fixedFlexGridContext = CreateFlexGridContext();
 
-            dataAdapterWasEmptyInOnInit = DataAdapter == null;
-            if (!dataAdapterWasEmptyInOnInit)
+            if (DataAdapter != null)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
             }
@@ -120,7 +120,8 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnParametersSetAsync()
         {
-            if (dataAdapterWasEmptyInOnInit && DataAdapter != null)
+            if (!tableDataSetInitialized &&
+                DataAdapter != null)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 tableDataSet = GetTableDataSet();
@@ -158,6 +159,8 @@ namespace Blazor.FlexGrid.Components
                 {
                     fixedFlexGridContext.FilterContext.OnFilterChanged += FilterChanged;
                 }
+
+                tableDataSetInitialized = true;
             }
 
             gridRenderingContexts = RendererContextFactory.CreateContexts(tableDataSet);

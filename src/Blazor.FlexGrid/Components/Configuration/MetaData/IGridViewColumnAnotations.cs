@@ -26,6 +26,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         IRenderFragmentAdapter SpecialColumnValue { get; }
 
+        Func<EditColumnContext, IRenderFragmentAdapter> ColumnEditComponentBuilder { get; }
+
         Func<ICurrentUserPermission, bool> ReadPermissionRestrictionFunc { get; }
 
         Func<ICurrentUserPermission, bool> WritePermissionRestrictionFunc { get; }

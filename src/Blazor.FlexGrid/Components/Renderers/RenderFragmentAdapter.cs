@@ -17,6 +17,7 @@ namespace Blazor.FlexGrid.Components.Renderers
     {
         private readonly RenderFragment<TItem> renderFragment;
 
+
         public RenderFragmentAdapter(RenderFragment<TItem> renderFragment)
         {
             this.renderFragment = renderFragment ?? throw new ArgumentNullException(nameof(renderFragment));
