@@ -10,13 +10,13 @@ namespace Blazor.FlexGrid.Components
 {
     public class CreateItemModal : ComponentBase
     {
-        [Parameter] CreateItemOptions CreateItemOptions { get; set; }
+        [Parameter] public CreateItemOptions CreateItemOptions { get; set; }
 
-        [Parameter] PermissionContext PermissionContext { get; set; }
+        [Parameter] public PermissionContext PermissionContext { get; set; }
 
-        [Parameter] CreateFormCssClasses CreateFormCssClasses { get; set; }
+        [Parameter] public CreateFormCssClasses CreateFormCssClasses { get; set; }
 
-        [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
+        [Parameter] public Action<ItemCreatedArgs> NewItemCreated { get; set; }
 
 
         [Inject]
@@ -49,7 +49,7 @@ namespace Blazor.FlexGrid.Components
                 .AddContent("Create Item")
                 .CloseElement()
                 .OpenElement(HtmlTagNames.Button, "close")
-                .AddAttribute(HtmlJSEvents.OnClick, BindMethods.GetEventHandlerValue((UIMouseEventArgs e) => FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)))
+                .AddAttribute(HtmlJSEvents.OnClick, EventCallback.Factory.Create(this, (UIMouseEventArgs e) => FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)))
                 .AddAttribute(HtmlAttributes.Type, "button")
                 .AddAttribute("data-dismiss", "modal")
                 .AddAttribute("aria-label", "Close")

@@ -16,14 +16,14 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableRow);
 
             var localActualItem = rendererContext.ActualItem;
-            rendererContext.AddOnClickEvent(() =>
-            BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
-            {
-                rendererContext.TableDataSet
-                     .GridViewEvents
-                     .OnItemClicked?.Invoke(new ItemClickedArgs { Item = localActualItem });
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                {
+                    rendererContext.TableDataSet
+                         .GridViewEvents
+                         .OnItemClicked?.Invoke(new ItemClickedArgs { Item = localActualItem });
 
-            }));
+                }));
 
             foreach (var property in rendererContext.GridItemProperties)
             {

@@ -26,8 +26,8 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                 builder
                     .OpenElement(HtmlTagNames.Div, "form-field-wrapper")
                     .OpenComponent(typeof(InputNumber<>).MakeGenericType(field.Type))
-                    .AddAttribute("Id", $"create-form-{localColumnName}")
-                    .AddAttribute("Class", "edit-text-field")
+                    .AddAttribute("id", $"create-form-{localColumnName}")
+                    .AddAttribute("class", "edit-text-field")
                     .AddAttribute("Value", value)
                     .AddAttribute("ValueExpression", valueExpression);
 

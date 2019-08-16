@@ -27,7 +27,7 @@ Collection.AddColumnEditValueRenderer(w => w.Summary, editWeatherSummary);
 @code{
     CollectionTableDataAdapter<WeatherForecast> dataAdapter;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         var forecast = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecastsSimple");
         dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);

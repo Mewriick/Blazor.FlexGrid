@@ -11,8 +11,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             var localActualItemIsSelected = rendererContext.TableDataSet.ItemIsSelected(localActualItem);
 
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
-            rendererContext.AddOnClickEvent(() =>
-                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.ToggleRowItem(localActualItem);
                     rendererContext.RequestRerenderNotification?.Invoke();

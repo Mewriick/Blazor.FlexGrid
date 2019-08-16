@@ -43,7 +43,7 @@ namespace Blazor.FlexGrid.Components.Renderers.CreateItemForm
                 .AddAttribute(nameof(EditContext), createItemRendererContext.ViewModel.EditContext)
                 .AddAttribute("OnValidSubmit", eventCallbackFactory.Create<EditContext>(this,
                     context => createItemRendererContext.ViewModel.SaveAction.Invoke(createItemRendererContext.ViewModel.Model)))
-                .AddAttribute(RenderTreeBuilder.ChildContent, formBody)
+                .AddAttribute(BlazorRendererTreeBuilder.ChildContent, formBody)
                 .CloseComponent();
 
             createItemRendererContext.ViewModel.ValidateModel();

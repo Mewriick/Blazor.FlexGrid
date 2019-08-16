@@ -38,19 +38,19 @@ namespace Blazor.FlexGrid.Components
 
         [Inject] ConventionsSet ConventionsSet { get; set; }
 
-        [Parameter] ITableDataAdapter DataAdapter { get; set; }
+        [Parameter] public ITableDataAdapter DataAdapter { get; set; }
 
-        [Parameter] ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+        [Parameter] public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
-        [Parameter] int PageSize { get; set; }
+        [Parameter] public int PageSize { get; set; }
 
-        [Parameter] Action<SaveResultArgs> SaveOperationFinished { get; set; }
+        [Parameter] public Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
-        [Parameter] Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
+        [Parameter] public Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
 
-        [Parameter] Action<ItemCreatedArgs> NewItemCreated { get; set; }
+        [Parameter] public Action<ItemCreatedArgs> NewItemCreated { get; set; }
 
-        [Parameter] Action<ItemClickedArgs> OnItemClicked { get; set; }
+        [Parameter] public Action<ItemClickedArgs> OnItemClicked { get; set; }
 
         public GridViewInternal()
             : this(DefaultFeatureCollection.AllFeatures)
@@ -80,7 +80,7 @@ namespace Blazor.FlexGrid.Components
                 internalRendererTreeBuilder
                     .OpenComponent(typeof(GridViewTable))
                     .AddAttribute(nameof(ImutableGridRendererContext), gridRenderingContexts.ImutableRendererContext)
-                    .AddAttribute(RenderTreeBuilder.ChildContent, tableFragment)
+                    .AddAttribute(BlazorRendererTreeBuilder.ChildContent, tableFragment)
                     .CloseComponent();
 
                 if (gridRenderingContexts.ImutableRendererContext.CreateItemIsAllowed() &&
@@ -100,11 +100,11 @@ namespace Blazor.FlexGrid.Components
                 .OpenComponent(typeof(CascadingValue<FlexGridContext>))
                     .AddAttribute("IsFixed", true)
                     .AddAttribute("Value", fixedFlexGridContext)
-                    .AddAttribute(nameof(RenderTreeBuilder.ChildContent), flexGridFragment)
+                    .AddAttribute(nameof(BlazorRendererTreeBuilder.ChildContent), flexGridFragment)
                     .CloseComponent();
         }
 
-        protected override async Task OnInitAsync()
+        protected override async Task OnInitializedAsync()
         {
             fixedFlexGridContext = CreateFlexGridContext();
 
@@ -114,8 +114,12 @@ namespace Blazor.FlexGrid.Components
             }
 
             tableDataSet = GetTableDataSet();
-
             await tableDataSet.GoToPage(0);
+
+            if (DataAdapter != null)
+            {
+                fixedFlexGridContext.FirstPageLoaded = true;
+            }
         }
 
         protected override async Task OnParametersSetAsync()
@@ -125,8 +129,9 @@ namespace Blazor.FlexGrid.Components
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 tableDataSet = GetTableDataSet();
-
                 await tableDataSet.GoToPage(0);
+
+                fixedFlexGridContext.FirstPageLoaded = true;
             }
         }
 

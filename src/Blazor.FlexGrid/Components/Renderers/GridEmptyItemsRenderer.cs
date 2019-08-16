@@ -10,7 +10,25 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)
         {
-            if (!rendererContext.TableDataSet.FilterIsApplied)
+            if (rendererContext.TableDataSet.FilterIsApplied)
+            {
+                rendererContext.OpenElement(HtmlTagNames.TableRow);
+                rendererContext.OpenElement(HtmlTagNames.TableColumn);
+                rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
+                rendererContext.OpenElement(HtmlTagNames.Div, "table-info-text");
+                rendererContext.OpenElement(HtmlTagNames.Span);
+                rendererContext.OpenElement(HtmlTagNames.I, "fas fa-search");
+                rendererContext.CloseElement();
+                rendererContext.CloseElement();
+                rendererContext.AddMarkupContent("\t No matching items found");
+                rendererContext.CloseElement();
+                rendererContext.CloseElement();
+                rendererContext.CloseElement();
+
+                return;
+            }
+
+            if (!rendererContext.FlexGridContext.FirstPageLoaded)
             {
                 rendererContext.OpenElement(HtmlTagNames.Div, "table-info-text table-info-text-small");
                 rendererContext.AddContent("Loading...");
@@ -20,13 +38,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             {
                 rendererContext.OpenElement(HtmlTagNames.TableRow);
                 rendererContext.OpenElement(HtmlTagNames.TableColumn);
-                rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.GridItemProperties.Count);
+                rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
                 rendererContext.OpenElement(HtmlTagNames.Div, "table-info-text");
-                rendererContext.OpenElement(HtmlTagNames.Span);
-                rendererContext.OpenElement(HtmlTagNames.I, "fas fa-search");
-                rendererContext.CloseElement();
-                rendererContext.CloseElement();
-                rendererContext.AddMarkupContent("\t No matching items found");
+                rendererContext.AddEmptyItemsMessage();
                 rendererContext.CloseElement();
                 rendererContext.CloseElement();
                 rendererContext.CloseElement();

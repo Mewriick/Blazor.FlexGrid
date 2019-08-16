@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Components
         [Inject]
         private FlexGridInterop FlexGridInterop { get; set; }
 
-        [Parameter] CreateItemContext CreateItemContext { get; set; }
+        [Parameter] public CreateItemContext CreateItemContext { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

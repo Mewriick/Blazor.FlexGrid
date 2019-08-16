@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Components.Filters
 
         [CascadingParameter] FlexGridContext CascadeFlexGridContext { get; set; }
 
-        [Parameter] string ColumnName { get; set; }
+        [Parameter] public string ColumnName { get; set; }
 
         static ColumnFilter()
         {
@@ -98,7 +98,7 @@ namespace Blazor.FlexGrid.Components.Filters
             rendererBuilder
                 .OpenElement(HtmlTagNames.Button, filterIsApplied ? "action-button action-button-small action-button-filter-active" : "action-button action-button-small")
                 .AddAttribute(HtmlJSEvents.OnClick,
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                     {
                         filterDefinitionOpened = !filterDefinitionOpened;
                     })
@@ -131,8 +131,8 @@ namespace Blazor.FlexGrid.Components.Filters
             {
                 rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
                 rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
-                    .AddOnClickEvent(() =>
-                        BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                    .AddAttribute(HtmlJSEvents.OnClick,
+                        EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                         {
                             ClearFilter();
                         })
@@ -145,9 +145,9 @@ namespace Blazor.FlexGrid.Components.Filters
             rendererBuilder.CloseElement();
         }
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
-            base.OnInit();
+            base.OnInitialized();
 
             filterContext = CascadeFlexGridContext.FilterContext;
         }
@@ -211,11 +211,12 @@ namespace Blazor.FlexGrid.Components.Filters
                 rendererBuilder
                     .OpenElement(HtmlTagNames.Input, "edit-text-field edit-date-field-filter")
                     .AddAttribute(HtmlAttributes.Type, HtmlAttributes.TypeDate)
-                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(FormatDateAsString(actualFilterValue)))
-                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
-                    {
-                        FilterValueChanged(__value);
-                    }, FormatDateAsString(actualFilterValue)))
+                    .AddAttribute(HtmlAttributes.Value, FormatDateAsString(actualFilterValue))
+                    .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                        (UIChangeEventArgs e) =>
+                        {
+                            FilterValueChanged(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
+                        }))
                     .CloseElement();
 
                 return;
@@ -223,11 +224,12 @@ namespace Blazor.FlexGrid.Components.Filters
 
             rendererBuilder
                 .OpenElement(HtmlTagNames.Input, "edit-text-field edit-text-field-filter")
-                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(filterIsApplied ? actualFilterValue.ToString() : string.Empty))
-                .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
-                {
-                    FilterValueChanged(__value);
-                }, actualFilterValue?.ToString() ?? string.Empty))
+                .AddAttribute(HtmlAttributes.Value, filterIsApplied ? actualFilterValue.ToString() : string.Empty)
+                .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) =>
+                    {
+                        FilterValueChanged(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
+                    }))
                 .CloseElement();
         }
 
@@ -237,11 +239,12 @@ namespace Blazor.FlexGrid.Components.Filters
                 .OpenElement(HtmlTagNames.Label, "switch")
                 .OpenElement(HtmlTagNames.Input)
                 .AddAttribute(HtmlAttributes.Type, HtmlAttributes.Checkbox)
-                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(actualFilterValue))
-                .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (bool __value)
-                {
-                    FilterBoolValueChanged(__value);
-                }, (bool)(object)actualFilterValue))
+                .AddAttribute(HtmlAttributes.Value, actualFilterValue)
+                .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) =>
+                    {
+                        FilterBoolValueChanged(BindConverterExtensions.ConvertTo(e.Value, false));
+                    }))
                 .CloseElement()
                 .OpenElement(HtmlTagNames.Span, "slider round")
                 .CloseElement()
@@ -252,15 +255,16 @@ namespace Blazor.FlexGrid.Components.Filters
         {
             rendererBuilder
                     .OpenElement(HtmlTagNames.Select)
-                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
-                    {
-                        selectedFilterOperation = (FilterOperation)__value;
-                        if (filterIsApplied)
+                    .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                        (UIChangeEventArgs e) =>
                         {
-                            filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
-                        }
+                            selectedFilterOperation = (FilterOperation)BindConverterExtensions.ConvertTo(e.Value, 1);
+                            if (filterIsApplied)
+                            {
+                                filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+                            }
 
-                    }, (int)selectedFilterOperation));
+                        }));
 
             foreach (var enumValue in Enum.GetValues(typeof(FilterOperation)))
             {

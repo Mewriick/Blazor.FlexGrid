@@ -104,8 +104,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddHeaderStyle(string style)
             => RendererTreeBuilder.AddAttribute(HtmlAttributes.Style, style);
 
-        public void AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
-            => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
+        public void AddOnClickEvent(EventCallback<UIMouseEventArgs> onClickBindMethod)
+            => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod);
 
         public void AddOnChangeEvent(Func<MulticastDelegate> onClickBindMethod)
             => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, onClickBindMethod());
@@ -177,6 +177,9 @@ namespace Blazor.FlexGrid.Components.Renderers
             RendererTreeBuilder.AddContent(string.Empty);
         }
 
+        public void AddEmptyItemsMessage()
+            => AddMarkupContent($"\t {GridConfiguration.EmptyItemsMessage}");
+
         public void OpenElement(string elementName, string className, string style = null)
         {
             OpenElement(elementName);
@@ -201,10 +204,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             }
 
             var masterDetailRelationship = GridConfiguration.FindRelationshipConfiguration(tableDataAdapter.UnderlyingTypeOfItem);
-            var pageSize = RuntimeHelpers.TypeCheck(masterDetailRelationship.DetailGridViewPageSize(TableDataSet));
+            var pageSize = masterDetailRelationship.DetailGridViewPageSize(TableDataSet);
 
             RendererTreeBuilder.OpenComponent(typeof(GridViewGeneric<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
-            RendererTreeBuilder.AddAttribute("DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            RendererTreeBuilder.AddAttribute("DataAdapter", tableDataAdapter);
             RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), pageSize);
 
             RendererTreeBuilder.AddAttribute(
@@ -223,7 +226,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddGridViewComponent(ITableDataAdapter tableDataAdapter)
         {
             RendererTreeBuilder.OpenComponent(typeof(GridViewGroup<>).MakeGenericType(tableDataAdapter.UnderlyingTypeOfItem));
-            RendererTreeBuilder.AddAttribute("DataAdapter", RuntimeHelpers.TypeCheck(tableDataAdapter));
+            RendererTreeBuilder.AddAttribute("DataAdapter", tableDataAdapter);
             RendererTreeBuilder.AddAttribute(nameof(ITableDataSet.PageableOptions.PageSize), GridConfiguration.GroupingOptions.GroupPageSize);
             RendererTreeBuilder.CloseComponent();
         }
@@ -251,28 +254,28 @@ namespace Blazor.FlexGrid.Components.Renderers
             {
                 RendererTreeBuilder.AddAttribute(
                     nameof(ITableDataSet.GridViewEvents.SaveOperationFinished),
-                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.SaveOperationFinished));
+                    TableDataSet.GridViewEvents.SaveOperationFinished);
             }
 
             if (TableDataSet.GridViewEvents.NewItemCreated != null)
             {
                 RendererTreeBuilder.AddAttribute(
                     nameof(ITableDataSet.GridViewEvents.NewItemCreated),
-                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.NewItemCreated));
+                    TableDataSet.GridViewEvents.NewItemCreated);
             }
 
             if (TableDataSet.GridViewEvents.OnItemClicked != null)
             {
                 RendererTreeBuilder.AddAttribute(
                     nameof(ITableDataSet.GridViewEvents.OnItemClicked),
-                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.OnItemClicked));
+                    TableDataSet.GridViewEvents.OnItemClicked);
             }
 
             if (TableDataSet.GridViewEvents.DeleteOperationFinished != null)
             {
                 RendererTreeBuilder.AddAttribute(
                     nameof(ITableDataSet.GridViewEvents.DeleteOperationFinished),
-                    RuntimeHelpers.TypeCheck(TableDataSet.GridViewEvents.DeleteOperationFinished));
+                    TableDataSet.GridViewEvents.DeleteOperationFinished);
             }
         }
     }
