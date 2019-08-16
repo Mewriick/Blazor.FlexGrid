@@ -12,7 +12,7 @@ GridView component for Blazor
 > Http client urls cannot started with "/" more info [here](https://github.com/Mewriick/Blazor.FlexGrid/releases/tag/release%2F0.8.1)
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.8.6-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.8.7-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
