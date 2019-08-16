@@ -27,8 +27,8 @@ namespace Blazor.FlexGrid.Components.Renderers.FormInputs
                     .OpenElement(HtmlTagNames.Div, "checkbox")
                     .OpenElement(HtmlTagNames.Label)
                     .OpenComponent(typeof(InputCheckbox))
-                    .AddAttribute("Id", $"create-form-{localColumnName}")
-                    .AddAttribute("Class", string.Empty)
+                    .AddAttribute("id", $"create-form-{localColumnName}")
+                    .AddAttribute("class", string.Empty)
                     .AddAttribute("Value", value)
                     .AddAttribute("ValueExpression", valueExpression);
 

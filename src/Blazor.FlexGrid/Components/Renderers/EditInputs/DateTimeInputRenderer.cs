@@ -19,11 +19,12 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                     .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                     .OpenElement(HtmlTagNames.Input, "edit-text-field")
                     .AddAttribute(HtmlAttributes.Type, dateValueContatinsTime ? "datetime-local" : "date")
-                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(dateTimeValue, dateFormat))
-                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (DateTime __value)
+                    .AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(dateTimeValue, dateFormat))
+                    .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                        (UIChangeEventArgs e) =>
                         {
-                            onChangeAction?.Invoke(localColumnName, __value);
-                        }, dateTimeValue, dateFormat))
+                            onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, DateTime.MinValue));
+                        }))
                     .CloseElement()
                     .CloseElement();
             }

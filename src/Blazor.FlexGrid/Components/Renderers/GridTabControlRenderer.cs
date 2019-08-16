@@ -88,8 +88,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Button,
                 selectedDataAdapter.IsForSameUnderlyingType(dataAdapter) ? "tabs-button tabs-button-active" : "tabs-button");
 
-            rendererContext.AddOnClickEvent(() =>
-                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                 {
                     masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, localActualItem));
                     rendererContext.RequestRerenderNotification?.Invoke();

@@ -9,7 +9,7 @@
         modal.parentNode.insertBefore(fadeDiv, modal.nextSibling);
 
         document.body.className = "modal-open";
-        this.flexGrid.showedModal.name = modalName;
+        window.flexGrid.showedModal.name = modalName;
 
         return true;
     },

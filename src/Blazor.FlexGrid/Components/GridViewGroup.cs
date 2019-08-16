@@ -17,9 +17,9 @@ namespace Blazor.FlexGrid.Components
         {
         }
 
-        protected override Task OnInitAsync()
+        protected override Task OnInitializedAsync()
         {
-            return base.OnInitAsync();
+            return base.OnInitializedAsync();
         }
 
         protected override async Task OnParametersSetAsync()

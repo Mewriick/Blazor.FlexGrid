@@ -16,12 +16,13 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 rendererTreeBuilder
                     .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                     .OpenElement(HtmlTagNames.Select, "edit-text-field")
-                    .AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (string __value)
+                    .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                        (UIChangeEventArgs e) =>
                         {
-                            var parsedValue = Enum.Parse(value.GetType(), __value);
+                            var parsedValue = Enum.Parse(value.GetType(), e.Value.ToString());
                             onChangeAction?.Invoke(localColumnName, parsedValue);
-                        }, value?.ToString() ?? string.Empty)
-                    );
+                        }
+                    ));
 
                 foreach (var enumValue in Enum.GetValues(enumTypeValue.GetType()))
                 {

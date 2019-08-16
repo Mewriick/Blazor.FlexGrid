@@ -137,5 +137,17 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public virtual EntityTypeBuilder<TEntity> HasEmptyItemsMessage(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            Builder.HasEmptyItemsMessage(message);
+
+            return this;
+        }
     }
 }

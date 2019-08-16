@@ -110,6 +110,19 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public string EmptyItemsMessage
+        {
+            get
+            {
+                var emptyItemsMessage = annotations[GridViewAnnotationNames.EmptyItemsMessage];
+                if (emptyItemsMessage is NullAnotationValue)
+                {
+                    return "No data to show here ...";
+                }
+
+                return emptyItemsMessage.ToString();
+            }
+        }
 
         public GridAnotations(IEntityType entityType)
         {

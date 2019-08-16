@@ -1,5 +1,4 @@
-﻿using Blazor.FlexGrid.DataSet.Options;
-using System;
+﻿using System;
 
 namespace Blazor.FlexGrid.Components.Configuration.MetaData
 {
@@ -8,13 +7,15 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         bool IsMasterTable { get; }
 
         bool OnlyShowExplicitProperties { get; }
-        
+
+        string EmptyItemsMessage { get; }
+
         InlineEditOptions InlineEditOptions { get; }
 
         MasterDetailOptions MasterDetailOptions { get; }
 
         CreateItemOptions CreateItemOptions { get; }
-        
+
         GridCssClasses CssClasses { get; }
 
         GlobalGroupingOptions GroupingOptions { get; }

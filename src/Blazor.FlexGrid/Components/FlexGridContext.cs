@@ -14,6 +14,8 @@ namespace Blazor.FlexGrid.Components
 
         public IFeatureCollection Features { get; }
 
+        public bool FirstPageLoaded { get; set; }
+
         public FlexGridContext(FilterContext filterContext, IFeatureCollection features)
         {
             FilterContext = filterContext ?? throw new ArgumentNullException(nameof(filterContext));

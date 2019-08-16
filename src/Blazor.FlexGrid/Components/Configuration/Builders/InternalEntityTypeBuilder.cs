@@ -77,6 +77,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         public bool AllowCreateItem(CreateItemOptions createItemOptions)
             => HasAnnotation(GridViewAnnotationNames.CreateItemOptions, createItemOptions);
 
-
+        public bool HasEmptyItemsMessage(string message)
+            => HasAnnotation(GridViewAnnotationNames.EmptyItemsMessage, message);
     }
 }

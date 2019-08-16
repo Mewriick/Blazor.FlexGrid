@@ -19,7 +19,7 @@
     CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
     MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         var customers = await Http.GetJsonAsync<Customer[]>("api/Customer/Customers");
         var customersAddresses = await Http.GetJsonAsync<CustomerAddress[]>("api/Customer/CustomersAddresses");

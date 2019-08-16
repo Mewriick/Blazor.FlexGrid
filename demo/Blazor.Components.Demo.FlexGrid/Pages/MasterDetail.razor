@@ -16,7 +16,7 @@
     CollectionTableDataAdapter<CustomerAddress> customerAddressesDataAdapter;
     MasterTableDataAdapter<Customer> customersMasterDataAdapter;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         var customers = CustomerService.Customers();
         var customersAddresses = CustomerService.CustomersAddresses();

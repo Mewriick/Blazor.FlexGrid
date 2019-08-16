@@ -50,10 +50,10 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Div, rendererContext.CssClasses.FooterCssClasses.GroupingPartWrapper);
             rendererContext.OpenElement(HtmlTagNames.Select, "group-select");
             rendererContext.AddAttribute(HtmlAttributes.Id, GroupingSelectId);
-            rendererContext.AddOnChangeEvent(() =>
-                BindMethods.GetEventHandlerValue(async (UIChangeEventArgs e) =>
+            rendererContext.AddAttribute(HtmlJSEvents.OnChange,
+                EventCallback.Factory.Create(this, async (UIChangeEventArgs e) =>
                 {
-                    rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(e.Value.ToString());
+                    rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
                     await rendererContext.TableDataSet.GoToPage(0);
                     rendererContext.RequestRerenderNotification?.Invoke();
                 })
@@ -87,8 +87,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             if (rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
             {
                 rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
-                rendererContext.AddOnClickEvent(() =>
-                    BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+                rendererContext.AddOnClickEvent(
+                    EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                     {
                         rendererContext.TableDataSet.GroupingOptions.DeactivateGrouping();
                         rendererContext.RequestRerenderNotification?.Invoke();
@@ -109,8 +109,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                 ? rendererContext.CssClasses.FooterCssClasses.PaginationButton
                 : rendererContext.CssClasses.FooterCssClasses.PaginationButtonDisabled);
             rendererContext.AddDisabled(disabled);
-            rendererContext.AddOnClickEvent(() =>
-                BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, async (UIMouseEventArgs e) =>
                 {
                     await GetPaginationTask(rendererContext, buttonType);
                     rendererContext.RequestRerenderNotification?.Invoke();

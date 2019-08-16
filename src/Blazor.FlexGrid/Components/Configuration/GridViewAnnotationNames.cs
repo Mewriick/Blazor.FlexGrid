@@ -15,6 +15,7 @@
         public const string MasterDetailOptions = "MasterDetailOptions";
         public const string OnlyShowExplicitProperties = "OnlyShowExplicitProperties";
         public const string GroupingOptions = "GroupingOptions";
+        public const string EmptyItemsMessage = "EmptyItemsMessage";
 
         public const string ColumnHeaderStyle = "GridColumnHeaderStyle";
         public const string ColumnCaption = "GridColumnCaption";

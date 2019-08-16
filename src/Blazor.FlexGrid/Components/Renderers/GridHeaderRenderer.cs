@@ -93,8 +93,8 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.Span,
                 rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
-            rendererContext.AddOnClickEvent(() =>
-                BindMethods.GetEventHandlerValue(async (UIMouseEventArgs e) =>
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, async (UIMouseEventArgs e) =>
                 {
                     await rendererContext.TableDataSet.SetSortExpression(property.Name);
                     rendererContext.RequestRerenderNotification?.Invoke();
@@ -128,8 +128,8 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Div, "create-button-wrapper");
 
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
-            rendererContext.AddOnClickEvent(() =>
-                BindMethods.GetEventHandlerValue((UIMouseEventArgs e) =>
+            rendererContext.AddOnClickEvent(
+                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
                     flexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))
             );
 

@@ -17,12 +17,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                 .OpenElement(HtmlTagNames.Input, "edit-text-field")
                 .AddAttribute(HtmlAttributes.Type, GetInputType(value?.ToString() ?? InputTypeText))
-                .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value))
-                .AddAttribute(HtmlJSEvents.OnChange,
-                    BindMethods.SetValueHandler(delegate (string __value)
-                    {
-                        onChangeAction?.Invoke(localColumnName, __value);
-                    }, value?.ToString() ?? string.Empty)
+                .AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(value))
+                .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, string.Empty)))
                 )
                 .CloseElement()
                 .CloseElement();

@@ -6,6 +6,8 @@ namespace Blazor.FlexGrid.Components.Renderers
 {
     public class BlazorRendererTreeBuilder : IRendererTreeBuilder
     {
+        public const string ChildContent = "ChildContent";
+
         private readonly RenderTreeBuilder renderTreeBuilder;
         private int sequence = 0;
 
@@ -73,13 +75,6 @@ namespace Blazor.FlexGrid.Components.Renderers
         public IRendererTreeBuilder AddContent(MarkupString markupContent)
         {
             renderTreeBuilder.AddContent(++sequence, markupContent);
-
-            return this;
-        }
-
-        public IRendererTreeBuilder AddOnClickEvent(Func<MulticastDelegate> onClickBindMethod)
-        {
-            AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod());
 
             return this;
         }

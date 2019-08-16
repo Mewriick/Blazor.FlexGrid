@@ -14,8 +14,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 rendererTreeBuilder
                     .OpenElement(HtmlTagNames.Div, "edit-field-wrapper")
                     .OpenElement(HtmlTagNames.Input, "edit-text-field")
-                    .AddAttribute(HtmlAttributes.Type, "number")
-                    .AddAttribute(HtmlAttributes.Value, BindMethods.GetValue(value));
+                    .AddAttribute(HtmlAttributes.Type, "number");
 
                 TryAddOnChangeHandler(rendererTreeBuilder, onChangeAction, localColumnName, value);
 
@@ -36,12 +35,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is int intValue)
             {
-                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (int __value)
-                    {
-                        onChangeAction?.Invoke(localColumnName, __value);
-                    }, intValue)
-                );
-
+                rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(intValue));
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0))));
             }
             else
             {
@@ -53,11 +49,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is long longValue)
             {
-                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (long __value)
-                    {
-                        onChangeAction?.Invoke(localColumnName, __value);
-                    }, longValue)
-                );
+                rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(longValue));
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0L))));
             }
             else
             {
@@ -69,12 +63,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is decimal decimalValue)
             {
-                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (decimal __value)
-                    {
-                        onChangeAction?.Invoke(localColumnName, __value);
-                    }, decimalValue)
-                );
-
+                rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(decimalValue));
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0m))));
             }
             else
             {
@@ -86,11 +77,9 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
         {
             if (value is double doubleValue)
             {
-                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, BindMethods.SetValueHandler(delegate (double __value)
-                    {
-                        onChangeAction?.Invoke(localColumnName, __value);
-                    }, doubleValue)
-                );
+                rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(doubleValue));
+                rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
+                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0d))));
             }
         }
     }
