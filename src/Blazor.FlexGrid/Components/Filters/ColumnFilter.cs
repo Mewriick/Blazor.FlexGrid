@@ -1,7 +1,8 @@
 ﻿using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Filters;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -98,7 +99,7 @@ namespace Blazor.FlexGrid.Components.Filters
             rendererBuilder
                 .OpenElement(HtmlTagNames.Button, filterIsApplied ? "action-button action-button-small action-button-filter-active" : "action-button action-button-small")
                 .AddAttribute(HtmlJSEvents.OnClick,
-                    EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                    EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     {
                         filterDefinitionOpened = !filterDefinitionOpened;
                     })
@@ -130,9 +131,9 @@ namespace Blazor.FlexGrid.Components.Filters
             if (parser != TryParseBool)
             {
                 rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
-                rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
+                _ = rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
                     .AddAttribute(HtmlJSEvents.OnClick,
-                        EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                        EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                         {
                             ClearFilter();
                         })
@@ -208,12 +209,12 @@ namespace Blazor.FlexGrid.Components.Filters
         {
             if (parser == TryParseDateTime || parser == TryParseDateTimeOffset)
             {
-                rendererBuilder
+                _ = rendererBuilder
                     .OpenElement(HtmlTagNames.Input, "edit-text-field edit-date-field-filter")
                     .AddAttribute(HtmlAttributes.Type, HtmlAttributes.TypeDate)
                     .AddAttribute(HtmlAttributes.Value, FormatDateAsString(actualFilterValue))
                     .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                        (UIChangeEventArgs e) =>
+                        (ChangeEventArgs e) =>
                         {
                             FilterValueChanged(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
                         }))
@@ -226,7 +227,7 @@ namespace Blazor.FlexGrid.Components.Filters
                 .OpenElement(HtmlTagNames.Input, "edit-text-field edit-text-field-filter")
                 .AddAttribute(HtmlAttributes.Value, filterIsApplied ? actualFilterValue.ToString() : string.Empty)
                 .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) =>
+                    (ChangeEventArgs e) =>
                     {
                         FilterValueChanged(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
                     }))
@@ -241,7 +242,7 @@ namespace Blazor.FlexGrid.Components.Filters
                 .AddAttribute(HtmlAttributes.Type, HtmlAttributes.Checkbox)
                 .AddAttribute(HtmlAttributes.Value, actualFilterValue)
                 .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) =>
+                    (ChangeEventArgs e) =>
                     {
                         FilterBoolValueChanged(BindConverterExtensions.ConvertTo(e.Value, false));
                     }))
@@ -256,7 +257,7 @@ namespace Blazor.FlexGrid.Components.Filters
             rendererBuilder
                     .OpenElement(HtmlTagNames.Select)
                     .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                        (UIChangeEventArgs e) =>
+                        (ChangeEventArgs e) =>
                         {
                             selectedFilterOperation = (FilterOperation)BindConverterExtensions.ConvertTo(e.Value, 1);
                             if (filterIsApplied)

@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                 .AddAttribute(HtmlAttributes.Type, GetInputType(value?.ToString() ?? InputTypeText))
                 .AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(value))
                 .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, string.Empty)))
+                    (ChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, string.Empty)))
                 )
                 .CloseElement()
                 .CloseElement();

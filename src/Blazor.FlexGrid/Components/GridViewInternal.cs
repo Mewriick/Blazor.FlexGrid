@@ -10,6 +10,7 @@ using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;

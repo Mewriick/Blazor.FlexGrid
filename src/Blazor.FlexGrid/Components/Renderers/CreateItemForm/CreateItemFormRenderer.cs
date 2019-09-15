@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Components.Renderers.FormInputs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 

@@ -8,6 +8,7 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +105,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddHeaderStyle(string style)
             => RendererTreeBuilder.AddAttribute(HtmlAttributes.Style, style);
 
-        public void AddOnClickEvent(EventCallback<UIMouseEventArgs> onClickBindMethod)
+        public void AddOnClickEvent(EventCallback<MouseEventArgs> onClickBindMethod)
             => RendererTreeBuilder.AddAttribute(HtmlJSEvents.OnClick, onClickBindMethod);
 
         public void AddOnChangeEvent(Func<MulticastDelegate> onClickBindMethod)
@@ -193,7 +194,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         public void AddAttribute(string name, object value)
             => RendererTreeBuilder.AddAttribute(name, value);
 
-        public void AddAttribute(string name, Action<UIEventArgs> value)
+        public void AddAttribute(string name, Action<ChangeEventArgs> value)
             => RendererTreeBuilder.AddAttribute(name, value);
 
         public void AddDetailGridViewComponent(ITableDataAdapter tableDataAdapter)

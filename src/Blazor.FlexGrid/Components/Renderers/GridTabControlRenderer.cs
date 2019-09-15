@@ -4,6 +4,7 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -89,7 +90,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 selectedDataAdapter.IsForSameUnderlyingType(dataAdapter) ? "tabs-button tabs-button-active" : "tabs-button");
 
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     masterTableDataSet.SelectDataAdapter(new MasterDetailRowArguments(dataAdapter, localActualItem));
                     rendererContext.RequestRerenderNotification?.Invoke();

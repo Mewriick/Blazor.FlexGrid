@@ -22,7 +22,7 @@
 @{
     Func<EditColumnContext, RenderFragment<WeatherForecast>> editWeatherSummary = context =>
     {
-        RenderFragment<WeatherForecast> editFragment = (weather) => @<input value=@weather.Summary @onchange=@((UIChangeEventArgs e) => context.NotifyValueHasChanged(e.Value)) />;
+        RenderFragment<WeatherForecast> editFragment = (weather) => @<input value=@weather.Summary @onchange=@((ChangeEventArgs e) => context.NotifyValueHasChanged(e.Value)) />;
 
 
 return editFragment;

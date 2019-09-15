@@ -4,6 +4,7 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Reflection;
 
@@ -94,7 +95,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Span,
                 rendererContext.SortingByActualColumnName ? "table-cell-head-sortable table-cell-head-sortable-active" : "table-cell-head-sortable");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, async (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, async (MouseEventArgs e) =>
                 {
                     await rendererContext.TableDataSet.SetSortExpression(property.Name);
                     rendererContext.RequestRerenderNotification?.Invoke();
@@ -129,7 +130,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     flexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))
             );
 

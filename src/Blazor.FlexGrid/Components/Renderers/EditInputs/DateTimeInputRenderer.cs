@@ -21,7 +21,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
                     .AddAttribute(HtmlAttributes.Type, dateValueContatinsTime ? "datetime-local" : "date")
                     .AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(dateTimeValue, dateFormat))
                     .AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                        (UIChangeEventArgs e) =>
+                        (ChangeEventArgs e) =>
                         {
                             onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, DateTime.MinValue));
                         }))

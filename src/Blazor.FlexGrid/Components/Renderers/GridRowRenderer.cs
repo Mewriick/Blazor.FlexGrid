@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -17,7 +18,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             var localActualItem = rendererContext.ActualItem;
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet
                          .GridViewEvents

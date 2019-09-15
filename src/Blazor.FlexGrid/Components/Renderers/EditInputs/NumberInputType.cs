@@ -37,7 +37,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             {
                 rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(intValue));
                 rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0))));
+                    (ChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0))));
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             {
                 rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(longValue));
                 rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0L))));
+                    (ChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0L))));
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             {
                 rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(decimalValue));
                 rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0m))));
+                    (ChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0m))));
             }
             else
             {
@@ -79,7 +79,7 @@ namespace Blazor.FlexGrid.Components.Renderers.EditInputs
             {
                 rendererTreeBuilder.AddAttribute(HtmlAttributes.Value, BindConverter.FormatValue(doubleValue));
                 rendererTreeBuilder.AddAttribute(HtmlJSEvents.OnChange, EventCallback.Factory.Create(this,
-                    (UIChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0d))));
+                    (ChangeEventArgs e) => onChangeAction?.Invoke(localColumnName, BindConverterExtensions.ConvertTo(e.Value, 0d))));
             }
         }
     }

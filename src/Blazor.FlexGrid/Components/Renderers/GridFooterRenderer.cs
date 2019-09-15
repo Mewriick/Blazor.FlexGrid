@@ -2,6 +2,7 @@
 using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -51,7 +52,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.Select, "group-select");
             rendererContext.AddAttribute(HtmlAttributes.Id, GroupingSelectId);
             rendererContext.AddAttribute(HtmlJSEvents.OnChange,
-                EventCallback.Factory.Create(this, async (UIChangeEventArgs e) =>
+                EventCallback.Factory.Create(this, async (ChangeEventArgs e) =>
                 {
                     rendererContext.TableDataSet.GroupingOptions.SetGroupedProperty(BindConverterExtensions.ConvertTo(e.Value, string.Empty));
                     await rendererContext.TableDataSet.GoToPage(0);
@@ -88,7 +89,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             {
                 rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
                 rendererContext.AddOnClickEvent(
-                    EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                    EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     {
                         rendererContext.TableDataSet.GroupingOptions.DeactivateGrouping();
                         rendererContext.RequestRerenderNotification?.Invoke();
@@ -110,7 +111,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 : rendererContext.CssClasses.FooterCssClasses.PaginationButtonDisabled);
             rendererContext.AddDisabled(disabled);
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, async (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, async (MouseEventArgs e) =>
                 {
                     await GetPaginationTask(rendererContext, buttonType);
                     rendererContext.RequestRerenderNotification?.Invoke();

@@ -19,7 +19,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         IRendererTreeBuilder AddAttribute(string name, Func<MulticastDelegate> value);
 
-        IRendererTreeBuilder AddAttribute(string name, Action<UIEventArgs> value);
+        IRendererTreeBuilder AddAttribute(string name, Action<ChangeEventArgs> value);
 
         IRendererTreeBuilder AddContent(string textContent);
 

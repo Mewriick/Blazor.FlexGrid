@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
@@ -44,7 +44,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             return this;
         }
 
-        public IRendererTreeBuilder AddAttribute(string name, Action<UIEventArgs> value)
+        public IRendererTreeBuilder AddAttribute(string name, Action<ChangeEventArgs> value)
         {
             renderTreeBuilder.AddAttribute(++sequence, name, value);
 

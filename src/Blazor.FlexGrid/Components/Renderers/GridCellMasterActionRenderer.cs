@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -12,7 +13,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableCell);
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.ToggleRowItem(localActualItem);
                     rendererContext.RequestRerenderNotification?.Invoke();

@@ -3,6 +3,7 @@ using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -36,7 +37,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                         rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
                         rendererContext.OpenElement(HtmlTagNames.Button, "pagination-button");
                         rendererContext.AddOnClickEvent(
-                            EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                            EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                             {
                                 rendererContext.TableDataSet.ToggleGroupRow(group.Key);
                                 rendererContext.RequestRerenderNotification?.Invoke();

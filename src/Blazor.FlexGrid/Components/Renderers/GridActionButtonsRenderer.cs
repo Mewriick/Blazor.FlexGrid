@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
@@ -36,7 +37,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.StartEditItem(localActualItem);
                     rendererContext.RequestRerenderNotification?.Invoke();
@@ -54,7 +55,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.SaveItem(rendererContext.PropertyValueAccessor);
                     rendererContext.RequestRerenderNotification?.Invoke();
@@ -80,7 +81,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.DeleteItem(localActualItem);
                     rendererContext.RequestRerenderNotification?.Invoke();
@@ -98,7 +99,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
             rendererContext.AddOnClickEvent(
-                EventCallback.Factory.Create(this, (UIMouseEventArgs e) =>
+                EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
                     rendererContext.TableDataSet.CancelEditation();
                     rendererContext.RequestRerenderNotification?.Invoke();

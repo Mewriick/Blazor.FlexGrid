@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.Components.Renderers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
 
 namespace Blazor.FlexGrid.Components

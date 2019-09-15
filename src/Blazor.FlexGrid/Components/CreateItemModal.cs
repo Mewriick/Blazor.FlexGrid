@@ -3,7 +3,8 @@ using Blazor.FlexGrid.Components.Events;
 using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 
 namespace Blazor.FlexGrid.Components
@@ -49,7 +50,7 @@ namespace Blazor.FlexGrid.Components
                 .AddContent("Create Item")
                 .CloseElement()
                 .OpenElement(HtmlTagNames.Button, "close")
-                .AddAttribute(HtmlJSEvents.OnClick, EventCallback.Factory.Create(this, (UIMouseEventArgs e) => FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)))
+                .AddAttribute(HtmlJSEvents.OnClick, EventCallback.Factory.Create(this, (MouseEventArgs e) => FlexGridInterop.HideModal(CreateItemOptions.CreateItemModalName)))
                 .AddAttribute(HtmlAttributes.Type, "button")
                 .AddAttribute("data-dismiss", "modal")
                 .AddAttribute("aria-label", "Close")

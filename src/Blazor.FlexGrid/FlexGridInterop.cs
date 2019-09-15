@@ -13,17 +13,17 @@ namespace Blazor.FlexGrid
             this.jSRuntime = jSRuntime ?? throw new ArgumentNullException(nameof(jSRuntime));
         }
 
-        public Task<bool> ShowModal(string modalName)
+        public ValueTask<bool> ShowModal(string modalName)
         {
             return jSRuntime.InvokeAsync<bool>("flexGrid.showModal", modalName);
         }
 
-        public Task<bool> HideModal(string modalName)
+        public ValueTask<bool> HideModal(string modalName)
         {
             return jSRuntime.InvokeAsync<bool>("flexGrid.hideModal", modalName);
         }
 
-        public Task<bool> AppendCssClass(string elementName, string cssClass)
+        public ValueTask<bool> AppendCssClass(string elementName, string cssClass)
         {
             return jSRuntime.InvokeAsync<bool>("flexGrid.appendCssClass", elementName, cssClass);
         }
