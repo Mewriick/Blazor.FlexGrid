@@ -34,6 +34,7 @@ namespace Blazor.FlexGrid.Demo.Server
             }
 
             app.UseClientSideBlazorFiles<Client.Startup>();
+            app.UseStaticFiles();
 
             app.UseRouting();
 

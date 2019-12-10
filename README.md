@@ -8,11 +8,21 @@ GridView component for Blazor
 ## IMPORTANT!
 **Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
 
-**Breaking change after support .NET Core 3.0 Preview 6**
-> Http client urls cannot started with "/" more info [here](https://github.com/Mewriick/Blazor.FlexGrid/releases/tag/release%2F0.8.1)
+**Breaking change after support .NET Core 3.1 Preview 1**
+> In Blazor WASM you have to manually add into index.html links to the css and js FlexGrid files
+```cs
+<link href="_content/Blazor.FlexGrid/FlexGridStyles.css" rel="stylesheet" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/fontawesome.css" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/all.css" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/regular.css" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/solid.css" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/svg-with-js.css" />
+<link rel="stylesheet" href="_content/Blazor.FlexGrid/fontawesome/css/v4-shims.css" />
+<script src="_content/Blazor.FlexGrid/flexGridIntereop.js"></script>
+```
 
 # Instalation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.9.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.10.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)

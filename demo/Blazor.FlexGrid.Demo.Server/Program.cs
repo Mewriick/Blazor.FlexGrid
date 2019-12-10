@@ -20,6 +20,7 @@ namespace Blazor.FlexGrid.Demo.Server
                     .AddCommandLine(args)
                     .Build())
                 .UseStartup<Startup>()
+                .UseStaticWebAssets()
                 .Build();
     }
 }
