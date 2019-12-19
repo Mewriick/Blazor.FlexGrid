@@ -39,6 +39,7 @@ namespace Blazor.Components.Demo.FlexGrid.Services
             var rng = new Random();
             return Task.FromResult(staticRepositoryCollections.Forecasts
                 //.Take(20)
+                .Where(kv => kv.Value.Date > startDate)
                 .Select(kv => kv.Value)
                 .ToArray()
             );

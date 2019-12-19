@@ -9,9 +9,9 @@ using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
+using Blazor.FlexGrid.Triggers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +25,13 @@ namespace Blazor.FlexGrid.Components
             Enumerable.Empty<EmptyDataSetItem>().AsQueryable(), new FilterExpressionTreeBuilder<EmptyDataSetItem>());
 
         private bool tableDataSetInitialized;
+        private int pageSize;
+        private ITableDataAdapter dataAdapter;
 
         private FlexGridContext fixedFlexGridContext;
         private (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) gridRenderingContexts;
+        private IParameterActionTriggerCollection actionTriggerCollection;
+
         protected IEnumerable<IFeature> features;
         protected ITableDataSet tableDataSet;
 
@@ -39,11 +43,29 @@ namespace Blazor.FlexGrid.Components
 
         [Inject] ConventionsSet ConventionsSet { get; set; }
 
-        [Parameter] public ITableDataAdapter DataAdapter { get; set; }
+        [Parameter]
+        public ITableDataAdapter DataAdapter
+        {
+            get => dataAdapter;
+            set
+            {
+                dataAdapter = value;
+                AddTrigger(() => new RefreshDataAdapterTrigger(GetTableDataSet));
+            }
+        }
 
         [Parameter] public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
 
-        [Parameter] public int PageSize { get; set; }
+        [Parameter]
+        public int PageSize
+        {
+            get => pageSize;
+            set
+            {
+                pageSize = value;
+                AddTrigger(() => new RefreshPageSizeTrigger(tableDataSet.PageableOptions, value));
+            }
+        }
 
         [Parameter] public Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
@@ -61,6 +83,7 @@ namespace Blazor.FlexGrid.Components
         protected GridViewInternal(IEnumerable<IFeature> features)
         {
             this.features = features ?? throw new ArgumentNullException(nameof(features));
+            this.actionTriggerCollection = new TriggerActionCollection();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -134,6 +157,15 @@ namespace Blazor.FlexGrid.Components
 
                 fixedFlexGridContext.FirstPageLoaded = true;
             }
+
+            if (fixedFlexGridContext.FirstPageLoaded)
+            {
+                await actionTriggerCollection.ExecuteTriggers(() =>
+                    actionTriggerCollection.HasMasterAction
+                    ? tableDataSet.GoToPage(0)
+                    : tableDataSet.GoToPage(tableDataSet.PageableOptions.CurrentPage)
+               );
+            }
         }
 
         protected virtual FlexGridContext CreateFlexGridContext()
@@ -189,6 +221,14 @@ namespace Blazor.FlexGrid.Components
         {
             tableDataSet.ApplyFilters(e.Filters);
             fixedFlexGridContext.RequestRerenderTableRowsNotification?.Invoke();
+        }
+
+        private void AddTrigger(Func<IParamterChangedTrigger> createTrigger)
+        {
+            if (tableDataSetInitialized)
+            {
+                actionTriggerCollection.AddTrigger(createTrigger());
+            }
         }
     }
 }
