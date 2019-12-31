@@ -1,11 +1,6 @@
-﻿using Blazor.FlexGrid.Components;
-using Blazor.FlexGrid.Components.Configuration;
+﻿using Blazor.FlexGrid.Components.Configuration;
 using Blazor.FlexGrid.Components.Configuration.Builders;
-using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Demo.Shared;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
-using System;
 
 namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
 {
@@ -23,7 +18,7 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
 
             builder.Property(e => e.Date)
                 .HasCaption("Date")
-                //.HasWritePermissionRestriction(perm => perm.IsInRole("TestRole1"))
+                .HasWritePermissionRestriction(perm => perm.IsInRole("TestRole1"))
                 .HasValueFormatter(d => d.ToShortDateString());
 
             builder.Property(e => e.TemperatureC)
@@ -36,7 +31,6 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
 
             builder.Property(e => e.RainyDay)
                 .IsFilterable();
-
             builder.EnableGrouping(options =>
             {
                 options.GroupPageSize = 15;
@@ -72,7 +66,7 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
                 .HasOrder(1)
                 //.HasValueFormatter(s => $"{s}!");
                 .HasCompositeValueFormatter(f => $"{f.Summary} <button>{f.TemperatureC}</button> {f.TemperatureF}");
-                //.HasBlazorEditComponent(weatherSummaryEdit);
+            //.HasBlazorEditComponent(weatherSummaryEdit);
         }
     }
 }

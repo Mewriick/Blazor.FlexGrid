@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.Permission
         {
             if (columnPermissions.TryGetValue(columnName, out var permission))
             {
-                permission.HasFlag(PermissionAccess.Read);
+                return permission.HasFlag(PermissionAccess.Read);
             }
 
             return true;
@@ -41,7 +41,7 @@ namespace Blazor.FlexGrid.Permission
         {
             if (columnPermissions.TryGetValue(columnName, out var permission))
             {
-                permission.HasFlag(PermissionAccess.Write);
+                return permission.HasFlag(PermissionAccess.Write);
             }
 
             return true;
