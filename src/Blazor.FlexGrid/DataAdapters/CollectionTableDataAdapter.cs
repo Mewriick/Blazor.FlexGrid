@@ -31,7 +31,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            var tableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable(), new FilterExpressionTreeBuilder<TItem>())
+            currentTableDataSet = new TableDataSet<TItem>(items.Where(Filter.Compile()).AsQueryable(), new FilterExpressionTreeBuilder<TItem>())
             {
                 PageableOptions = tableDataSetOptions.PageableOptions,
                 SortingOptions = tableDataSetOptions.SortingOptions,
@@ -39,7 +39,7 @@ namespace Blazor.FlexGrid.DataAdapters
                 GroupingOptions = tableDataSetOptions.GroupingOptions,
             };
 
-            return tableDataSet;
+            return currentTableDataSet;
         }
 
         public override object Clone()

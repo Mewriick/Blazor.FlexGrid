@@ -24,7 +24,7 @@ namespace Blazor.FlexGrid.Components
 
         protected override async Task OnParametersSetAsync()
         {
-            tableDataSet = GetTableDataSet();
+            GetTableDataSet();
             await tableDataSet.GoToPage(0);
         }
     }

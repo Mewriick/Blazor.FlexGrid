@@ -9,13 +9,12 @@ namespace Blazor.FlexGrid.Triggers
     {
         private readonly List<IParamterChangedTrigger> paramterChangedTriggers;
 
-        public bool HasMasterAction => paramterChangedTriggers.Any(t => t.IsMasterAction);
+        private bool HasActionWithRefresh => paramterChangedTriggers.Any(t => t.RefreshPage);
 
         public TriggerActionCollection()
         {
             this.paramterChangedTriggers = new List<IParamterChangedTrigger>();
         }
-
 
         public bool AddTrigger(IParamterChangedTrigger trigger)
         {
@@ -24,7 +23,7 @@ namespace Blazor.FlexGrid.Triggers
                 throw new ArgumentNullException(nameof(trigger));
             }
 
-            if (paramterChangedTriggers.Any(t => t.IsMasterAction))
+            if (paramterChangedTriggers.Any(t => t.RefreshPage))
             {
                 return false;
             }
@@ -34,26 +33,29 @@ namespace Blazor.FlexGrid.Triggers
             return true;
         }
 
-        public Task ExecuteTriggers()
+        public async Task ExecuteTriggers()
         {
-            if (!paramterChangedTriggers.Any())
-            {
-                return Task.FromResult(0);
-            }
+            await Task.WhenAll(paramterChangedTriggers.Select(t => t.Execute()));
 
-            foreach (var trigger in paramterChangedTriggers)
-            {
-                trigger.Execute();
-            }
-
-            paramterChangedTriggers.Clear();
-            return Task.FromResult(0);
+            return;
         }
 
         public async Task ExecuteTriggers(Func<Task> onActionExecuted)
         {
+            if (!paramterChangedTriggers.Any())
+            {
+                return;
+            }
+
             await ExecuteTriggers();
-            await onActionExecuted();
+
+            if (!HasActionWithRefresh)
+            {
+                Console.WriteLine("ExecuteTriggers Refresh");
+                await onActionExecuted();
+            }
+
+            paramterChangedTriggers.Clear();
         }
     }
 }

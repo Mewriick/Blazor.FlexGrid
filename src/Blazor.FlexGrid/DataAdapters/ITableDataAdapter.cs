@@ -7,7 +7,7 @@ namespace Blazor.FlexGrid.DataAdapters
     /// <summary>
     /// Define contract which create and configure <seealso cref="ITableDataSet"/> for GridComponent 
     /// </summary>
-    public interface ITableDataAdapter : ICloneable
+    public interface ITableDataAdapter : IRefreshableDataSource, ICloneable
     {
         Type UnderlyingTypeOfItem { get; }
 

@@ -13,6 +13,7 @@
 @*<BlazorButton>Test</BlazorButton>*@
 <GridView DataAdapter="@dataAdapter" PageSize="@pageSize" LazyLoadingOptions="@op"></GridView>
 <button class="btn btn-primary" @onclick="@SetPageSize">Click me</button>
+<button class="btn btn-primary" @onclick="@ReloadCurrentPage">Reload data</button>
 
 @*@{
         RenderFragment<WeatherForecast> weatherTemp = (weather) => @<MatButton Raised="true" Icon="favorite">@weather.Summary</MatButton>;
@@ -34,8 +35,8 @@ Collection.AddColumnEditValueRenderer(w => w.Summary, editWeatherSummary);
 
 
 @code {
-    CollectionTableDataAdapter<WeatherForecast>
-    dataAdapter;
+    bool forceReload;
+    CollectionTableDataAdapter<WeatherForecast> dataAdapter;
 
     int pageSize = 5;
     LazyLoadingOptions op;
@@ -51,5 +52,10 @@ Collection.AddColumnEditValueRenderer(w => w.Summary, editWeatherSummary);
         pageSize++;
         var forecast = await WeatherService.GetForecastAsync(new DateTime(2020, 3, 19));
         dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
+    }
+
+    async Task ReloadCurrentPage()
+    {
+        await dataAdapter.ReloadCurrentPage();
     }
 }

@@ -4,7 +4,7 @@ namespace Blazor.FlexGrid.DataSet.Options
 {
     public class PageableOptions : IPagingOptions
     {
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 5;
 
         public int TotalItemsCount { get; set; }
 

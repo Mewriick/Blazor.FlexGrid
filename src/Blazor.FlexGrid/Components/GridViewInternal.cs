@@ -27,6 +27,7 @@ namespace Blazor.FlexGrid.Components
         private bool tableDataSetInitialized;
         private int pageSize;
         private ITableDataAdapter dataAdapter;
+        private ILazyLoadingOptions lazyLoadingOptions;
 
         private FlexGridContext fixedFlexGridContext;
         private (ImutableGridRendererContext ImutableRendererContext, PermissionContext PermissionContext) gridRenderingContexts;
@@ -49,12 +50,27 @@ namespace Blazor.FlexGrid.Components
             get => dataAdapter;
             set
             {
-                dataAdapter = value;
-                AddTrigger(() => new RefreshDataAdapterTrigger(GetTableDataSet));
+                if (dataAdapter != value)
+                {
+                    dataAdapter = value;
+                    AddTrigger(() => new RefreshDataAdapterTrigger(GetTableDataSet));
+                }
             }
         }
 
-        [Parameter] public ILazyLoadingOptions LazyLoadingOptions { get; set; } = new LazyLoadingOptions();
+        [Parameter]
+        public ILazyLoadingOptions LazyLoadingOptions
+        {
+            get => lazyLoadingOptions;
+            set
+            {
+                if (lazyLoadingOptions != value)
+                {
+                    lazyLoadingOptions = value;
+                    AddTrigger(() => new RefreshLazyLoadingOptionsTrigger(tableDataSet, value));
+                }
+            }
+        }
 
         [Parameter]
         public int PageSize
@@ -62,11 +78,13 @@ namespace Blazor.FlexGrid.Components
             get => pageSize;
             set
             {
-                pageSize = value;
-                AddTrigger(() => new RefreshPageSizeTrigger(tableDataSet.PageableOptions, value));
+                if (pageSize != value)
+                {
+                    pageSize = value;
+                    AddTrigger(() => new RefreshPageSizeTrigger(tableDataSet.PageableOptions, value));
+                }
             }
         }
-
         [Parameter] public Action<SaveResultArgs> SaveOperationFinished { get; set; }
 
         [Parameter] public Action<DeleteResultArgs> DeleteOperationFinished { get; set; }
@@ -137,7 +155,7 @@ namespace Blazor.FlexGrid.Components
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
             }
 
-            tableDataSet = GetTableDataSet();
+            GetTableDataSet();
             await tableDataSet.GoToPage(0);
 
             if (DataAdapter != null)
@@ -152,7 +170,7 @@ namespace Blazor.FlexGrid.Components
                 DataAdapter != null)
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
-                tableDataSet = GetTableDataSet();
+                GetTableDataSet();
                 await tableDataSet.GoToPage(0);
 
                 fixedFlexGridContext.FirstPageLoaded = true;
@@ -161,9 +179,7 @@ namespace Blazor.FlexGrid.Components
             if (fixedFlexGridContext.FirstPageLoaded)
             {
                 await actionTriggerCollection.ExecuteTriggers(() =>
-                    actionTriggerCollection.HasMasterAction
-                    ? tableDataSet.GoToPage(0)
-                    : tableDataSet.GoToPage(tableDataSet.PageableOptions.CurrentPage)
+                    tableDataSet.GoToPage(tableDataSet.PageableOptions.CurrentPage)
                );
             }
         }
@@ -173,7 +189,7 @@ namespace Blazor.FlexGrid.Components
 
         protected ITableDataSet GetTableDataSet()
         {
-            var tableDataSet = DataAdapter?.GetTableDataSet(conf =>
+            tableDataSet = DataAdapter?.GetTableDataSet(conf =>
             {
                 conf.LazyLoadingOptions = LazyLoadingOptions;
                 conf.PageableOptions.PageSize = PageSize;
@@ -192,6 +208,7 @@ namespace Blazor.FlexGrid.Components
             }
             else
             {
+                DataAdapter.AfterReloadPage = fixedFlexGridContext.RequestRerenderTableRowsNotification;
                 tableDataSet = MasterDetailTableDataSetFactory.ConvertToMasterTableIfIsRequired(tableDataSet);
                 if (fixedFlexGridContext.IsFeatureActive<FilteringFeature>())
                 {

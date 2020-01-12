@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet;
 using System;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Triggers
 {
@@ -7,16 +8,17 @@ namespace Blazor.FlexGrid.Triggers
     {
         private readonly Func<ITableDataSet> createDataSet;
 
-        public bool IsMasterAction => true;
+        public bool RefreshPage => true;
 
         public RefreshDataAdapterTrigger(Func<ITableDataSet> createDataSet)
         {
             this.createDataSet = createDataSet ?? throw new ArgumentNullException(nameof(createDataSet));
         }
 
-        public void Execute()
+        public async Task Execute()
         {
-            createDataSet();
+            var tableDataSet = createDataSet();
+            await tableDataSet.GoToPage(0);
         }
     }
 }

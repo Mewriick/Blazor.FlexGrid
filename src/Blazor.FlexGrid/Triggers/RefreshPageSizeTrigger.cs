@@ -1,5 +1,6 @@
 ﻿using Blazor.FlexGrid.DataSet.Options;
 using System;
+using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Triggers
 {
@@ -8,7 +9,7 @@ namespace Blazor.FlexGrid.Triggers
         private readonly IPagingOptions pagingOptions;
         private readonly int newPageSize;
 
-        public bool IsMasterAction => false;
+        public bool RefreshPage => false;
 
         public RefreshPageSizeTrigger(IPagingOptions pagingOptions, int newPageSize)
         {
@@ -16,7 +17,7 @@ namespace Blazor.FlexGrid.Triggers
             this.newPageSize = newPageSize;
         }
 
-        public void Execute()
+        public Task Execute()
         {
             var lastCurrentPage = pagingOptions.CurrentPage;
             pagingOptions.PageSize = newPageSize;
@@ -25,6 +26,8 @@ namespace Blazor.FlexGrid.Triggers
             {
                 pagingOptions.CurrentPage = pagingOptions.PagesCount - 1;
             }
+
+            return Task.CompletedTask;
         }
     }
 }
