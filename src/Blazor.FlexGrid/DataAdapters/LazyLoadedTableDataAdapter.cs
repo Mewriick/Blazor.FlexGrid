@@ -37,7 +37,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions;
             AddRequestParamsAction?.Invoke(lazyLoadingOptions.RequestParams);
 
-            var tableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyGroupableDataSetLoader, lazyDataSetItemSaver)
+            currentTableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyGroupableDataSetLoader, lazyDataSetItemSaver)
             {
                 LazyLoadingOptions = lazyLoadingOptions,
                 PageableOptions = tableDataSetOptions.PageableOptions,
@@ -46,7 +46,7 @@ namespace Blazor.FlexGrid.DataAdapters
                 GridViewEvents = tableDataSetOptions.GridViewEvents
             };
 
-            return tableDataSet;
+            return currentTableDataSet;
         }
 
         public override object Clone()

@@ -9,14 +9,14 @@
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <LangVersion>7.3</LangVersion>
     <PackageId>Blazor.FlexGrid</PackageId>
-    <PackageVersion>0.10.2</PackageVersion>
+    <PackageVersion>0.11.0</PackageVersion>
     <Title>Blazor.FlexGrid</Title>
     <Description>GridView component for Blazor</Description>
     <Authors>Jaroslav Surala</Authors>
     <PackageProjectUrl>https://github.com/Mewriick/Blazor.FlexGrid</PackageProjectUrl>
     <PackageTags>Blazor;GridView;Component</PackageTags>
-    <Version>0.10.2</Version>
-    <PackageReleaseNotes>Fix saving row issue</PackageReleaseNotes>
+    <Version>0.11.0</Version>
+    <PackageReleaseNotes>Add triggers feature</PackageReleaseNotes>
     <PackageIconUrl>https://msdnshared.blob.core.windows.net/media/2018/04/Blazor-300x280.jpg</PackageIconUrl>
     <RestoreAdditionalProjectSources>
       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;

@@ -10,6 +10,14 @@ namespace Blazor.FlexGrid.DataSet.Options
 
         public string DeleteUri { get; set; }
 
-        public QueryBuilder RequestParams { get; } = new QueryBuilder();
+        public QueryBuilder RequestParams { get; private set; } = new QueryBuilder();
+
+        public void Copy(ILazyLoadingOptions lazyLoadingOptions)
+        {
+            DataUri = lazyLoadingOptions.DataUri;
+            PutDataUri = lazyLoadingOptions.PutDataUri;
+            DeleteUri = lazyLoadingOptions.DeleteUri;
+            RequestParams = lazyLoadingOptions.RequestParams;
+        }
     }
 }

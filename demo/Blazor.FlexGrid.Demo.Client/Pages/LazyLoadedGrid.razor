@@ -17,19 +17,35 @@
 <p>This component demonstrates fetching data from the server.</p>
 
 
-<GridView DataAdapter="@forecastAdapter"
-          LazyLoadingOptions="@(new LazyLoadingOptions() {
-                                    DataUri = "api/SampleData/WeatherForecasts",
-                                    PutDataUri = "api/SampleData/UpdateWeatherForecast",
-                                    DeleteUri = "api/SampleData/Delete/{Id}" })"
+<GridView DataAdapter="@dataAdapter"
+          LazyLoadingOptions="@options"
           PageSize="10"
           SaveOperationFinished="@ItemSavedOperationFinished"
           DeleteOperationFinished="@ItemDeletedOperationFinished"
           NewItemCreated="@ItemCreated">
 </GridView>
 
+<button class="btn btn-primary" @onclick="@ChangeOptions">Change options</button>
+<button class="btn btn-primary" @onclick="@ReloadCurrentPage">Reload data</button>
+<button class="btn btn-primary" @onclick="@ChangeDataAdapter">Change data adapter</button>
 
 @code{
+
+    ITableDataAdapter dataAdapter;
+    LazyLoadingOptions options = new LazyLoadingOptions()
+    {
+        DataUri = "api/SampleData/WeatherForecasts",
+        PutDataUri = "api/SampleData/UpdateWeatherForecast",
+        DeleteUri = "api/SampleData/Delete/{Id}"
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        dataAdapter = forecastAdapter;
+    }
+
     public void ItemSavedOperationFinished(SaveResultArgs saveResultArgs)
     {
         Console.WriteLine($"Item saved result: {saveResultArgs.ItemSucessfullySaved}");
@@ -43,6 +59,29 @@
     public void ItemCreated(ItemCreatedArgs itemCreatedArgs)
     {
         Console.WriteLine($"Item created result: {itemCreatedArgs.CreatedItem}");
+    }
+
+    void ChangeOptions()
+    {
+        options = new LazyLoadingOptions()
+        {
+            DataUri = "api/SampleData/WeatherForecasts",
+            PutDataUri = "api/SampleData/UpdateWeatherForecast",
+            DeleteUri = "api/SampleData/Delete/{Id}"
+        };
+
+        options.RequestParams.Add("test", "value");
+    }
+
+    async Task ReloadCurrentPage()
+    {
+        await dataAdapter.ReloadCurrentPage();
+    }
+
+    async Task ChangeDataAdapter()
+    {
+        var forecast = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecastsSimple");
+        dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
     }
 }
 

@@ -11,5 +11,7 @@ namespace Blazor.FlexGrid.DataSet.Options
         string DeleteUri { get; set; }
 
         QueryBuilder RequestParams { get; }
+
+        void Copy(ILazyLoadingOptions lazyLoadingOptions);
     }
 }
