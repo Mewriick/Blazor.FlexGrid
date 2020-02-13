@@ -23,7 +23,7 @@ GridView component for Blazor
 
 **Version 0.11.0 contains new Triggers feature more info in [wiki](https://github.com/Mewriick/Blazor.FlexGrid/wiki/Triggers)** 
 
-# Instalation
+# Installation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.11.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
@@ -90,7 +90,7 @@ From your index.(cs)html add references
 <script src="Blazor.FlexGrid/flexGridIntereop.js"></script>
 ```
 
-For properly working of **LazyLoaded** functionallity some services must be registered in IoC. Because in web scenario **FlexGrid** uses **Http** services which are provided in IoC
+For properly working of **LazyLoaded** functionality some services must be registered in IoC. Because in web scenario **FlexGrid** uses **Http** services which are provided in IoC
 by default, but in server side scenario you have to provide these services.
 
 ```cs
@@ -102,7 +102,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-These services are registered by defaul in IoC if you want for your grid use funtionality like lazy loading data, inlinde editing or create item form
+These services are registered by default in IoC if you want for your grid use funtionality like lazy loading data, inline editing or create item form
 you have to provide these services for your models.
 
 In your Blazor component add Tag helper and required usings
@@ -287,7 +287,7 @@ For filter exists two modes, for standard **TableDataSet** is filtering done on 
 For **LazyTableDataSet** is filter object sended to the server. More info how it is works is [here](https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet---Client-Side-Blazor#filtering)
 
 # Grouping
-You can enable dynamic grouping functinallity for table
+You can enable dynamic grouping functionality for table
 ```cs
 builder.EnableGrouping(options =>
 {
@@ -412,7 +412,7 @@ public void Configure(EntityTypeBuilder<Order> builder)
 }
 ```
 You can also configure which columns will be editable for current logger user, see **Permission restriction** section. If you are using 
-**CollectionTableDataAdapter** chagnes are saved only into local object in list. For saving to the server you have to write your own functionallity.
+**CollectionTableDataAdapter** changes are saved only into local object in list. For saving to the server you have to write your own functionallity.
 If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must provide url for updating of item.
 
 ```cs
