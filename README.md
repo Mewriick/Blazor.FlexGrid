@@ -24,7 +24,7 @@ GridView component for Blazor
 **Version 0.11.0 contains new Triggers feature more info in [wiki](https://github.com/Mewriick/Blazor.FlexGrid/wiki/Triggers)** 
 
 # Installation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.11.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.11.1-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
@@ -409,6 +409,8 @@ public void Configure(EntityTypeBuilder<Order> builder)
         conf.AllowDeleting = true;
         conf.DeletePermissionRestriction = perm => perm.IsInRole("TestRole");
     });
+
+    builder.DoNotUseDeleteConfirmDialog(); // Disable confirmation dialog before delete operation
 }
 ```
 You can also configure which columns will be editable for current logger user, see **Permission restriction** section. If you are using 

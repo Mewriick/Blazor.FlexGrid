@@ -24,6 +24,8 @@
 
         public CreateFormCssClasses CreateFormCssClasses { get; set; } = NullCreateFormCssClasses.Instance;
 
+        public DeleteDialogCssClasses DeleteDialogCssClasses { get; set; } = new DeleteDialogCssClasses();
+
         internal void AppendDefaultCssClasses(DefaultGridCssClasses defaultCssClasses)
         {
             Table = $"{defaultCssClasses.Table} {Table}".TrimEnd();
@@ -60,6 +62,15 @@
                 ModalSize = $"{defaultCreateFormCssClasses.ModalSize} {CreateFormCssClasses.ModalSize}".TrimEnd()
             };
         }
+
+        internal void AppendDefaultDeleteDialogCssClasses(DefaultDeleteDialogCssClasses defaultDeleteDialogCssClasses)
+        {
+            DeleteDialogCssClasses = new DeleteDialogCssClasses
+            {
+                DeleteButton = $"{defaultDeleteDialogCssClasses.DeleteButton} {DeleteDialogCssClasses.DeleteButton}".TrimEnd(),
+                CancelButton = $"{defaultDeleteDialogCssClasses.CancelButton} {DeleteDialogCssClasses.CancelButton}".TrimEnd()
+            };
+        }
     }
 
     public class GridFooterCssClasses
@@ -88,6 +99,12 @@
         public string ModalFooter { get; set; } = string.Empty;
     }
 
+    public class DeleteDialogCssClasses
+    {
+        public string DeleteButton { get; set; } = string.Empty;
+
+        public string CancelButton { get; set; } = string.Empty;
+    }
 
     public class DefaultGridCssClasses : GridCssClasses
     {
@@ -104,6 +121,7 @@
             TableGroupRowCell = "table-group-row-cell";
             FooterCssClasses = new DefaultFooterCssClasses();
             CreateFormCssClasses = new DefaultCreateFormCssClasses();
+            DeleteDialogCssClasses = new DefaultDeleteDialogCssClasses();
         }
     }
 
@@ -133,6 +151,15 @@
             ModalHeader = "modal-header";
             ModalBody = "modal-body";
             ModalFooter = "modal-footer";
+        }
+    }
+
+    public class DefaultDeleteDialogCssClasses : DeleteDialogCssClasses
+    {
+        public DefaultDeleteDialogCssClasses()
+        {
+            CancelButton = "btn btn-light";
+            DeleteButton = "btn btn-danger";
         }
     }
 

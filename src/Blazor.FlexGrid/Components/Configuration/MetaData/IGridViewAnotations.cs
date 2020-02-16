@@ -16,6 +16,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         CreateItemOptions CreateItemOptions { get; }
 
+        DeleteItemOptions DeleteItemOptions { get; }
+
         GridCssClasses CssClasses { get; }
 
         GlobalGroupingOptions GroupingOptions { get; }

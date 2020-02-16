@@ -1,11 +1,20 @@
-﻿using Blazor.FlexGrid.Permission;
+﻿using Blazor.FlexGrid.Components.Configuration;
+using Blazor.FlexGrid.Permission;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 
 namespace Blazor.FlexGrid.Components.Renderers
 {
     public class GridActionButtonsRenderer : GridPartRenderer
     {
+        private readonly FlexGridInterop flexGridInterop;
+
+        public GridActionButtonsRenderer(FlexGridInterop flexGridInterop)
+        {
+            this.flexGridInterop = flexGridInterop ?? throw new ArgumentNullException(nameof(flexGridInterop));
+        }
+
         public override bool CanRender(GridRendererContext rendererContext)
             => rendererContext.IsLastColumn && rendererContext.GridConfiguration.InlineEditOptions.InlineEditIsAllowed;
 
@@ -83,8 +92,16 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
-                    rendererContext.TableDataSet.DeleteItem(localActualItem);
-                    rendererContext.RequestRerenderNotification?.Invoke();
+                    if (rendererContext.GridConfiguration.DeleteItemOptions.UseConfirmationDialog)
+                    {
+                        rendererContext.FlexGridContext.SelectItem(localActualItem);
+                        flexGridInterop.ShowModal(DeleteItemOptions.DialogName);
+                    }
+                    else
+                    {
+                        rendererContext.TableDataSet.DeleteItem(localActualItem);
+                        rendererContext.RequestRerenderNotification?.Invoke();
+                    }
                 })
             );
 

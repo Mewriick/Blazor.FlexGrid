@@ -117,6 +117,21 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
+        public virtual EntityTypeBuilder<TEntity> ConfigureDeleteItem(Action<DeleteItemOptions> configureDeleteItem)
+        {
+            if (configureDeleteItem is null)
+            {
+                throw new ArgumentNullException(nameof(configureDeleteItem));
+            }
+
+            var deleteItemOptions = new DeleteItemOptions();
+            configureDeleteItem.Invoke(deleteItemOptions);
+
+            Builder.DeleteItemConfiguration(deleteItemOptions);
+
+            return this;
+        }
+
         public virtual EntityTypeBuilder<TEntity> EnableSortingForAllProperties()
         {
             foreach (var property in typeof(TEntity).GetProperties())
@@ -146,6 +161,13 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             }
 
             Builder.HasEmptyItemsMessage(message);
+
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> DoNotUseDeleteConfirmDialog()
+        {
+            ConfigureDeleteItem(cfg => cfg.UseConfirmationDialog = false);
 
             return this;
         }

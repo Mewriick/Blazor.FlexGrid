@@ -80,7 +80,19 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public DeleteItemOptions DeleteItemOptions
+        {
+            get
+            {
+                var deleteItemOptions = annotations[GridViewAnnotationNames.DeleteItemOptions];
+                if (deleteItemOptions is NullAnotationValue)
+                {
+                    return new DefaulDeleteItemOptions();
+                }
 
+                return (DeleteItemOptions)deleteItemOptions;
+            }
+        }
 
         public bool OnlyShowExplicitProperties
         {

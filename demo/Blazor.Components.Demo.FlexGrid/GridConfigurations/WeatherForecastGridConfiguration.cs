@@ -14,7 +14,7 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
                 conf.CreateUri = "/api/SampleData/WeatherForecast";
             });
 
-            builder.AllowInlineEdit();
+            builder.AllowInlineEdit(cfg => cfg.AllowDeleting = true);
 
             builder.Property(e => e.Date)
                 .HasCaption("Date")
@@ -67,6 +67,8 @@ namespace Blazor.Components.Demo.FlexGrid.GridConfigurations
                 //.HasValueFormatter(s => $"{s}!");
                 .HasCompositeValueFormatter(f => $"{f.Summary} <button>{f.TemperatureC}</button> {f.TemperatureF}");
             //.HasBlazorEditComponent(weatherSummaryEdit);
+
+            // builder.DoNotUseDeleteConfirmDialog();
         }
     }
 }

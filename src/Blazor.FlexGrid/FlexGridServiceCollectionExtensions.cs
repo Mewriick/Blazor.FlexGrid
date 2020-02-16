@@ -132,7 +132,7 @@ namespace Blazor.FlexGrid
                 .AddRenderer(new GridCellMasterActionRenderer())
                 .AddRenderer(new GridCellRenderer(provider.GetRequiredService<EditInputRendererTree>()))
                 .AddRenderer(new GridTabControlRenderer(provider.GetRequiredService<ITableDataAdapterProvider>()), RendererType.AfterTag)
-                .AddRenderer(new GridActionButtonsRenderer());
+                .AddRenderer(new GridActionButtonsRenderer(provider.GetRequiredService<FlexGridInterop>()));
 
             var gridBodySimpleRenderer = new GridBodySimpleRenderer(provider.GetRequiredService<ILogger<GridBodySimpleRenderer>>())
                 .AddRenderer(gridRowRenderer);
@@ -147,7 +147,8 @@ namespace Blazor.FlexGrid
                 .AddRenderer(new GridHeaderRenderer(provider.GetRequiredService<FlexGridInterop>()))
                 .AddRenderer(new GridEmptyItemsRenderer())
                 .AddRenderer(gridBodyRenderer)
-                .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag);
+                .AddRenderer(new GridFooterRenderer(), RendererType.AfterTag)
+                .AddRenderer(new DeleteModalRenderer(provider.GetRequiredService<FlexGridInterop>()), RendererType.AfterTag);
 
             return gridRenderer;
         }

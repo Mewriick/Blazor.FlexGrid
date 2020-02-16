@@ -50,6 +50,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             gridCssClasses.AppendDefaultCssClasses(new DefaultGridCssClasses());
             gridCssClasses.AppendDefaultFooterCssClasses(new DefaultFooterCssClasses());
             gridCssClasses.AppendDefaultCreateFormCssClasses(new DefaultCreateFormCssClasses());
+            gridCssClasses.AppendDefaultDeleteDialogCssClasses(new DefaultDeleteDialogCssClasses());
 
             return HasAnnotation(GridViewAnnotationNames.CssClasses, gridCssClasses);
         }
@@ -76,6 +77,9 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool AllowCreateItem(CreateItemOptions createItemOptions)
             => HasAnnotation(GridViewAnnotationNames.CreateItemOptions, createItemOptions);
+
+        public bool DeleteItemConfiguration(DeleteItemOptions deleteItemOptions)
+            => HasAnnotation(GridViewAnnotationNames.DeleteItemOptions, deleteItemOptions);
 
         public bool HasEmptyItemsMessage(string message)
             => HasAnnotation(GridViewAnnotationNames.EmptyItemsMessage, message);

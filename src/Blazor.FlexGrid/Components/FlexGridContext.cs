@@ -16,6 +16,8 @@ namespace Blazor.FlexGrid.Components
 
         public bool FirstPageLoaded { get; set; }
 
+        public object SelectedItem { get; private set; }
+
         public FlexGridContext(FilterContext filterContext, IFeatureCollection features)
         {
             FilterContext = filterContext ?? throw new ArgumentNullException(nameof(filterContext));
@@ -34,5 +36,9 @@ namespace Blazor.FlexGrid.Components
 
         public bool IsFeatureActive<TFeature>() where TFeature : IFeature
             => Features.Contains<TFeature>();
+
+        public void SelectItem(object item) => SelectedItem = item;
+
+        public void RemoveSelection() => SelectedItem = null;
     }
 }

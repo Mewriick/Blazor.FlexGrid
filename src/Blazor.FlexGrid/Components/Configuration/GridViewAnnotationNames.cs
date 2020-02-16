@@ -12,6 +12,7 @@
         public const string DetailDeleteUrl = "DetailDeleteUrl";
         public const string InlineEditOptions = "InlineEditOptions";
         public const string CreateItemOptions = "CreateItemOptions";
+        public const string DeleteItemOptions = "DeleteItemOptions";
         public const string MasterDetailOptions = "MasterDetailOptions";
         public const string OnlyShowExplicitProperties = "OnlyShowExplicitProperties";
         public const string GroupingOptions = "GroupingOptions";
