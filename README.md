@@ -6,7 +6,7 @@ GridView component for Blazor
 <img src="/docs/ReadmeImages/table_gif.gif" alt="table_gif"/>
 
 ## IMPORTANT!
-**Still development not completely finished and rapidly continue. Next versions can containt breaking changes** 
+**Still development not completely finished and rapidly continue. Next versions can contain breaking changes** 
 
 **Breaking change after support .NET Core 3.1 Preview 1**
 > In Blazor WASM you have to manually add into index.html links to the css and js FlexGrid files
@@ -26,7 +26,7 @@ GridView component for Blazor
 # Installation
 [![NuGet Pre Release](https://img.shields.io/badge/nuget-0.11.1-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
-After nuget instalation you must create in Blazor.Client app Linker.xml file because nuget use some features which are not supported in default mono managed interpreter from WebAssembly
+After nuget installation you must create in Blazor.Client app Linker.xml file because nuget uses some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
 
 ```cs
@@ -137,9 +137,9 @@ Result
 <img src="/docs/ReadmeImages/flextable.png" alt="table"/>
 
 # Configuration
-You do not need define informations about columns and component will render columns by **properties** of object type which is associated
+You do not need to define information about columns and components will render columns by **properties** of object type which is associated
 with **table data adapter** which provide *data set* for **Table** component. Value for column is provided by **ToString** method on the property type.
-Or you can configure some behavior for table and columns by using fluent api which is supported in classes where interface **IEntityTypeConfiguration<TItem>** is implemented.
+Or you can configure some behavior for tables and columns by using fluent api which is supported in classes where interface **IEntityTypeConfiguration<TItem>** is implemented.
 ```cs
 public class WeatherForecastGridConfiguration : IEntityTypeConfiguration<WeatherForecast>
 {
@@ -188,7 +188,7 @@ You can use simple **CollectionTableDataAdapter** which requires collection of i
 ```
 
 Another data adapter type is **LazyLoadedTableDataAdapter<TItem>** which support lazy loading data from API. This type of adapter 
-is registered in dependency injection conatiner and you only must provide **LazyLoadingOptins** to table component. 
+is registered in dependency injection conatiner and you must only provide **LazyLoadingOptins** to table component. 
 ```cs
 @addTagHelper *, Blazor.FlexGrid
 @using Blazor.FlexGrid.Demo.Shared
@@ -247,7 +247,7 @@ And last thing is register **ICurrentUserPermission** into DI container as **Sin
 
 # Blazor components in column
 You can configure column value for rendering **Blazor** component this way:
-Fisrt add using **Blazor.FlexGrid.Components.Configuration**.
+First add using **Blazor.FlexGrid.Components.Configuration**.
 Second inject required service **BlazorComponentColumnCollection<T>** into HTML of component where you use **FlexGrid**
 And the last thing you have to provide **RenderFragment** for columns
 
@@ -295,11 +295,11 @@ builder.EnableGrouping(options =>
 });
 ```
 
-You can define page size for grouped items. Grouping works in two modes, for standard **TableDataSet** is grouping done on client side across whole collection of items.
-For **LazyTableDataSet** is **GroupExpression** sended to the server. More info how it is works is [here](https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet---Client-Side-Blazor#grouping)
+You can define page size for grouped items. Grouping works in two modes, for standard **TableDataSet**, grouping is done on client side across whole collection of items.
+For **LazyTableDataSet**, **GroupExpression** is sent to the server. More info how it is works is [here](https://github.com/Mewriick/Blazor.FlexGrid/wiki/LazyTableDataSet---Client-Side-Blazor#grouping)
 
 # Create item form
-You can have very easily **Create item form** for your models. You can configure even different type of model for create item form
+You can very easily have **Create item form** for your models. You can even configure different type of model for create item form
 than is used for rendering in **FlexGrid**. You can also specify the return type from your Api which can be different than input.
 Now the restriction for model is that have **default constructor**
 Configuration example:
@@ -312,13 +312,13 @@ builder.AllowCreateItem<WeatherForecastCreateModel, WeatherForecast>(conf =>
 });
 ```
 
-You can also restrict the creation of items only for some users. Important property is **CreateUri** which must be filled. Form includes also 
-validations which are run after every change. Submit can be done only if form is in **Valid** state. For rendering are used two layouts types.
+You can also restrict the creation of items only for some users. Important property is **CreateUri** which must be filled. Form also includes  
+validations which are run after every change. Submit can be done only if form is in **Valid** state. For rendering, two layout types are used.
 You can have one column layout or you can have two columns layout. Now the behavior is that every model that have more than 6 properties the
 two column layout is used. You can also write your own layout. You only have to inherit from **BaseCreateItemFormLayout** and also you must
-create your own layout provider by creating class which implements **IFormLayoutProvider** and register this provider to IoC. 
-Properties are in default layouts rendered in order that they are write in class.
-After item is succesfully created event **NewItemCreated** is fired.
+create your own layout provider by creating a class which implements **IFormLayoutProvider** and register this provider to IoC. 
+Properties are in default layouts rendered in order that they are written in class.
+After item is succesfully created the **NewItemCreated** event is fired.
 You can also change the modal dialog css classes by using:
 
 ```
@@ -329,8 +329,8 @@ builder.AppendCssClasses(conf =>
 ```
 
 # Master / Detail 
-You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is collection
-**FlexGrid** component automatically find out this and will render this kind of object as Master / Detail grid.
+You can have multiple **DataSets** related together and rendered only with one **FlexGrid** component. If you have object that have property which is a collection,
+the **FlexGrid** component automatically finds this and will render this kind of object as Master / Detail grid.
 
 Example configuration
 ```cs
@@ -355,8 +355,8 @@ public void Configure(EntityTypeBuilder<Order> builder)
 }
 ```
 
-For correct working of Master / Detail grid you must configure relation ships between objects. Also you can define some additional options for related grid component.
-If you want use **LazyTableDataSet** you must provide url address for loading. This is not required in ServerSide solution because you have to create your own DataSet
+For correct working of Master / Detail grid you must configure relationships between objects. Also you can define some additional options for related grid component.
+If you want to use **LazyTableDataSet** you must provide url address for loading. This is not required in ServerSide solution because you have to create your own DataSet
 which implements **ILazyDataSetLoader**.
 
 Example page with Master/Detail grid
@@ -394,11 +394,11 @@ Example page with Master/Detail grid
     }
 }
 ```
-For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is register in DI container. 
+For building Master / Detail **TableDataSet** is used **MasterTableDataAdapter** which is registered in DI container. 
 Master / Detail usage you can find in ServerSide Blazor demo project
 
 # Inline editing
-You can use inline editing feature by configuring grid
+You can use inline editing features by configuring grid
 ```cs
 public void Configure(EntityTypeBuilder<Order> builder)
 {
@@ -413,9 +413,9 @@ public void Configure(EntityTypeBuilder<Order> builder)
     builder.DoNotUseDeleteConfirmDialog(); // Disable confirmation dialog before delete operation
 }
 ```
-You can also configure which columns will be editable for current logger user, see **Permission restriction** section. If you are using 
-**CollectionTableDataAdapter** changes are saved only into local object in list. For saving to the server you have to write your own functionallity.
-If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must provide url for updating of item.
+You can also configure which columns will be editable for current logged in user, see **Permission restriction** section. If you are using 
+**CollectionTableDataAdapter** changes are saved only into local object in list. For saving to the server you have to write your own functionality.
+If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must provide a url for updating item.
 
 ```cs
 <GridView DataAdapter="@forecastAdapter"
@@ -428,8 +428,8 @@ If you are using **LazyLoadedTableDataAdapter** and Client/Server mode you must 
           DeleteOperationFinished="@ItemDeletedOperationFinished">
 </GridView>
 ```
-And the Http request will be send to the server. For fully working delete feature you have to set properly **DeleteUri** of **LazyLoadingOptions**. 
-In url is a template where at end you must specify the name of object property in { } (for example {Id}) which is key and this key is send to the action method on server side.
+The Http request will be sent to the server. For fully working delete feature you have to properly set **DeleteUri** of **LazyLoadingOptions**. 
+The url contains a template where you must specify the name of object property in { } at the end (for example {Id}) which is the key and this key is sent to the action method on server side.
 
 Or if the Grid is used as detail 
 
@@ -442,7 +442,7 @@ builder.HasDetailRelationship<Order>(c => c.Id, o => o.CustomerId)
 ```
 
 # Events
-You can subscribe some events which **FlexGrid** provides only things which you must do are add using
+You can subscribe to some events which **FlexGrid** provides. The only requirements are add using
 **@using Blazor.FlexGrid.Components.Events** and register **EventHandler** in HTML of Grid component.
 
 **Suppoerted events:**  
