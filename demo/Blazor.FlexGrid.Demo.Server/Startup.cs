@@ -33,7 +33,7 @@ namespace Blazor.FlexGrid.Demo.Server
                 app.UseBlazorDebugging();
             }
 
-            app.UseClientSideBlazorFiles<Client.Startup>();
+            app.UseClientSideBlazorFiles<Client.Program>();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -41,7 +41,7 @@ namespace Blazor.FlexGrid.Demo.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
+                endpoints.MapFallbackToClientSideBlazor<Client.Program>("index.html");
             });
         }
     }
