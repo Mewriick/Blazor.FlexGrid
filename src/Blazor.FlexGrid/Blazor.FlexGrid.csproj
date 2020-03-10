@@ -9,14 +9,14 @@
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
     <LangVersion>7.3</LangVersion>
     <PackageId>Blazor.FlexGrid</PackageId>
-    <PackageVersion>0.11.1</PackageVersion>
+    <PackageVersion>0.12.0</PackageVersion>
     <Title>Blazor.FlexGrid</Title>
     <Description>GridView component for Blazor</Description>
     <Authors>Jaroslav Surala</Authors>
     <PackageProjectUrl>https://github.com/Mewriick/Blazor.FlexGrid</PackageProjectUrl>
     <PackageTags>Blazor;GridView;Component</PackageTags>
-    <Version>0.11.1</Version>
-    <PackageReleaseNotes>Add delete confirm dialog</PackageReleaseNotes>
+    <Version>0.12.0</Version>
+    <PackageReleaseNotes>Add support Blazor 3.2.0-preview1</PackageReleaseNotes>
     <PackageIconUrl>https://msdnshared.blob.core.windows.net/media/2018/04/Blazor-300x280.jpg</PackageIconUrl>
     <RestoreAdditionalProjectSources>
       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
@@ -25,11 +25,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.1.0-preview4.19579.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.1.0-preview4.19579.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.2.0-preview1.20073.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview1.20073.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
   </ItemGroup>

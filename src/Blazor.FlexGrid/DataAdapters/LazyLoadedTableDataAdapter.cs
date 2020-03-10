@@ -34,7 +34,7 @@ namespace Blazor.FlexGrid.DataAdapters
             var tableDataSetOptions = new TableDataSetOptions();
             configureDataSet?.Invoke(tableDataSetOptions);
 
-            var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions;
+            var lazyLoadingOptions = tableDataSetOptions.LazyLoadingOptions ?? new LazyLoadingOptions();
             AddRequestParamsAction?.Invoke(lazyLoadingOptions.RequestParams);
 
             currentTableDataSet = new LazyTableDataSet<TItem>(lazyDataSetLoader, lazyGroupableDataSetLoader, lazyDataSetItemSaver)
