@@ -65,6 +65,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             ImutableGridRendererContext imutableGridRendererContext,
             IRendererTreeBuilder rendererTreeBuilder,
             ITableDataSet tableDataSet,
+            ISpecialColumnFragmentsCollection specialColumnFragmentsCollection,
             FlexGridContext flexGridContext)
         {
             if (imutableGridRendererContext is null)
@@ -84,8 +85,11 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             gridEntityConfiguration = imutableGridRendererContext.GridEntityConfiguration;
             valueFormatters = imutableGridRendererContext.ValueFormatters;
-            columnRendererFragments = imutableGridRendererContext.ColumnRendererFragments;
-            columnEditRendererBuilders = imutableGridRendererContext.ColumnEditRendererBuilders;
+            columnRendererFragments = specialColumnFragmentsCollection
+                .Merge(gridEntityConfiguration, imutableGridRendererContext.ColumnRendererFragments);
+            columnEditRendererBuilders = specialColumnFragmentsCollection
+                .Merge(gridEntityConfiguration, imutableGridRendererContext.ColumnEditRendererBuilders);
+
             firstColumnName = GridItemProperties.First().Name;
             lastColumnName = GridItemProperties.Last().Name;
             NumberOfColumns = GridItemProperties.Count +

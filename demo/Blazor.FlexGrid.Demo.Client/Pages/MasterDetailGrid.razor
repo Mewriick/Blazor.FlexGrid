@@ -2,9 +2,13 @@
 @using Blazor.FlexGrid.Demo.Shared
 @using Blazor.FlexGrid.DataAdapters
 @using Blazor.FlexGrid.Components.Events
+@using Blazor.FlexGrid.Components.Configuration
+
 @inject HttpClient Http
 @inject MasterTableDataAdapterBuilder<Customer> MasterAdapterBuilder
 @inject LazyLoadedTableDataAdapter<Order> ordersAdapter
+@inject BlazorComponentColumnCollection<Order> Collection
+
 @page "/masterdetailgrid"
 
 <h1>Customers</h1>
@@ -13,6 +17,12 @@
           PageSize="5"
           SaveOperationFinished="@ItemSavedOperationFinished">
 </GridView>
+
+@{
+    RenderFragment<Order> date = (order) => @<b>@order.OrderDate</b>;
+Collection.AddColumnValueRenderFunction(o => o.OrderDate, date);
+}
+
 
 @code{
     CollectionTableDataAdapter<Customer> customerDataAdapter;

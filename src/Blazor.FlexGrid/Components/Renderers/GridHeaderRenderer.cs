@@ -20,7 +20,9 @@ namespace Blazor.FlexGrid.Components.Renderers
         }
 
         public override bool CanRender(GridRendererContext rendererContext)
-            => (rendererContext.TableDataSet.HasItems() || rendererContext.TableDataSet.FilterIsApplied) &&
+            => (rendererContext.TableDataSet.HasItems()
+                || rendererContext.TableDataSet.FilterIsApplied
+                || rendererContext.GridConfiguration.RenderHeaderWithEmtyItemsMessage) &&
                 rendererContext.FlexGridContext.IsFeatureActive<TableHeaderFeature>();
 
         protected override void BuildRendererTreeInternal(GridRendererContext rendererContext, PermissionContext permissionContext)

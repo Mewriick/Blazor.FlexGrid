@@ -8,6 +8,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         bool OnlyShowExplicitProperties { get; }
 
+        bool RenderHeaderWithEmtyItemsMessage { get; }
+
         string EmptyItemsMessage { get; }
 
         InlineEditOptions InlineEditOptions { get; }

@@ -83,5 +83,8 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool HasEmptyItemsMessage(string message)
             => HasAnnotation(GridViewAnnotationNames.EmptyItemsMessage, message);
+
+        public bool RenderHeaderWithEmtyItemsMessage(bool render)
+            => HasAnnotation(GridViewAnnotationNames.RenderHeaderWithEmtyItemsMessage, render);
     }
 }

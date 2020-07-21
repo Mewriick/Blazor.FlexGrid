@@ -42,6 +42,8 @@ namespace Blazor.FlexGrid.Components
 
         [Inject] IMasterDetailTableDataSetFactory MasterDetailTableDataSetFactory { get; set; }
 
+        [Inject] ISpecialColumnFragmentsCollection SpecialColumnFragmentsCollection { get; set; }
+
         [Inject] ConventionsSet ConventionsSet { get; set; }
 
         [Parameter]
@@ -112,7 +114,12 @@ namespace Blazor.FlexGrid.Components
             RenderFragment<ImutableGridRendererContext> tableFragment =
                 (ImutableGridRendererContext imutableGridRendererContext) => delegate (RenderTreeBuilder internalBuilder)
             {
-                var gridRendererContext = new GridRendererContext(imutableGridRendererContext, new BlazorRendererTreeBuilder(internalBuilder), tableDataSet, fixedFlexGridContext);
+                var gridRendererContext = new GridRendererContext(
+                    imutableGridRendererContext,
+                    new BlazorRendererTreeBuilder(internalBuilder),
+                    tableDataSet,
+                    SpecialColumnFragmentsCollection,
+                    fixedFlexGridContext);
                 GridRendererTreeBuilder.BuildRendererTree(gridRendererContext, gridRenderingContexts.PermissionContext);
             };
 

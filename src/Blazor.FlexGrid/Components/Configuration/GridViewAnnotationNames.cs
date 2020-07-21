@@ -17,6 +17,7 @@
         public const string OnlyShowExplicitProperties = "OnlyShowExplicitProperties";
         public const string GroupingOptions = "GroupingOptions";
         public const string EmptyItemsMessage = "EmptyItemsMessage";
+        public const string RenderHeaderWithEmtyItemsMessage = "RenderHeaderWithEmtyItemsMessage";
 
         public const string ColumnHeaderStyle = "GridColumnHeaderStyle";
         public const string ColumnCaption = "GridColumnCaption";

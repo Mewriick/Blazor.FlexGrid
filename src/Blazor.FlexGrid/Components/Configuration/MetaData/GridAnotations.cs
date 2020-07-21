@@ -136,6 +136,20 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public bool RenderHeaderWithEmtyItemsMessage
+        {
+            get
+            {
+                var renderHeaderWithEmtyItemsMessage = annotations[GridViewAnnotationNames.RenderHeaderWithEmtyItemsMessage];
+                if (renderHeaderWithEmtyItemsMessage is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)renderHeaderWithEmtyItemsMessage;
+            }
+        }
+
         public GridAnotations(IEntityType entityType)
         {
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));

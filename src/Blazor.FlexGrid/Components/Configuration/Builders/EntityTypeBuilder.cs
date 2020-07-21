@@ -154,6 +154,9 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
         }
 
         public virtual EntityTypeBuilder<TEntity> HasEmptyItemsMessage(string message)
+            => HasEmptyItemsMessage(message, false);
+
+        public virtual EntityTypeBuilder<TEntity> HasEmptyItemsMessage(string message, bool renderGridHeader = true)
         {
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -161,6 +164,7 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             }
 
             Builder.HasEmptyItemsMessage(message);
+            Builder.RenderHeaderWithEmtyItemsMessage(renderGridHeader);
 
             return this;
         }

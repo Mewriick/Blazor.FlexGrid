@@ -104,6 +104,7 @@ namespace Blazor.FlexGrid
         {
             services.AddSingleton(typeof(CreateItemFormRenderer<>));
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
+            services.AddSingleton<ISpecialColumnFragmentsCollection, BlazorComponentColumnCollection>();
             services.AddSingleton<GridContextsFactory>();
             services.AddSingleton<EditInputRendererTree>();
 
@@ -117,6 +118,7 @@ namespace Blazor.FlexGrid
         {
             services.AddSingleton(typeof(CreateItemFormRenderer<>));
             services.AddSingleton(typeof(BlazorComponentColumnCollection<>));
+            services.AddSingleton<ISpecialColumnFragmentsCollection, BlazorComponentColumnCollection>();
             services.AddSingleton<GridContextsFactory>();
             services.AddSingleton<EditInputRendererTree>();
 
