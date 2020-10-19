@@ -34,6 +34,8 @@ namespace Blazor.FlexGrid.Components.Filters
 
         [Parameter] public string ColumnName { get; set; }
 
+        [Parameter] public StringComparison TextComparison { get; set; }
+
         static ColumnFilter()
         {
             var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
@@ -90,14 +92,14 @@ namespace Blazor.FlexGrid.Components.Filters
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
             base.BuildRenderTree(builder);
 
             LoadStateIfExists();
 
             var rendererBuilder = new BlazorRendererTreeBuilder(builder);
-
             rendererBuilder
-                .OpenElement(HtmlTagNames.Button, filterIsApplied ? "action-button action-button-small action-button-filter-active" : "action-button action-button-small")
+                .OpenElement(HtmlTagNames.Div, filterIsApplied ? "action-button action-button-small action-button-filter-active" : "action-button action-button-small")
                 .AddAttribute(HtmlJSEvents.OnClick,
                     EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     {
@@ -131,7 +133,7 @@ namespace Blazor.FlexGrid.Components.Filters
             if (parser != TryParseBool)
             {
                 rendererBuilder.OpenElement(HtmlTagNames.Div, "filter-buttons");
-                _ = rendererBuilder.OpenElement(HtmlTagNames.Button, "btn btn-light filter-buttons-clear")
+                _ = rendererBuilder.OpenElement(HtmlTagNames.Div, "btn btn-light filter-buttons-clear")
                     .AddAttribute(HtmlJSEvents.OnClick,
                         EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                         {
@@ -169,7 +171,8 @@ namespace Blazor.FlexGrid.Components.Filters
 
         private void AddFilterDefinition()
         {
-            filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+            filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(
+                ColumnName, selectedFilterOperation, actualFilterValue, TextComparison));
             filterIsApplied = true;
             CacheActualState();
         }
@@ -262,9 +265,9 @@ namespace Blazor.FlexGrid.Components.Filters
                             selectedFilterOperation = (FilterOperation)BindConverterExtensions.ConvertTo(e.Value, 1);
                             if (filterIsApplied)
                             {
-                                filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(ColumnName, selectedFilterOperation, actualFilterValue));
+                                filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(
+                                    ColumnName, selectedFilterOperation, actualFilterValue, TextComparison));
                             }
-
                         }));
 
             foreach (var enumValue in Enum.GetValues(typeof(FilterOperation)))

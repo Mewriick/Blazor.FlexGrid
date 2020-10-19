@@ -241,6 +241,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             RendererTreeBuilder
                 .OpenComponent(typeof(ColumnFilter<>).MakeGenericType(property.PropertyType))
                 .AddAttribute("ColumnName", property.Name)
+                .AddAttribute("TextComparison", ActualColumnConfiguration.TextComparison)
                 .CloseComponent();
         }
 

@@ -35,7 +35,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                         rendererContext.OpenElement(HtmlTagNames.TableRow, rendererContext.CssClasses.TableGroupRow);
                         rendererContext.OpenElement(HtmlTagNames.TableColumn, rendererContext.CssClasses.TableGroupRowCell);
                         rendererContext.AddAttribute(HtmlAttributes.Colspan, rendererContext.NumberOfColumns);
-                        rendererContext.OpenElement(HtmlTagNames.Button, "pagination-button");
+                        rendererContext.OpenElement(HtmlTagNames.Div, "pagination-button");
                         rendererContext.AddOnClickEvent(
                             EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                             {

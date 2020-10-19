@@ -86,7 +86,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                 .FindRelationshipConfiguration(dataAdapter.UnderlyingTypeOfItem);
 
             var localActualItem = rendererContext.ActualItem;
-            rendererContext.OpenElement(HtmlTagNames.Button,
+            rendererContext.OpenElement(HtmlTagNames.Div,
                 selectedDataAdapter.IsForSameUnderlyingType(dataAdapter) ? "tabs-button tabs-button-active" : "tabs-button");
 
             rendererContext.AddOnClickEvent(

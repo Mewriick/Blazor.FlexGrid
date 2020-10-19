@@ -31,6 +31,7 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             builder.Property(e => e.Summary)
                 .HasCaption("MySummary")
                 .HasOrder(1)
+                .IsFilterable()
                 //.HasValueFormatter(s => $"<button>{s}!</button>");
                 .HasCompositeValueFormatter(f => $"{f.Summary} - {f.TemperatureC} - {f.TemperatureF}");
 

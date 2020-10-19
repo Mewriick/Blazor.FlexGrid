@@ -10,7 +10,13 @@ namespace Blazor.FlexGrid.Filters
 
         public FilterOperation FilterOperation { get; }
 
-        public ExpressionFilterDefinition(string columnName, FilterOperation filterOperation, object value)
+        public StringComparison TextComparasion { get; } = StringComparison.InvariantCultureIgnoreCase;
+
+        public ExpressionFilterDefinition(
+            string columnName,
+            FilterOperation filterOperation,
+            object value,
+            StringComparison stringComparison)
         {
             ColumnName = string.IsNullOrWhiteSpace(columnName)
                 ? throw new ArgumentNullException(nameof(columnName))
@@ -21,6 +27,7 @@ namespace Blazor.FlexGrid.Filters
                 : filterOperation;
 
             Value = value ?? throw new ArgumentNullException(nameof(value));
+            TextComparasion = stringComparison;
         }
     }
 }

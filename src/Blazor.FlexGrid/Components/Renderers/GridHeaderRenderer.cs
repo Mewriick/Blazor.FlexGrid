@@ -130,7 +130,7 @@ namespace Blazor.FlexGrid.Components.Renderers
             rendererContext.OpenElement(HtmlTagNames.TableHeadCell, rendererContext.CssClasses.TableHeaderCell);
             rendererContext.OpenElement(HtmlTagNames.Div, "create-button-wrapper");
 
-            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     flexGridInterop.ShowModal(CreateItemOptions.CreateItemModalName))

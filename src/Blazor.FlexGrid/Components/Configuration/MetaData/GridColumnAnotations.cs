@@ -95,6 +95,19 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public StringComparison TextComparison
+        {
+            get
+            {
+                var textComparisonValue = Annotations[GridViewAnnotationNames.ColumnFilterTextComparison];
+                if (textComparisonValue is NullAnotationValue)
+                {
+                    return StringComparison.InvariantCultureIgnoreCase;
+                }
+
+                return (StringComparison)textComparisonValue;
+            }
+        }
 
         public IValueFormatter ValueFormatter
         {
@@ -167,6 +180,7 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
         }
 
         protected IAnnotatable Annotations { get; }
+
 
         public GridColumnAnotations(IProperty property)
         {

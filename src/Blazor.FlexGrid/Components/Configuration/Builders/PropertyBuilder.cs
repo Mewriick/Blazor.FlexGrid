@@ -42,9 +42,9 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
             return this;
         }
 
-        public PropertyBuilder<TProperty, TEntity> IsFilterable()
+        public PropertyBuilder<TProperty, TEntity> IsFilterable(StringComparison textComparison = StringComparison.InvariantCultureIgnoreCase)
         {
-            Builder.IsFilterable();
+            Builder.IsFilterable(textComparison);
 
             return this;
         }

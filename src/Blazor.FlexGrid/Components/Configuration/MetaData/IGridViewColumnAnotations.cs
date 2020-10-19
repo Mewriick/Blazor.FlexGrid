@@ -22,6 +22,8 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         bool IsFilterable { get; }
 
+        StringComparison TextComparison { get; }
+
         IValueFormatter ValueFormatter { get; }
 
         IRenderFragmentAdapter SpecialColumnValue { get; }

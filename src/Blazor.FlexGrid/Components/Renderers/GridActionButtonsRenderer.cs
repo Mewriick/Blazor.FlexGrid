@@ -44,7 +44,7 @@ namespace Blazor.FlexGrid.Components.Renderers
         {
             var localActualItem = rendererContext.ActualItem;
 
-            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
@@ -62,7 +62,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderSaveButton(GridRendererContext rendererContext)
         {
-            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
@@ -88,7 +88,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             var localActualItem = rendererContext.ActualItem;
 
-            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {
@@ -114,7 +114,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderDiscardButton(GridRendererContext rendererContext)
         {
-            rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+            rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
             rendererContext.AddOnClickEvent(
                 EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                 {

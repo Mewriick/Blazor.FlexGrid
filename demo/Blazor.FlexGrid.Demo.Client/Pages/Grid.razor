@@ -7,7 +7,10 @@
 
 <h1>Weather forecast</h1>
 
-<GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
+<EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
+    <InputText id="name" @bind-Value="Model.Summary" />
+    <GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
+</EditForm>
 
 @{
     RenderFragment<WeatherForecast> weatherTemp = (weather) => @<h4>@weather.Summary!!</h4>;
@@ -25,11 +28,17 @@ Collection.AddColumnEditValueRenderer(w => w.Summary, editWeatherSummary);
 }
 
 @code{
+    WeatherForecast Model = new WeatherForecast();
     CollectionTableDataAdapter<WeatherForecast> dataAdapter;
 
     protected override async Task OnInitializedAsync()
     {
         var forecast = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecastsSimple");
         dataAdapter = new CollectionTableDataAdapter<WeatherForecast>(forecast);
+    }
+
+    private void HandleValidSubmit()
+    {
+
     }
 }

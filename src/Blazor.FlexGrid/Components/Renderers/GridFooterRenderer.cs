@@ -87,7 +87,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
             if (rendererContext.TableDataSet.GroupingOptions.IsGroupingActive)
             {
-                rendererContext.OpenElement(HtmlTagNames.Button, "action-button");
+                rendererContext.OpenElement(HtmlTagNames.Div, "action-button");
                 rendererContext.AddOnClickEvent(
                     EventCallback.Factory.Create(this, (MouseEventArgs e) =>
                     {
@@ -106,7 +106,7 @@ namespace Blazor.FlexGrid.Components.Renderers
 
         private void RenderButton(GridRendererContext rendererContext, PaginationButtonType buttonType, bool disabled, string buttonArrowClass)
         {
-            rendererContext.OpenElement(HtmlTagNames.Button, !disabled
+            rendererContext.OpenElement(HtmlTagNames.Div, !disabled
                 ? rendererContext.CssClasses.FooterCssClasses.PaginationButton
                 : rendererContext.CssClasses.FooterCssClasses.PaginationButtonDisabled);
             rendererContext.AddDisabled(disabled);
