@@ -22,6 +22,7 @@ GridView component for Blazor
 ```
 
 **Version 0.11.0 contains new Triggers feature more info in [wiki](https://github.com/Mewriick/Blazor.FlexGrid/wiki/Triggers)** 
+
 **Version 1.0.0 contains breaking change more info in [release](https://github.com/Mewriick/Blazor.FlexGrid/releases/tag/release%2F1.0.0)**
 
 # Installation
