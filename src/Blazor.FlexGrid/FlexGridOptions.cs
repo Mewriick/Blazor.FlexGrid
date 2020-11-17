@@ -5,5 +5,7 @@
         public bool IsServerSideBlazorApp { get; set; } = false;
 
         public bool UseAuthorizationForHttpRequests { get; set; }
+
+        public string BaseServerAddress { get; set; }
     }
 }

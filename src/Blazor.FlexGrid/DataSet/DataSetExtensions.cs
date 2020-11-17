@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.DataSet
@@ -7,6 +8,9 @@ namespace Blazor.FlexGrid.DataSet
     {
         public static Type UnderlyingTypeOfItem(this ITableDataSet tableDataSet)
             => tableDataSet.GetType().GenericTypeArguments[0];
+
+        public static bool IsExpando(this ITableDataSet tableDataSet)
+            => tableDataSet.GetType().GenericTypeArguments[0] == typeof(ExpandoObject);
 
         public static bool HasItems(this ITableDataSet tableDataSet)
             => tableDataSet.Items != null && tableDataSet.Items.Count > 0;

@@ -175,5 +175,19 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
             return this;
         }
+
+        public virtual EntityTypeBuilder<TEntity> EnablePreserveFiltering()
+        {
+            Builder.PreserveFiltering();
+
+            return this;
+        }
+
+        public virtual EntityTypeBuilder<TEntity> EnablePreservePagination()
+        {
+            Builder.PreservePagination();
+
+            return this;
+        }
     }
 }

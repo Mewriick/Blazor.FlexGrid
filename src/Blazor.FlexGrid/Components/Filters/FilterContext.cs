@@ -11,7 +11,7 @@ namespace Blazor.FlexGrid.Components.Filters
 
         public event EventHandler<FilterChangedEventArgs> OnFilterChanged;
 
-        public void AddOrUpdateFilterDefinition(IFilterDefinition filterDefinition)
+        public void AddOrUpdateFilterDefinition(IFilterDefinition filterDefinition, bool fireFilterChanged = true)
         {
             var definition = filterDefinitions.FirstOrDefault(fd => fd.ColumnName == filterDefinition.ColumnName);
             if (definition is null)
@@ -24,7 +24,10 @@ namespace Blazor.FlexGrid.Components.Filters
                 filterDefinitions.Add(filterDefinition);
             }
 
-            OnFilterChanged?.Invoke(this, new FilterChangedEventArgs(filterDefinitions));
+            if (fireFilterChanged)
+            {
+                OnFilterChanged?.Invoke(this, new FilterChangedEventArgs(filterDefinitions));
+            }
         }
 
         public void RemoveFilter(string columnName)

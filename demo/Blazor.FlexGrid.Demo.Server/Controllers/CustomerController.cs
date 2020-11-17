@@ -7,7 +7,7 @@ using System.Linq;
 namespace Blazor.FlexGrid.Demo.Server.Controllers
 {
     [Route("api/[controller]")]
-    public class CustomerController : Controller
+    public class CustomerController : ControllerBase
     {
         [HttpGet("[action]")]
         public IActionResult Customers()

@@ -15,7 +15,7 @@ namespace Blazor.FlexGrid.DataSet
         private readonly HttpClient httpClient;
         private readonly ILogger<HttpLazyDataSetLoader<TItem>> logger;
 
-        public HttpLazyDataSetLoader(IHttpClientFactory httpClientFactory, ILogger<HttpLazyDataSetLoader<TItem>> logger)
+        public HttpLazyDataSetLoader(Http.IHttpClientFactory httpClientFactory, ILogger<HttpLazyDataSetLoader<TItem>> logger)
         {
             this.httpClient = httpClientFactory?.Create() ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

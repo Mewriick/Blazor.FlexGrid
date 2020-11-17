@@ -1,5 +1,4 @@
 ﻿using Blazor.FlexGrid.Components.Configuration.ValueFormatters;
-using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.DataSet.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -20,7 +19,7 @@ namespace Blazor.FlexGrid.DataSet
         private readonly ILogger<HttpLazyDataSetItemManipulator<TItem>> logger;
 
         public HttpLazyDataSetItemManipulator(
-            IHttpClientFactory httpClientFactory,
+            Http.IHttpClientFactory httpClientFactory,
             ITypePropertyAccessorCache propertyValueAccessorCache,
             ILogger<HttpLazyDataSetItemManipulator<TItem>> logger)
         {

@@ -1,7 +1,8 @@
 ﻿using Blazor.FlexGrid.Demo.Client.GridConfigurations;
 using Blazor.FlexGrid.Permission;
-using Microsoft.AspNetCore.Blazor.Hosting;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 namespace Blazor.FlexGrid.Demo.Client
@@ -12,6 +13,12 @@ namespace Blazor.FlexGrid.Demo.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault();
             builder.RootComponents.Add<App>("app");
+
+            builder.Services.AddScoped(sp =>
+                new System.Net.Http.HttpClient
+                {
+                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+                });
 
             builder.Services.AddFlexGrid(
                 cfg =>
@@ -24,6 +31,7 @@ namespace Blazor.FlexGrid.Demo.Client
                 {
                     options.IsServerSideBlazorApp = false;
                     options.UseAuthorizationForHttpRequests = true;
+                    options.BaseServerAddress = builder.HostEnvironment.BaseAddress;
                 }
             )
             .AddSingleton<ICurrentUserPermission, TestCurrentUserPermission>()

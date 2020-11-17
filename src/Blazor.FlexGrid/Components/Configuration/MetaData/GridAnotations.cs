@@ -150,6 +150,34 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
             }
         }
 
+        public bool PreserveFiltering
+        {
+            get
+            {
+                var preserveFiltering = annotations[GridViewAnnotationNames.PreserveFiltering];
+                if (preserveFiltering is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)preserveFiltering;
+            }
+        }
+
+        public bool PreservePagination
+        {
+            get
+            {
+                var preservePagination = annotations[GridViewAnnotationNames.PreservePagination];
+                if (preservePagination is NullAnotationValue)
+                {
+                    return false;
+                }
+
+                return (bool)preservePagination;
+            }
+        }
+
         public GridAnotations(IEntityType entityType)
         {
             this.entityTypeMetadata = entityType ?? throw new ArgumentNullException(nameof(entityType));

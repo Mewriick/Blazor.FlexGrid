@@ -12,6 +12,10 @@ namespace Blazor.FlexGrid.Components.Configuration.MetaData
 
         string EmptyItemsMessage { get; }
 
+        bool PreserveFiltering { get; }
+
+        bool PreservePagination { get; }
+
         InlineEditOptions InlineEditOptions { get; }
 
         MasterDetailOptions MasterDetailOptions { get; }

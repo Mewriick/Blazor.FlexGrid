@@ -3,13 +3,14 @@ using Blazor.FlexGrid.DataSet.Http.Dto;
 using Blazor.FlexGrid.Demo.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace Blazor.FlexGrid.Demo.Server.Controllers
 {
     [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class SampleDataController : ControllerBase
     {
 
         private readonly StaticRepositoryCollections staticRepositoryCollections;
@@ -98,6 +99,23 @@ namespace Blazor.FlexGrid.Demo.Server.Controllers
         public IEnumerable<WeatherForecast> WeatherForecastsSimple()
         {
             return staticRepositoryCollections.Forecasts.Values.Take(20);
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<ExpandoObject> WeatherForecastsSimpleExpando()
+        {
+            return staticRepositoryCollections.Forecasts.Values
+                .Take(20)
+                .Select(w =>
+                {
+                    dynamic forecast = new ExpandoObject();
+                    forecast.Date = w.Date;
+                    forecast.Summary = w.Summary;
+                    forecast.TemperatureC = w.TemperatureC;
+                    forecast.TemperatureF = w.TemperatureF;
+
+                    return forecast as ExpandoObject;
+                });
         }
 
         [HttpPost(nameof(WeatherForecast))]

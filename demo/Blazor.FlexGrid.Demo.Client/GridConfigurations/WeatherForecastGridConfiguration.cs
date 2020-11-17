@@ -53,6 +53,8 @@ namespace Blazor.FlexGrid.Demo.Client.GridConfigurations
             });
 
             builder.EnableGrouping();
+            builder.EnablePreserveFiltering();
+            builder.EnablePreservePagination();
         }
     }
 }

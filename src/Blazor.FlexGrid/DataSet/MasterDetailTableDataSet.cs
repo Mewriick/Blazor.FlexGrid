@@ -126,8 +126,8 @@ namespace Blazor.FlexGrid.DataSet
         public Task<bool> DeleteItem(object item)
             => tableDataSet.DeleteItem(item);
 
-        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
-            => tableDataSet.ApplyFilters(filters);
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters, bool goToFirstPage = true)
+            => tableDataSet.ApplyFilters(filters, goToFirstPage);
 
         public void ToggleGroupRow(object groupItemKey)
             => tableDataSet.ToggleGroupRow(groupItemKey);

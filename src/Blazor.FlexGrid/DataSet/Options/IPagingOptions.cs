@@ -1,7 +1,11 @@
-﻿namespace Blazor.FlexGrid.DataSet.Options
+﻿using System;
+
+namespace Blazor.FlexGrid.DataSet.Options
 {
     public interface IPagingOptions
     {
+        Action<int> PageChanged { get; set; }
+
         int PageSize { get; set; }
 
         int TotalItemsCount { get; set; }

@@ -40,6 +40,8 @@ namespace Blazor.FlexGrid.Components.Renderers
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
+
                     logger.LogError($"Error raised during rendering GridView component. Ex: {ex}");
                 }
             }

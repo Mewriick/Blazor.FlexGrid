@@ -70,7 +70,7 @@ namespace Blazor.FlexGrid.Components.Renderers
                     {
                         logger.LogError($"Error occured during rendering grouped grid view body. Ex: {ex}");
 
-                        throw ex;
+                        throw;
                     }
                 }
 

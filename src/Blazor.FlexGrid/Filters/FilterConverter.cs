@@ -19,33 +19,51 @@ namespace Blazor.FlexGrid.Filters
             var stringComparisonExpression = Expression.Constant(filter.TextComparasion);
             var valueType = filter.Value.GetType();
 
+            var condition = default(Expression);
             switch (filter.FilterOperation)
             {
                 case FilterOperation.Equal:
-                    return valueType == typeof(string)
+                    condition = valueType == typeof(string)
                         ? Expression.Call(memberExpression, EqualsMethod, constantExpression, stringComparisonExpression)
                         : (Expression)Expression.Equal(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.GreaterThan:
-                    return Expression.GreaterThan(memberExpression, constantExpression);
+                    condition = Expression.GreaterThan(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.GreaterThanOrEqual:
-                    return Expression.GreaterThanOrEqual(memberExpression, constantExpression);
+                    condition = Expression.GreaterThanOrEqual(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.LessThan:
-                    return Expression.LessThan(memberExpression, constantExpression);
+                    condition = Expression.LessThan(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.LessThanOrEqual:
-                    return Expression.LessThanOrEqual(memberExpression, constantExpression);
+                    condition = Expression.LessThanOrEqual(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.NotEqual:
-                    return valueType == typeof(string)
+                    condition = valueType == typeof(string)
                         ? Expression.Not(Expression.Call(memberExpression, EqualsMethod, constantExpression, stringComparisonExpression))
                         : (Expression)Expression.NotEqual(memberExpression, constantExpression);
+                    break;
                 case FilterOperation.Contains:
-                    return Expression.Call(memberExpression, ContainsMethod, constantExpression, stringComparisonExpression);
+                    condition = Expression.Call(memberExpression, ContainsMethod, constantExpression, stringComparisonExpression);
+                    break;
                 case FilterOperation.StartsWith:
-                    return Expression.Call(memberExpression, StartsWithMethod, constantExpression, stringComparisonExpression);
+                    condition = Expression.Call(memberExpression, StartsWithMethod, constantExpression, stringComparisonExpression);
+                    break;
                 case FilterOperation.EndsWith:
-                    return Expression.Call(memberExpression, EndsWithMethod, constantExpression, stringComparisonExpression);
+                    condition = Expression.Call(memberExpression, EndsWithMethod, constantExpression, stringComparisonExpression);
+                    break;
                 default:
                     throw new InvalidOperationException($"Conversion is not defined for operation {filter.FilterOperation}");
             }
+
+            if (!valueType.IsValueType)
+            {
+                var nullCheck = Expression.NotEqual(memberExpression, Expression.Constant(null, typeof(object)));
+                condition = Expression.AndAlso(nullCheck, condition);
+            }
+
+            return condition;
         }
     }
 }

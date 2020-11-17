@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Blazor.FlexGrid.Demo.Shared;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Blazor.FlexGrid.Demo.Shared;
 
 namespace Blazor.FlexGrid.Demo.Server
 {
@@ -40,7 +40,8 @@ namespace Blazor.FlexGrid.Demo.Server
                 }).ToList();
 
             Forecasts = Enumerable.Range(1, 100)
-                .Select(index => new WeatherForecast {
+                .Select(index => new WeatherForecast
+                {
                     Id = index,
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = random.Next(-20, 55),

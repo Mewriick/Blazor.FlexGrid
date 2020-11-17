@@ -1,0 +1,21 @@
+﻿@using Blazor.FlexGrid.Demo.Shared
+@using Blazor.FlexGrid.DataAdapters
+@using Blazor.FlexGrid.Components.Configuration
+@inject HttpClient Http
+@page "/gridexpando"
+
+<h1>Weather forecast</h1>
+
+<GridView DataAdapter="@dataAdapter" PageSize="5"></GridView>
+
+
+@code{
+    CollectionTableDataAdapter<ExpandoObject> dataAdapter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var forecast = await Http.GetJsonAsync<ExpandoObject[]>("api/SampleData/WeatherForecastsSimpleExpando");
+        dataAdapter = new CollectionTableDataAdapter<ExpandoObject>(forecast);
+    }
+
+}

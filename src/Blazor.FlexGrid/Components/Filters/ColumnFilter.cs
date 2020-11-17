@@ -1,17 +1,17 @@
 ﻿using Blazor.FlexGrid.Components.Renderers;
 using Blazor.FlexGrid.Filters;
+using Blazor.FlexGrid.State;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace Blazor.FlexGrid.Components.Filters
 {
     public class ColumnFilter<TValue> : ComponentBase
     {
-        private static Dictionary<string, ColumnFilterState> stateCache = new Dictionary<string, ColumnFilterState>();
+        private ColumnFilterState state;
 
         private const string WrapperCssClass = "filter-wrapper";
         private const string WrapperCssCheckboxClass = "filter-wrapper-checkbox";
@@ -35,6 +35,8 @@ namespace Blazor.FlexGrid.Components.Filters
         [Parameter] public string ColumnName { get; set; }
 
         [Parameter] public StringComparison TextComparison { get; set; }
+
+        [Inject] IStateCache StateCache { get; set; }
 
         static ColumnFilter()
         {
@@ -182,30 +184,38 @@ namespace Blazor.FlexGrid.Components.Filters
             filterContext.RemoveFilter(ColumnName);
             filterIsApplied = false;
             filterDefinitionOpened = false;
-            stateCache.Remove(ColumnName);
+            StateCache.RemoveStateValue(ColumnName);
+            state = null;
         }
 
         private void LoadStateIfExists()
         {
-            if (stateCache.TryGetValue(ColumnName, out var columnFilterState))
+            if (state != null)
             {
-                selectedFilterOperation = columnFilterState.FilterOperation;
-                actualFilterValue = (TValue)columnFilterState.FilterValue;
+                selectedFilterOperation = state.FilterOperation;
+                actualFilterValue = (TValue)state.FilterValue;
                 filterIsApplied = true;
+
+                return;
+            }
+
+            if (CascadeFlexGridContext.GridConfiguration.PreserveFiltering &&
+                StateCache.TryGetStateValue<ColumnFilterState>(ColumnName, out var cachedState))
+            {
+                state = cachedState;
+                selectedFilterOperation = state.FilterOperation;
+                actualFilterValue = (TValue)state.FilterValue;
+                filterIsApplied = true;
+
+                filterContext.AddOrUpdateFilterDefinition(new ExpressionFilterDefinition(
+                    ColumnName, selectedFilterOperation, actualFilterValue, TextComparison), false);
             }
         }
 
         private void CacheActualState()
         {
-            var filterState = new ColumnFilterState(actualFilterValue, selectedFilterOperation);
-            if (!stateCache.ContainsKey(ColumnName))
-            {
-                stateCache.Add(ColumnName, filterState);
-            }
-            else
-            {
-                stateCache[ColumnName] = filterState;
-            }
+            state = new ColumnFilterState(actualFilterValue, selectedFilterOperation);
+            StateCache.SetStateValue(ColumnName, new ColumnFilterState(actualFilterValue, selectedFilterOperation));
         }
 
         private void BuildRendererTreeForInputs(BlazorRendererTreeBuilder rendererBuilder)

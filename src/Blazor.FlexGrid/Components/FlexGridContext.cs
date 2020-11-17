@@ -1,4 +1,5 @@
-﻿using Blazor.FlexGrid.Components.Filters;
+﻿using Blazor.FlexGrid.Components.Configuration.MetaData;
+using Blazor.FlexGrid.Components.Filters;
 using Blazor.FlexGrid.Features;
 using System;
 
@@ -13,6 +14,8 @@ namespace Blazor.FlexGrid.Components
         public Action RequestRerenderTableRowsNotification { get; private set; }
 
         public IFeatureCollection Features { get; }
+
+        public IGridViewAnotations GridConfiguration { get; set; }
 
         public bool FirstPageLoaded { get; set; }
 

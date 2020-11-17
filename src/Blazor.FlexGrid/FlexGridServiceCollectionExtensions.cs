@@ -13,11 +13,13 @@ using Blazor.FlexGrid.DataAdapters.Visitors;
 using Blazor.FlexGrid.DataSet;
 using Blazor.FlexGrid.DataSet.Http;
 using Blazor.FlexGrid.Permission;
+using Blazor.FlexGrid.State;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+
 
 namespace Blazor.FlexGrid
 {
@@ -52,13 +54,12 @@ namespace Blazor.FlexGrid
             }
             else
             {
-                /*services.AddLogging(builder => builder
-                    .AddBrowserConsole()
-                    .SetMinimumLevel(LogLevel.Debug));*/
-
                 if (flexGridOptions.UseAuthorizationForHttpRequests)
                 {
-                    services.AddSingleton<IHttpClientFactory, AuthorizationHttpClientFactory>();
+                    services.AddHttpClient<IHttpClientFactory, AuthorizationHttpClientFactory>(client =>
+                    {
+                        client.BaseAddress = new Uri(flexGridOptions.BaseServerAddress);
+                    });
                 }
                 else
                 {
@@ -75,6 +76,8 @@ namespace Blazor.FlexGrid
                 RegisterRendererTreeBuilders(services);
             }
 
+            services.AddMemoryCache();
+            services.AddSingleton<IStateCache, MemoryStateCache>();
             services.TryAddSingleton<IAuthorizationService, NullAuthorizationService>();
             services.TryAddSingleton<ICurrentUserPermission>(new NullCurrentUserPermission());
             services.AddSingleton(typeof(MasterTableDataAdapterBuilder<>));

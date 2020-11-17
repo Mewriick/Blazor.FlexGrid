@@ -75,7 +75,7 @@ namespace Blazor.FlexGrid.DataSet
             return GoToPage(0);
         }
 
-        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters, bool goToFirstPage = true)
         {
             if (!filters.Any())
             {
@@ -83,10 +83,13 @@ namespace Blazor.FlexGrid.DataSet
                 return GoToPage(0);
             }
 
-            PageableOptions.CurrentPage = 0;
             filterExpression = filterExpressionTreeBuilder.BuildExpressionTree(filters);
+            if (goToFirstPage)
+            {
+                return GoToPage(0);
+            }
 
-            return GoToPage(0);
+            return Task.CompletedTask;
         }
 
         public void ToggleRowItem(object item)

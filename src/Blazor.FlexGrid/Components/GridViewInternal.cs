@@ -9,6 +9,7 @@ using Blazor.FlexGrid.DataSet.Options;
 using Blazor.FlexGrid.Features;
 using Blazor.FlexGrid.Filters;
 using Blazor.FlexGrid.Permission;
+using Blazor.FlexGrid.State;
 using Blazor.FlexGrid.Triggers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -26,6 +27,7 @@ namespace Blazor.FlexGrid.Components
 
         private bool tableDataSetInitialized;
         private int pageSize;
+        private int? cachedCurrentPage;
         private ITableDataAdapter dataAdapter;
         private ILazyLoadingOptions lazyLoadingOptions;
 
@@ -45,6 +47,8 @@ namespace Blazor.FlexGrid.Components
         [Inject] ISpecialColumnFragmentsCollection SpecialColumnFragmentsCollection { get; set; }
 
         [Inject] ConventionsSet ConventionsSet { get; set; }
+
+        [Inject] IStateCache StateCache { get; set; }
 
         [Parameter]
         public ITableDataAdapter DataAdapter
@@ -150,7 +154,7 @@ namespace Blazor.FlexGrid.Components
                     .AddAttribute("IsFixed", true)
                     .AddAttribute("Value", fixedFlexGridContext)
                     .AddAttribute(nameof(BlazorRendererTreeBuilder.ChildContent), flexGridFragment)
-                    .CloseComponent();
+                .CloseComponent();
         }
 
         protected override async Task OnInitializedAsync()
@@ -163,7 +167,8 @@ namespace Blazor.FlexGrid.Components
             }
 
             GetTableDataSet();
-            await tableDataSet.GoToPage(0);
+            await RestoreCachedState();
+            await tableDataSet.GoToPage(cachedCurrentPage.HasValue ? cachedCurrentPage.Value : 0);
 
             if (DataAdapter != null)
             {
@@ -178,8 +183,8 @@ namespace Blazor.FlexGrid.Components
             {
                 ConventionsSet.ApplyConventions(DataAdapter.UnderlyingTypeOfItem);
                 GetTableDataSet();
-                await tableDataSet.GoToPage(0);
-
+                await RestoreCachedState();
+                await tableDataSet.GoToPage(cachedCurrentPage.HasValue ? cachedCurrentPage.Value : 0);
                 fixedFlexGridContext.FirstPageLoaded = true;
             }
 
@@ -199,6 +204,7 @@ namespace Blazor.FlexGrid.Components
             tableDataSet = DataAdapter?.GetTableDataSet(conf =>
             {
                 conf.LazyLoadingOptions = LazyLoadingOptions;
+                conf.PageableOptions.PageChanged = PageChanged;
                 conf.PageableOptions.PageSize = PageSize;
                 conf.GridViewEvents = new GridViewEvents
                 {
@@ -226,6 +232,7 @@ namespace Blazor.FlexGrid.Components
             }
 
             gridRenderingContexts = RendererContextFactory.CreateContexts(tableDataSet);
+            fixedFlexGridContext.GridConfiguration = gridRenderingContexts.ImutableRendererContext.GridConfiguration;
             if (fixedFlexGridContext.IsFeatureActive<GroupingFeature>())
             {
                 tableDataSet.GroupingOptions.SetConfiguration(
@@ -239,6 +246,40 @@ namespace Blazor.FlexGrid.Components
             }
 
             return tableDataSet;
+        }
+
+        private async Task RestoreCachedState()
+        {
+            if (tableDataSet == EmptyDataSet || StateCache.Count == 0)
+            {
+                return;
+            }
+
+            if (fixedFlexGridContext.IsFeatureActive<FilteringFeature>() &&
+                fixedFlexGridContext.GridConfiguration.PreserveFiltering)
+            {
+                var cachedDefinitions = StateCache.GetFilterDefinitions(gridRenderingContexts.ImutableRendererContext);
+                if (cachedDefinitions.Any())
+                {
+                    await tableDataSet.ApplyFilters(cachedDefinitions, false);
+                }
+            }
+
+            if (fixedFlexGridContext.GridConfiguration.PreservePagination &&
+                StateCache.TryGetStateValue<int>(StateKeys.CurrentPage, out var currentPage))
+            {
+                cachedCurrentPage = currentPage;
+            }
+            else
+            {
+                cachedCurrentPage = null;
+            }
+        }
+
+        private void PageChanged(int e)
+        {
+            Console.WriteLine($"PageChanged {e}");
+            StateCache.SetStateValue(StateKeys.CurrentPage, e);
         }
 
         private void FilterChanged(object sender, FilterChangedEventArgs e)

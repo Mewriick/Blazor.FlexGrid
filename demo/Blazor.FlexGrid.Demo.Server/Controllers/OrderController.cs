@@ -5,7 +5,7 @@ using System.Linq;
 namespace Blazor.FlexGrid.Demo.Server.Controllers
 {
     [Route("api/[controller]")]
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
         private readonly StaticRepositoryCollections staticRepositoryCollections;
 

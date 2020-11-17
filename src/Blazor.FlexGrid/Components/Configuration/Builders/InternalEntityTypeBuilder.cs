@@ -86,5 +86,11 @@ namespace Blazor.FlexGrid.Components.Configuration.Builders
 
         public bool RenderHeaderWithEmtyItemsMessage(bool render)
             => HasAnnotation(GridViewAnnotationNames.RenderHeaderWithEmtyItemsMessage, render);
+
+        public bool PreserveFiltering()
+            => HasAnnotation(GridViewAnnotationNames.PreserveFiltering, true);
+        public bool PreservePagination()
+            => HasAnnotation(GridViewAnnotationNames.PreservePagination, true);
+
     }
 }

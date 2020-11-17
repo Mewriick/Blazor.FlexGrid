@@ -16,7 +16,7 @@ namespace Blazor.FlexGrid.DataSet.Http
         private readonly ILogger<HttpCreateItemHandler<TModel, TOutputDto>> logger;
 
         public HttpCreateItemHandler(
-            IHttpClientFactory httpClientFactory,
+            Http.IHttpClientFactory httpClientFactory,
             ILogger<HttpCreateItemHandler<TModel, TOutputDto>> logger)
         {
             this.httpClient = httpClientFactory?.Create() ?? throw new ArgumentNullException(nameof(httpClientFactory));

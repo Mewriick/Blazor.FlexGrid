@@ -18,6 +18,8 @@
         public const string GroupingOptions = "GroupingOptions";
         public const string EmptyItemsMessage = "EmptyItemsMessage";
         public const string RenderHeaderWithEmtyItemsMessage = "RenderHeaderWithEmtyItemsMessage";
+        public const string PreserveFiltering = "PreserveFiltering";
+        public const string PreservePagination = "PreservePagination";
 
         public const string ColumnHeaderStyle = "GridColumnHeaderStyle";
         public const string ColumnCaption = "GridColumnCaption";

@@ -8,6 +8,6 @@ namespace Blazor.FlexGrid.DataSet
     {
         bool FilterIsApplied { get; }
 
-        Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters);
+        Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters, bool goToFirstPage = true);
     }
 }

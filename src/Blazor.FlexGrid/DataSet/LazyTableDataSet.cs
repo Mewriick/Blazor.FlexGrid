@@ -172,11 +172,16 @@ namespace Blazor.FlexGrid.DataSet
             return removedItem != null ? true : false;
         }
 
-        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters)
+        public Task ApplyFilters(IReadOnlyCollection<IFilterDefinition> filters, bool goToFirstPage = true)
         {
             filterDefinitions = filters;
 
-            return GoToPage(0);
+            if (goToFirstPage)
+            {
+                return GoToPage(0);
+            }
+
+            return Task.CompletedTask;
         }
 
         public void ToggleGroupRow(object groupItemKey)
