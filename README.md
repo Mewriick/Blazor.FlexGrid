@@ -22,9 +22,10 @@ GridView component for Blazor
 ```
 
 **Version 0.11.0 contains new Triggers feature more info in [wiki](https://github.com/Mewriick/Blazor.FlexGrid/wiki/Triggers)** 
+**Version 1.0.0 contains breaking change more info in [release](https://github.com/Mewriick/Blazor.FlexGrid/releases/tag/release%2F1.0.0)**
 
 # Installation
-[![NuGet Pre Release](https://img.shields.io/badge/nuget-0.14.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
+[![NuGet Pre Release](https://img.shields.io/badge/nuget-1.0.0-orange.svg)](https://www.nuget.org/packages/Blazor.FlexGrid)
 
 After nuget installation you must create in Blazor.Client app Linker.xml file because nuget uses some features which are not supported in default mono managed interpreter from WebAssembly
 (https://github.com/mono/mono/issues/8872)
